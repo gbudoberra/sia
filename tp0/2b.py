@@ -4,18 +4,16 @@ import plotly.express as px
 
 if __name__ == "__main__":
     factory = PokemonFactory("pokemon.json")
-    catch_prob = []
-    condition_list = []
-    for condition in StatusEffect:
+    catch_prob=[]
+    for i in range(100):
         average = []
-        condition_list.append(str(condition.name))
         for _ in range(2000):
-            onix = factory.create("caterpie", 100, condition, 1)
+            onix = factory.create("onix", 100, StatusEffect.NONE, 0.01*i)
             value = 1 if attempt_catch(onix, "pokeball", 0.15)[0] else 0
             average.append(value)
             # attempt_catch_by_pokeball.append(value)
             # average.append(attempt_catch(onix, "heavyball", 0.15)[1])
         catch_prob.append(sum(average) / len(average))
-    fig = px.scatter(x=condition_list, y=catch_prob, labels={'x': 'Health Condition', 'y': 'Catch Probability'})
-    fig.update_layout(title='Catch Probability vs Health Condition')
+    fig = px.scatter(x=range(100), y=catch_prob, labels={'x': 'HP', 'y': 'Catch Probability'})
+    fig.update_layout(title='Catch Probability vs HP')
     fig.show()
