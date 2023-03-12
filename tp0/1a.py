@@ -13,8 +13,8 @@ if __name__ == "__main__":
     result_map = {}
 
     for pokeball in pokeball_list:
-        attempt_catch_by_pokeball = []
         for pokemon_name in pokemon_names:
+            attempt_catch_by_pokeball = []
             pokemon = factory.create(pokemon_name, 100, StatusEffect.NONE, 1)
             for i in range(100):
                 value = 1 if attempt_catch(pokemon, pokeball)[0] else 0
@@ -27,9 +27,8 @@ if __name__ == "__main__":
     for pokeball in result_map.keys():
         result_avg_map[pokeball] = sum(result_map[pokeball])/len(result_map[pokeball])
 
-    data = result_avg_map
-    plt.bar(range(len(data)), list(data.values()), align='center')
-    plt.xticks(range(len(data)), list(data.keys()))
+    plt.bar(range(len(result_avg_map)), list(result_avg_map.values()), align='center')
+    plt.xticks(range(len(result_avg_map)), list(result_avg_map.keys()))
     plt.xlabel('Tipo de bola')
     plt.ylabel('Probabilidad de captura')
     plt.title('Probabilidades de captura por tipo de bola')
