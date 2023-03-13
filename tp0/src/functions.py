@@ -4,12 +4,16 @@ import statistics
 
 
 def catch_with_pokeballs(pokeball_list, pokemon_names, factory):
+    return catch_with_pokeballs_level(pokeball_list, pokemon_names, factory, 100)
+
+
+def catch_with_pokeballs_level(pokeball_list, pokemon_names, factory, level):
     result_map = {}
     for j in range(100):
         for pokeball in pokeball_list:
             for pokemon_name in pokemon_names:
                 attempt_catch_by_pokeball = []
-                pokemon = factory.create(pokemon_name, 100, StatusEffect.NONE, 1)
+                pokemon = factory.create(pokemon_name, level, StatusEffect.NONE, 1)
                 for i in range(1000):
                     value = 1 if attempt_catch(pokemon, pokeball)[0] else 0
                     attempt_catch_by_pokeball.append(value)
