@@ -12,9 +12,6 @@ if __name__ == "__main__":
         pokemon_dictionary = dict(json.load(c))
     pokemon_names = pokemon_dictionary.keys()
 
-    # Crear subplots
-    fig1, ax1 = plt.subplots()
-
     deltas_status = []
     deltas_hp = []
     deltas_level = []
