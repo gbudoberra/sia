@@ -1,19 +1,32 @@
 from src.catching import attempt_catch
 from src.pokemon import PokemonFactory, StatusEffect
-import plotly.express as px
+import plotly.graph_objects as go
+import numpy as np
+
 
 if __name__ == "__main__":
     factory = PokemonFactory("pokemon.json")
-    catch_prob=[]
+    catch_prob = []
+    error = []
+    x = []
     for i in range(100):
-        average = []
-        for _ in range(2000):
-            onix = factory.create("onix", 100, StatusEffect.NONE, 0.01*i)
-            value = 1 if attempt_catch(onix, "pokeball", 0.15)[0] else 0
-            average.append(value)
+        data = []
+        x.append(i)
+        for _ in range(1000):
+            caterpie = factory.create("caterpie", 100, StatusEffect.NONE, 0.01*i)
+            value = 1 if attempt_catch(caterpie, "pokeball", 0.15)[0] else 0
+            data.append(value)
             # attempt_catch_by_pokeball.append(value)
-            # average.append(attempt_catch(onix, "heavyball", 0.15)[1])
-        catch_prob.append(sum(average) / len(average))
-    fig = px.scatter(x=range(100), y=catch_prob, labels={'x': 'HP', 'y': 'Catch Probability'})
+            # data.append(attempt_catch(caterpie, "heavyball", 0.15)[1])
+        catch_prob.append(sum(data) / len(data))
+        error.append(np.std(data)/np.sqrt(len(data)))
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=x, y=catch_prob, name='Catch Probability vs HP',
+                     error_y=dict(
+                         type='data',
+                         array=error,
+                         visible=True
+                     )
+                     ))
     fig.update_layout(title='Catch Probability vs HP')
     fig.show()
