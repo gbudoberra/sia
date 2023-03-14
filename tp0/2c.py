@@ -15,10 +15,11 @@ if __name__ == "__main__":
     # Crear subplots
     fig1, ax1 = plt.subplots()
 
-    deltas = {}
+    deltas_status = []
+    deltas_hp = []
+    deltas_level = []
+
     for name in pokemon_names:
-        # Establecer el ancho de la barra
-        width = 0.15
 
         # Level
         level_attempts = []
@@ -30,7 +31,7 @@ if __name__ == "__main__":
         max_level = max(level_attempts[i][0] for i in range(100))
         min_level = min(level_attempts[i][0] for i in range(100))
         delta_level = max_level - min_level
-        print("Delta Level: " + str(delta_level))
+        deltas_level.append(delta_level)
 
         # % HP
         hp_attempts = {}
@@ -42,7 +43,7 @@ if __name__ == "__main__":
         max_hp = max(hp_attempts[i][0] for i in np.linspace(0, 1, 21))
         min_hp = min(hp_attempts[i][0] for i in np.linspace(0, 1, 21))
         delta_hp = max_hp - min_hp
-        print("Delta HP: " + str(delta_hp))
+        deltas_hp.append(delta_hp)
 
         # Status
         status_attempts = {}
@@ -54,16 +55,29 @@ if __name__ == "__main__":
         max_status = max(status_attempts[i][0] for i in StatusEffect)
         min_status = min(status_attempts[i][0] for i in StatusEffect)
         delta_status = max_status - min_status
-        print("Delta Status: " + str(delta_status))
+        deltas_status.append(delta_status)
 
-        deltas[name] = (delta_hp, delta_level, delta_status)
+    # Set the width of each bar and the gap between bars
+    bar_width = 0.25
+    bar_gap = 0.05
 
-    # todo
-    # Graph with bars> Pokemon is the X axis.
-    # Each pokemon has three bars with different colors.
-    # Delta value is the Y Axis
-    #
+    # Create the x positions for each set of bars
+    x_positions = np.arange(len(pokemon_names))
 
+    # Plot the bars for each set of values
+    plt.bar(x_positions - bar_width - bar_gap, deltas_hp, bar_width, label="Delta HP")
+    plt.bar(x_positions, deltas_level, bar_width, label="Delta Level")
+    plt.bar(x_positions + bar_width + bar_gap, deltas_status, bar_width, label="Delta Status")
+
+    # Add labels and a legend
+    plt.xlabel("Pokemons")
+    plt.ylabel("Delta Values")
+    plt.title("Comparison of the impact of each property")
+    plt.xticks(x_positions, pokemon_names)
+    plt.legend()
+
+    # Display the plot
+    plt.show()
 
 
 
