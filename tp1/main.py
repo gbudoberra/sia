@@ -1,17 +1,14 @@
-from Methods.star_a import StarA
-from Methods.dfs import Dfs
+from ColorGridStatus import create_root
 from Methods.bfs import Bfs
+from Methods.dfs import Dfs
 from Methods.greedy import Greedy
-
-from ColorGridStatus import ColorGridStatus
-from queue import LifoQueue
-from utils import parse_input_file
-
+from Methods.star_a import StarA
+from utils import parse_input_file, color_matrix, draw_matrix
 
 if __name__ == '__main__':
     matrix, method = parse_input_file("matrix.txt")
-    step = 1
-    grid = ColorGridStatus(matrix)
+    step = 0
+    grid = create_root(matrix)
 
     if method == 'dfs':
         tree = Dfs(grid)
@@ -25,11 +22,12 @@ if __name__ == '__main__':
         raise IOError("Unknown method provided")
 
     node = tree.search_solution()
-    stack = LifoQueue()
+    solution = []
     while node is not None:
-        stack.put(node)
+        solution.append(node)
         node = node.get_parent()
-    while not stack.empty():
-        node = stack.get()
-        node.draw_node("node_" + str(step))
+    solution.reverse()
+    for node in solution:
+        color_matrix(matrix, node.get_status().get_current_color(), node.get_status().colored)
+        draw_matrix(matrix, step)
         step += 1

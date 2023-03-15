@@ -1,5 +1,8 @@
-from ColorGridStatus import Color
 import random
+
+import matplotlib.pyplot as plt
+
+from ColorGridStatus import Color
 
 
 def random_grid(dim):
@@ -36,3 +39,15 @@ def parse_input_file(filename):
     return colour_matrix, method
 
 
+def color_matrix(matrix, color, coordinates):
+    for coords in coordinates:
+        matrix[coords[0]][coords[1]] = color
+    return matrix
+
+
+def draw_matrix(matrix, step):
+    matrix_colors = [[cell.value for cell in row] for row in matrix]
+    fig, ax = plt.subplots()
+    ax.imshow(matrix_colors)
+    plt.savefig("Graphs/step_" + str(step))
+    plt.clf()

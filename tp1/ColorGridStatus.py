@@ -1,15 +1,15 @@
-from matplotlib import colors
 from enum import Enum
-import matplotlib.pyplot as plt
 
+import matplotlib.pyplot as plt
+from matplotlib import colors
 
 
 class ColorGridStatus:
-    def __init__(self, grid):
-        self.grid = [[cell for cell in row] for row in grid]
-        self._current_color = grid[0][0]
-        self.border = {(0, 1), (1, 0)}
-        self.colored = {(0, 0)}
+    def __init__(self, grid, current_color, border, colored):
+        self.grid = grid
+        self._current_color = current_color
+        self.border = border
+        self.colored = colored
         self._update_border(self._current_color)
 
     def __eq__(self, obj) -> bool:
@@ -17,13 +17,12 @@ class ColorGridStatus:
             return True
         if obj is None or type(self) != type(obj):
             return False
-        return self.grid == obj.grid and self.border == obj.border and self.colored == obj.colored
+        return self.border == obj.border and self.colored == obj.colored
 
     def __hash__(self):
-        grid_tuple = tuple(tuple(row) for row in self.grid)
         border_tuple = tuple(sorted(self.border))
         colored_tuple = tuple(sorted(self.colored))
-        return hash((grid_tuple, border_tuple, colored_tuple))
+        return hash((border_tuple, colored_tuple))
 
     def _update_border(self, new_color):
         border = set(self.border)
@@ -41,13 +40,14 @@ class ColorGridStatus:
                             border.add((new_row, new_col))
                 self.border.discard((current_row, current_col))
                 self.colored.add((current_row, current_col))
-        for current_cell in self.colored:
-            current_row, current_col = current_cell
-            self.grid[current_row][current_col] = new_color
 
     def get_grid_son(self, color):
-        grid_son = ColorGridStatus(self.grid)
-        grid_son._update_border(color)
+        grid = self.grid
+        current_color = color
+        border = set(self.border)
+        colored = set(self.colored)
+
+        grid_son = ColorGridStatus(grid, current_color, border, colored)
         return grid_son
 
     def is_grid_complete(self):
@@ -60,6 +60,16 @@ class ColorGridStatus:
         plt.savefig("Graphs/" + name)
         # plt.show()
         plt.clf()
+
+    def get_current_color(self):
+        return self._current_color
+
+
+def create_root(grid):
+    current_color = grid[0][0]
+    border = {(0, 1), (1, 0)}
+    colored = {(0, 0)}
+    return ColorGridStatus(grid, current_color, border, colored)
 
 
 class Color(Enum):

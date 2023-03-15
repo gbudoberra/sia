@@ -1,4 +1,4 @@
-from ColorGridStatus import Color
+from ColorGridStatus import Color, ColorGridStatus
 
 
 class Node:
@@ -22,6 +22,9 @@ class Node:
 
     def get_parent(self):
         return self._parent
+
+    def get_status(self) -> ColorGridStatus:
+        return self.status
 
     def __eq__(self, other) -> bool:
         if self is other:
