@@ -1,18 +1,23 @@
 from Node import Node
-from collections import deque
+import queue
+from ColorGridStatus import ColorGridStatus
 
 
 class Graph:
-    def __init__(self, initial_grid):
+    def __init__(self, initial_grid: ColorGridStatus):
         self.root = Node(initial_grid)
-        self.visitedNode = set()
+        self._visited_nodes = set()
 
     def get_solution_by_dfs(self):
-        border_nodes = deque()
-        border_nodes.append(self.root)
-        while border_nodes:
-            removed_node = border_nodes.popleft()
-            if removed_node.grid_status.is_grid_complete():
+        self._visited_nodes = set()
+        border_nodes = [self.root]
+        while not border_nodes.empty():
+            current_node = border_nodes.pop()
+            if current_node.is_complete_state():
                 print("Solucion hallada")
-            son_nodes = removed_node.explodeNode().getSons()
-            border_nodes.extend(son_nodes)
+                return current_node
+            son_nodes = [son for son in current_node.explode_node() if son not in self._visited_nodes]
+            self._visited_nodes.update(son_nodes)
+            border_nodes.queue.extend(son_nodes)
+        print("No se encontró solución")
+        return None
