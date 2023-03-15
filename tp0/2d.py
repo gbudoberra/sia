@@ -57,13 +57,15 @@ if __name__ == "__main__":
     # Level
     level_attempts = []
     for i in range(100):
-        level_attempts.append(get_avg_std_for_pokemon(factory.create(name, i, StatusEffect.NONE, 1), pokeball_list[0]))
+        level_attempts.append(get_avg_std_for_pokemon(factory.create(name, i, StatusEffect.FREEZE, 0), pokeball_list[1]))
     x = range(100)
     y = [level_attempts[i][0] for i in range(100)]
     yerr = [level_attempts[i][1] for i in range(100)]
     ax2.scatter(x, y)
     ax2.errorbar(x, y, yerr=yerr, linestyle='None')
+
     # Establecer etiquetas en los ejes y títulos
+    ax2.set_ylim([0, 1])
     ax2.set_ylabel('Probabilidad de atrapar')
     ax2.set_xlabel('Nivel')
     ax2.set_title('Impacto del nivel: ' + name)
@@ -73,13 +75,14 @@ if __name__ == "__main__":
     # % HP
     hp_attempts = {}
     for i in np.linspace(0, 1, 21):
-        hp_attempts[i] = (get_avg_std_for_pokemon(factory.create(name, 100, StatusEffect.NONE, i), pokeball_list[0]))
+        hp_attempts[i] = (get_avg_std_for_pokemon(factory.create(name, 100, StatusEffect.SLEEP, i), pokeball_list[1]))
     x = np.linspace(0, 1, 21)
     y = [hp_attempts[i][0] for i in np.linspace(0, 1, 21)]
     yerr = [hp_attempts[i][1] for i in np.linspace(0, 1, 21)]
     ax3.scatter(x, y)
     ax3.errorbar(x, y, yerr=yerr, linestyle='None')
     # Establecer etiquetas en los ejes y títulos
+    ax3.set_ylim([0, 1])
     ax3.set_ylabel('Probabilidad de atrapar')
     ax3.set_xlabel('HP %')
     ax3.set_title('Impacto del HP %: ' + name)
@@ -88,7 +91,7 @@ if __name__ == "__main__":
     # Status
     status_attempts = {}
     for status in StatusEffect:
-        status_attempts[status] = (get_avg_std_for_pokemon(factory.create(name, 100, status, 1), pokeball_list[0]))
+        status_attempts[status] = (get_avg_std_for_pokemon(factory.create(name, 100, status, 1), pokeball_list[1]))
     x = np.arange(len(StatusEffect))
     y = [status_attempts[i][0] for i in StatusEffect]
     yerr = [status_attempts[i][1] for i in StatusEffect]
