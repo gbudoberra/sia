@@ -1,3 +1,6 @@
+from matplotlib import colors
+
+
 class ColorGridStatus:
     def __init__(self, grid):
         self._grid = grid
@@ -14,27 +17,24 @@ class ColorGridStatus:
         self._update_border(self._current_color)
 
     def _update_border(self, new_color):
-        border_update = True
-        border = []
-        border.extend(self._border)
-        while border_update:
-            border_update = False
-            for cell in border:
-                if self._grid[cell[0]][cell[1]] is new_color:
-                    for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
-                        r, c = cell[0] + dr, cell[1] + dc
-                        if 0 <= r < len(self._grid) and 0 <= c < len(self._grid[0]):
-                            self._border.add((r, c))
-                            if self._grid[r][c] is new_color and (r, c) not in self._colored:
-                                border.append((r, c))
-                                border_update = True
-                    self._border.remove((cell[0], cell[1]))
-                    self._colored.add((cell[0], cell[1]))
-                    border.remove((cell[0], cell[1]))
-                else:
-                    border.remove((cell[0], cell[1]))
-        for cell in self._colored:
-            self._grid[cell[0]][cell[1]] = new_color
+        border = set(self._border)
+        while border:
+            current_cell = border.pop()
+            current_row, current_col = current_cell
+            if self._grid[current_row][current_col] == new_color:
+                for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+                    new_row, new_col = current_row + dr, current_col + dc
+                    if 0 <= new_row < len(self._grid) and 0 <= new_col < len(self._grid[0]) and \
+                            (new_row, new_col) not in self._colored and (new_row, new_col) not in border\
+                            and (new_row, new_col) not in self._border:
+                        self._border.add((new_row, new_col))
+                        if self._grid[new_row][new_col] == new_color:
+                            border.add((new_row, new_col))
+                self._border.discard((current_row, current_col))
+                self._colored.add((current_row, current_col))
+        for current_cell in self._colored:
+            current_row, current_col = current_cell
+            self._grid[current_row][current_col] = new_color
 
     def get_grid_son(self, color):
         grid_son = ColorGridStatus(self._grid)
@@ -46,9 +46,9 @@ class ColorGridStatus:
 
 
 class Color:
-    RED = 1
-    BLUE = 2
-    YELLOW = 3
-    WHITE = 4
-    GREEN = 5
-    PURPLE = 6
+    RED = colors.to_rgba("red")
+    BLUE = colors.to_rgba("blue")
+    YELLOW = colors.to_rgba("yellow")
+    WHITE = colors.to_rgba("white")
+    GREEN = colors.to_rgba("green")
+    PURPLE = colors.to_rgba("purple")
