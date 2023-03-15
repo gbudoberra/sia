@@ -6,6 +6,7 @@ class Node:
         self.status = status
         self._parent = parent
         self.sons = set()
+        self.cost = parent.cost+1 if parent is not None else 0
 
     def explode_node(self):
         color_values = [color for color in Color]

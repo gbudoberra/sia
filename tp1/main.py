@@ -31,7 +31,7 @@ if __name__ == '__main__':
     matrix_colors = [[cell.value for cell in row] for row in matrix]
     step = 1
     grid = ColorGridStatus(matrix)
-    tree = Bfs(grid)
+    tree = StarA(grid)
     node = tree.search_solution()
     stack = LifoQueue()
     while node is not None:
