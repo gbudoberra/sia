@@ -53,10 +53,11 @@ class ColorGridStatus:
     def is_grid_complete(self):
         return len(self.colored) == len(self.grid) * len(self.grid)
 
-    def draw_status(self):
+    def draw_status(self, name):
         matrix_colors = [[cell.value for cell in row] for row in self.grid]
         fig, ax = plt.subplots()
         ax.imshow(matrix_colors)
+        plt.savefig("Graphs/" + name)
         plt.show()
         plt.clf()
 

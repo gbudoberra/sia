@@ -1,9 +1,10 @@
 import random
-from tree import Graph
+from Methods.dfs import Dfs
+from Methods.bfs import Bfs
 from ColorGridStatus import ColorGridStatus
 from ColorGridStatus import Color
 import matplotlib.pyplot as plt
-
+from queue import LifoQueue
 
 
 
@@ -34,28 +35,28 @@ if __name__ == '__main__':
     #           [Color.RED, Color.RED, Color.RED, Color.RED],
     #           [Color.RED, Color.RED, Color.RED, Color.RED]
     #           ]
+    # # crea una figura y un eje
     matrix = random_grid(4, colours)
     matrix_colors = [[cell.value for cell in row] for row in matrix]
-    # crea una figura y un eje
     fig, ax = plt.subplots()
     # muestra la matriz en el eje
     ax.imshow(matrix_colors)
     # muestra el gráfico
     plt.show()
     plt.clf()
-
-
-
+    step = 1
     grid = ColorGridStatus(matrix)
-    tree = Graph(grid)
-    solucion = tree.get_solution_by_dfs()
-    solucion.draw_node()
+    tree = Bfs(grid)
+    node = tree.search_solution()
+    stack = LifoQueue()
+    while node is not None:
+        stack.put(node)
+        node = node.get_parent()
+    while not stack.empty():
+        node = stack.get()
+        node.draw_node("node_" + str(step))
+        step += 1
 
-
-
-
-
-    #
     # grid = ColorGridStatus(matrix)
     #
     # for i in range(100):

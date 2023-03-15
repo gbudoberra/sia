@@ -2,21 +2,25 @@ from ColorGridStatus import Color
 
 
 class Node:
-    def __init__(self, status):
+    def __init__(self, status, parent):
         self.status = status
+        self._parent = parent
         self.sons = set()
 
     def explode_node(self):
         color_values = [color for color in Color]
         for color in color_values:
-            self.sons.add(Node(self.status.get_grid_son(color)))
+            self.sons.add(Node(self.status.get_grid_son(color), self))
         return self.sons
 
     def is_complete_state(self) -> bool:
         return self.status.is_grid_complete()
 
-    def draw_node(self):
-        self.status.draw_status()
+    def draw_node(self, name):
+        self.status.draw_status(name)
+
+    def get_parent(self):
+        return self._parent
 
     def __eq__(self, other) -> bool:
         if self is other:
