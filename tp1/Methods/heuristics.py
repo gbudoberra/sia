@@ -7,3 +7,8 @@ def heuristic_border_colors(node: Node):
         x, y = coordinates
         border_colors.add(node.status.grid[x][y])
     return len(border_colors)
+
+
+def heuristic_grid_remaining_colors(node:Node):
+    return 0
+
