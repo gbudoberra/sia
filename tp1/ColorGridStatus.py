@@ -58,7 +58,7 @@ class ColorGridStatus:
         fig, ax = plt.subplots()
         ax.imshow(matrix_colors)
         plt.savefig("Graphs/" + name)
-        plt.show()
+        # plt.show()
         plt.clf()
 
 
