@@ -11,7 +11,9 @@ class Node:
     def explode_node(self):
         color_values = [color for color in Color]
         for color in color_values:
-            self.sons.add(Node(self.status.get_grid_son(color), self))
+            new_status = self.status.get_grid_son(color)
+            if new_status is not None:
+                self.sons.add(Node(new_status, self))
         return self.sons
 
     def is_complete_state(self) -> bool:

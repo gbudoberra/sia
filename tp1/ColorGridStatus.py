@@ -10,7 +10,6 @@ class ColorGridStatus:
         self._current_color = current_color
         self.border = border
         self.colored = colored
-        self._update_border(self._current_color)
 
     def __eq__(self, obj) -> bool:
         if self is obj:
@@ -26,10 +25,12 @@ class ColorGridStatus:
 
     def _update_border(self, new_color):
         border = set(self.border)
+        is_updated = False
         while border:
             current_cell = border.pop()
             current_row, current_col = current_cell
             if self.grid[current_row][current_col] == new_color:
+                is_updated = True
                 for dr, dc in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
                     new_row, new_col = current_row + dr, current_col + dc
                     if 0 <= new_row < len(self.grid) and 0 <= new_col < len(self.grid[0]) and \
@@ -40,6 +41,7 @@ class ColorGridStatus:
                             border.add((new_row, new_col))
                 self.border.discard((current_row, current_col))
                 self.colored.add((current_row, current_col))
+        return is_updated
 
     def get_grid_son(self, color):
         grid = self.grid
@@ -48,7 +50,10 @@ class ColorGridStatus:
         colored = set(self.colored)
 
         grid_son = ColorGridStatus(grid, current_color, border, colored)
-        return grid_son
+        if grid_son._update_border(current_color):
+            return grid_son
+        else:
+            return None
 
     def is_grid_complete(self):
         return len(self.colored) == len(self.grid) * len(self.grid)
@@ -69,7 +74,9 @@ def create_root(grid):
     current_color = grid[0][0]
     border = {(0, 1), (1, 0)}
     colored = {(0, 0)}
-    return ColorGridStatus(grid, current_color, border, colored)
+    new_status = ColorGridStatus(grid, current_color, border, colored)
+    new_status._update_border(current_color)
+    return new_status
 
 
 class Color(Enum):
