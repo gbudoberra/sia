@@ -1,6 +1,7 @@
 from tp1.Node import Node
 from tp1.ColorGridStatus import ColorGridStatus
 from abc import ABC, abstractmethod
+# from memory_profiler import profile
 
 
 class SearchMethod(ABC):
@@ -8,6 +9,7 @@ class SearchMethod(ABC):
         self.root = Node(initial_grid, None)
         self._visited_nodes = set()
 
+    # @profile
     def search_solution(self):
         self._visited_nodes = set()
         self.add_new_nodes([self.root])
@@ -15,7 +17,10 @@ class SearchMethod(ABC):
             current_node = self.get_next_node()
             if current_node.is_complete_state():
                 return current_node
-            son_nodes = [son for son in current_node.explode_node() if son not in self._visited_nodes]
+            son_nodes = []
+            for son in current_node.explode_node():
+                if son not in self._visited_nodes:
+                    son_nodes.append(son)
             self._visited_nodes.update(son_nodes)
             self.add_new_nodes(son_nodes)
         return None
