@@ -32,8 +32,8 @@ if __name__ == '__main__':
     f = open('output.txt', 'a')
     # Redirige la salida a este archivo
     sys.stdout = f
-
-    matrix, method = parse_input_file("matrix.txt")
+    print("--------------------------------------------------")
+    matrix, method = parse_input_file("conf.json")
     step = 0
     grid = create_root(matrix)
 

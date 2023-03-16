@@ -6,7 +6,7 @@ from Methods.star_a import StarA
 from utils import parse_input_file, color_matrix, draw_matrix
 
 if __name__ == '__main__':
-    matrix, method = parse_input_file("matrix.txt")
+    matrix, method = parse_input_file("conf.json")
     step = 0
     grid = create_root(matrix)
 
