@@ -16,3 +16,6 @@ class Dfs(SearchMethod):
 
     def remaining_nodes(self) -> bool:
         return not self.stack.empty()
+
+    def boundary_nodes_size(self):
+        return self.stack.qsize()

@@ -12,20 +12,23 @@ def heuristic_border_colors(node: Node):
 def heuristic_grid_remaining_colors(node: Node):
     grid = node.status.grid
     colors = set()
-
     for x in range(len(grid)):
         for y in range(len(grid[0])):
-            if (x, y) in node.status.colored:
-                pass
-            else:
+            if (x, y) not in node.status.colored:
                 colors.add(grid[x][y].name)
     return len(colors)
 
 
+def count_colors(node):
+    colored_cells = set(node.status.colored)
+    color_names = set(cell.name for row in node.status.grid for cell in row)
+    return len(color_names.difference(colored_cells))
+
+
+# NO ADMISIBLE
 def heuristic_cells_pending_per_color_remaining(node: Node):
     colors = heuristic_grid_remaining_colors(node)
     if colors == 0:
         return 0
     cells = len(node.status.grid) * len(node.status.grid[0]) - len(node.status.colored)
     return cells / colors
-

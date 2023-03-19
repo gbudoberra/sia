@@ -15,3 +15,6 @@ class PriorityQueue:
 
     def is_empty(self):
         return len(self._heap) == 0
+
+    def len(self):
+        return len(self._heap)

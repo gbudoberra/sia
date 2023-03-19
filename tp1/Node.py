@@ -28,6 +28,9 @@ class Node:
     def get_status(self) -> ColorGridStatus:
         return self.status
 
+    def get_cost(self):
+        return self.cost
+
     def __eq__(self, other) -> bool:
         if self is other:
             return True

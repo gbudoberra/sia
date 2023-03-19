@@ -6,6 +6,7 @@ from ColorGridStatus import Color
 
 import json
 
+
 def random_grid(dim, colors):
     colours = [Color.RED, Color.BLUE, Color.YELLOW, Color.WHITE, Color.GREEN, Color.PURPLE]
     colours = colours[:colors]

@@ -23,7 +23,7 @@ class ColorGridStatus:
         colored_tuple = tuple(sorted(self.colored))
         return hash((border_tuple, colored_tuple))
 
-    def _update_border(self, new_color):
+    def update_border(self, new_color):
         border = set(self.border)
         is_updated = False
         while border:
@@ -50,7 +50,7 @@ class ColorGridStatus:
         colored = set(self.colored)
 
         grid_son = ColorGridStatus(grid, current_color, border, colored)
-        if grid_son._update_border(current_color):
+        if grid_son.update_border(current_color):
             return grid_son
         else:
             return None
@@ -75,7 +75,7 @@ def create_root(grid):
     border = {(0, 1), (1, 0)}
     colored = {(0, 0)}
     new_status = ColorGridStatus(grid, current_color, border, colored)
-    new_status._update_border(current_color)
+    new_status.update_border(current_color)
     return new_status
 
 

@@ -6,6 +6,8 @@ from abc import ABC, abstractmethod
 
 class SearchMethod(ABC):
     def __init__(self, initial_grid: ColorGridStatus):
+        self._cost = None
+        self._boundary_node = None
         self.root = Node(initial_grid, None)
         self._visited_nodes = set()
 
@@ -16,6 +18,8 @@ class SearchMethod(ABC):
         while self.remaining_nodes():
             current_node = self.get_next_node()
             if current_node.is_complete_state():
+                self._cost = current_node.get_cost()
+                self._boundary_node = self.boundary_nodes_size()
                 return current_node
             son_nodes = []
             for son in current_node.explode_node():
@@ -36,3 +40,10 @@ class SearchMethod(ABC):
     @abstractmethod
     def remaining_nodes(self):
         pass
+
+    @abstractmethod
+    def boundary_nodes_size(self):
+        pass
+
+    def get_cost(self):
+        return self._cost

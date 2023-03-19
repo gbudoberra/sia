@@ -25,12 +25,9 @@ def run() -> None:
     global node
     node = tree.search_solution()
 
-# !!!! Hay que descomentar la annotation @profiler de search_method.py en la funcion search_solution
-if __name__ == '__main__':
 
-    # Abre el archivo de salida
+if __name__ == '__main__':
     f = open('output.txt', 'a')
-    # Redirige la salida a este archivo
     sys.stdout = f
     matrix, method = parse_input_file("conf.json")
     step = 0
@@ -51,6 +48,8 @@ if __name__ == '__main__':
 
     execution_time = timeit.timeit(run, number=1)
     print("Time (s): " + str(execution_time))
+    print("Costo: " + str(tree.get_cost()))
+    print("Cantidad de nodos fronteras: " + str(tree.boundary_nodes_size()))
     solution = []
     while node is not None:
         solution.append(node)

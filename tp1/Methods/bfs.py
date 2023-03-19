@@ -17,3 +17,6 @@ class Bfs(SearchMethod):
 
     def remaining_nodes(self):
         return not self.queue.empty()
+
+    def boundary_nodes_size(self):
+        return self.queue.qsize()

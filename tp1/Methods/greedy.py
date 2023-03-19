@@ -18,3 +18,7 @@ class Greedy(SearchMethod):
 
     def remaining_nodes(self):
         return not self.priority_queue.is_empty()
+
+    def boundary_nodes_size(self):
+        return self.priority_queue.len()
+
