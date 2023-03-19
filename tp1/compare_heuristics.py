@@ -1,23 +1,14 @@
 import sys
 import timeit
 
-from tp1.ColorGridStatus import Color, create_root
-from tp1.Methods.bfs import Bfs
-from tp1.Methods.dfs import Dfs
-from tp1.Methods.greedy import Greedy
+from tp1.ColorGridStatus import create_root
+from tp1.Methods.heuristics import heuristic_border_colors
+from tp1.Methods.heuristics import heuristic_cells_pending_per_color_remaining
 from tp1.Methods.heuristics import heuristic_grid_remaining_colors
 from tp1.Methods.star_a import StarA
+from tp1.utils import parse_input_file
 from tp1.utils import color_matrix, parse_input_file, draw_matrix
 
-matrix = [
-        [Color.GREEN, Color.PURPLE, Color.BLUE, Color.RED, Color.BLUE, Color.BLUE, Color.WHITE],
-        [Color.WHITE, Color.RED, Color.WHITE, Color.GREEN, Color.RED, Color.RED, Color.PURPLE],
-        [Color.WHITE, Color.YELLOW, Color.RED, Color.GREEN, Color.YELLOW, Color.GREEN, Color.PURPLE],
-        [Color.YELLOW, Color.RED, Color.GREEN, Color.GREEN, Color.BLUE, Color.RED, Color.WHITE],
-        [Color.WHITE, Color.PURPLE, Color.PURPLE, Color.PURPLE, Color.WHITE, Color.PURPLE, Color.RED],
-        [Color.WHITE, Color.WHITE, Color.WHITE, Color.PURPLE, Color.WHITE, Color.RED, Color.RED],
-        [Color.WHITE, Color.WHITE, Color.RED, Color.GREEN, Color.PURPLE, Color.RED, Color.YELLOW]
-    ]
 
 node = None
 
@@ -28,7 +19,7 @@ def run() -> None:
 
 
 if __name__ == '__main__':
-    f = open('output.csv', 'a')
+    f = open('heuristic_output.csv', 'a')
     f_initial_cond = open('initial_conditions.txt', 'a')
     sys.stdout = f
     matrix, method = parse_input_file("conf.json")
@@ -37,18 +28,16 @@ if __name__ == '__main__':
 
     f_initial_cond.write(str(matrix) + "\n")
 
-    #print("dimension;method;time;cost;boundary_set_size")
-    for method in ['dfs', 'greedy', 'A*', 'bfs']:
+    # print("dimension;method;time;cost;boundary_set_size")
+    for method in ['heuristic_border_colors',
+                   'heuristic_grid_remaining_colors', 'heuristic_cells_pending_per_color_remaining']:
         for i in range(5):
-            if method == 'dfs':
-                tree = Dfs(grid)
-            elif method == 'bfs':
-                tree = Bfs(grid)
-            elif method == 'A*':
+            if method == 'heuristic_border_colors':
+                tree = StarA(grid, heuristic_border_colors)
+            elif method == 'heuristic_grid_remaining_colors':
                 tree = StarA(grid, heuristic_grid_remaining_colors)
-            elif method == 'greedy':
-                tree = Greedy(grid, heuristic_grid_remaining_colors)
-
+            elif method == 'heuristic_cells_pending_per_color_remaining':
+                tree = StarA(grid, heuristic_cells_pending_per_color_remaining)
             execution_time = timeit.timeit(run, number=1)
             print(str(len(matrix)), end=";")
             print(method, end=";")
@@ -67,6 +56,7 @@ if __name__ == '__main__':
         color_matrix(matrix, node.get_status().get_current_color(), node.get_status().colored)
         draw_matrix(matrix, step)
         step += 1
+
 
     # Restaura la salida estándar
     sys.stdout = sys.__stdout__

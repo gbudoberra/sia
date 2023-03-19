@@ -5,6 +5,7 @@ from tp1.ColorGridStatus import Color, create_root
 from tp1.Methods.bfs import Bfs
 from tp1.Methods.dfs import Dfs
 from tp1.Methods.greedy import Greedy
+from tp1.Methods.heuristics import heuristic_grid_remaining_colors
 from tp1.Methods.star_a import StarA
 from tp1.utils import color_matrix, parse_input_file, draw_matrix
 
@@ -38,9 +39,9 @@ if __name__ == '__main__':
     elif method == 'bfs':
         tree = Bfs(grid)
     elif method == 'A*':
-        tree = StarA(grid)
+        tree = StarA(grid, heuristic_grid_remaining_colors)
     elif method == 'greedy':
-        tree = Greedy(grid)
+        tree = Greedy(grid, heuristic_grid_remaining_colors)
     else:
         raise IOError("Unknown method provided")
 
