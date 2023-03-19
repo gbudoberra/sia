@@ -1,7 +1,7 @@
 from tp1.Node import Node
 from tp1.ColorGridStatus import ColorGridStatus
 from abc import ABC, abstractmethod
-# from memory_profiler import profile
+from memory_profiler import profile
 
 
 class SearchMethod(ABC):

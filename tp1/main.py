@@ -27,45 +27,41 @@ def run() -> None:
 
 
 if __name__ == '__main__':
-    f = open('output.csv', 'a')
-    f_initial_cond = open('initial_conditions.txt', 'a')
+    f = open('output.txt', 'a')
     sys.stdout = f
     matrix, method = parse_input_file("conf.json")
     step = 0
     grid = create_root(matrix)
 
-    f_initial_cond.write(str(matrix) + "\n")
+    if method == 'dfs':
+        tree = Dfs(grid)
+    elif method == 'bfs':
+        tree = Bfs(grid)
+    elif method == 'A*':
+        tree = StarA(grid)
+    elif method == 'greedy':
+        tree = Greedy(grid)
+    else:
+        raise IOError("Unknown method provided")
 
-    # print("dimension;method;time;cost;boundary_set_size")
-    for method in ['dfs', 'greedy', 'A*']:
-        for i in range(5):
-            if method == 'dfs':
-                tree = Dfs(grid)
-            # elif method == 'bfs':
-            #     tree = Bfs(grid)
-            elif method == 'A*':
-                tree = StarA(grid)
-            elif method == 'greedy':
-                tree = Greedy(grid)
+    print("--------------------\nDimension: " + str(len(matrix)) + "\nMethod: " + method + "\n\nMemory information:\n")
 
-            execution_time = timeit.timeit(run, number=1)
-            print(str(len(matrix)), end=";")
-            print(method, end=";")
-            print(str(execution_time), end=";")
-            print(str(tree.get_cost()), end=";")
-            print(str(tree.boundary_nodes_size()), end="\n")
-
-            solution = []
-    # while node is not None:
-    #     solution.append(node)
-    #     node = node.get_parent()
-    # solution.reverse()
-    # # print("Solution: ", end="")
-    # for node in solution:
-    #     # print(node.get_status().get_current_color().name, end=" ")
-    #     color_matrix(matrix, node.get_status().get_current_color(), node.get_status().colored)
-    #     draw_matrix(matrix, step)
-    #     step += 1
+    execution_time = timeit.timeit(run, number=1)
+    print("Time (s): " + str(execution_time))
+    print("Costo: " + str(tree.get_cost()))
+    print("Cantidad de nodos fronteras: " + str(tree.boundary_nodes_size()))
+    solution = []
+    while node is not None:
+        solution.append(node)
+        node = node.get_parent()
+    solution.reverse()
+    print("Solution: ", end="")
+    for node in solution:
+        print(node.get_status().get_current_color().name, end=" ")
+        color_matrix(matrix, node.get_status().get_current_color(), node.get_status().colored)
+        draw_matrix(matrix, step)
+        step += 1
+    print("")
 
     # Restaura la salida estándar
     sys.stdout = sys.__stdout__
