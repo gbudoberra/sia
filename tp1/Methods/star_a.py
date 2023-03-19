@@ -1,7 +1,7 @@
 from tp1.ColorGridStatus import ColorGridStatus
 from tp1.Methods.search_method import SearchMethod
 from tp1.Methods.PriorityQueue import PriorityQueue
-from tp1.Methods.heuristics import heuristic_border_colors
+from tp1.Methods.heuristics import heuristic_grid_remaining_colors
 
 
 class StarA(SearchMethod):
@@ -14,7 +14,7 @@ class StarA(SearchMethod):
         return self.priority_queue.pop()
 
     def add_new_nodes(self, new_nodes):
-        [self.priority_queue.push(node, heuristic_border_colors(node) + node.cost) for node in new_nodes]
+        [self.priority_queue.push(node, heuristic_grid_remaining_colors(node) + node.cost) for node in new_nodes]
 
     def remaining_nodes(self):
         return not self.priority_queue.is_empty()
