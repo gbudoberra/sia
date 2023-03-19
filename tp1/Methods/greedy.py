@@ -6,15 +6,16 @@ from tp1.Methods.heuristics import heuristic_border_colors
 
 class Greedy(SearchMethod):
 
-    def __init__(self, initial_grid: ColorGridStatus):
+    def __init__(self, initial_grid: ColorGridStatus, heuristic):
         super().__init__(initial_grid)
         self.priority_queue = PriorityQueue()
+        self.heuristic = heuristic
 
     def get_next_node(self):
         return self.priority_queue.pop()
 
     def add_new_nodes(self, new_nodes):
-        [self.priority_queue.push(node, heuristic_border_colors(node)) for node in new_nodes]
+        [self.priority_queue.push(node, self.heuristic(node)) for node in new_nodes]
 
     def remaining_nodes(self):
         return not self.priority_queue.is_empty()

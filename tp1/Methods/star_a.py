@@ -6,15 +6,16 @@ from tp1.Methods.heuristics import heuristic_cells_pending_per_color_remaining, 
 
 class StarA(SearchMethod):
 
-    def __init__(self, initial_grid: ColorGridStatus):
+    def __init__(self, initial_grid: ColorGridStatus, heuristic):
         super().__init__(initial_grid)
         self.priority_queue = PriorityQueue()
+        self.heuristic = heuristic
 
     def get_next_node(self):
         return self.priority_queue.pop()
 
     def add_new_nodes(self, new_nodes):
-        [self.priority_queue.push(node, heuristic_grid_remaining_colors(node) + node.cost)
+        [self.priority_queue.push(node, self.heuristic(node) + node.cost)
          for node in new_nodes]
 
     def remaining_nodes(self):
