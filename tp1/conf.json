@@ -1,6 +1,6 @@
 {
   "method": "A*",
-  "dimension": 3,
-  "colors": 4,
+  "dimension": 5,
+  "colors": 6,
   "matrix": []
 }

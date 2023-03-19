@@ -22,15 +22,10 @@ def heuristic_grid_remaining_colors(node: Node):
     return len(colors)
 
 
-def heuristic_cells_pending_per_color(node: Node):
-    grid = node.status.grid
-    colors = set()
-    for row in grid:
-        for cell in row:
-            if cell != node.status.get_current_color():
-                colors.add(cell)
-            else:
-                if cell not in node.status.border and cell not in node.status.colored:
-                    colors.add(cell)
-    return len(colors)
+def heuristic_cells_pending_per_color_remaining(node: Node):
+    colors = heuristic_grid_remaining_colors(node)
+    if colors == 0:
+        return 0
+    cells = len(node.status.grid) * len(node.status.grid[0]) - len(node.status.colored)
+    return cells / colors
 
