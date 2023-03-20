@@ -54,7 +54,8 @@ if __name__ == '__main__':
             print(method, end=";")
             print(str(execution_time), end=";")
             print(str(tree.get_cost()), end=";")
-            print(str(tree.boundary_nodes_size()), end="\n")
+            print(str(tree.boundary_nodes_size()), end=";")
+            print(str(tree.get_nodes_exploded_size()), end="\n")
 
             solution = []
     while node is not None:
