@@ -26,9 +26,9 @@ for dim in data.keys():
 
     # create a bar chart showing the values and errors for all the search methods in the current dimension
     fig, ax = plt.subplots()
-    ax.bar(methods, values, yerr=errors, capsize=5, color=colors[:len(methods)])
+    ax.bar(methods, values, capsize=5, color=colors[:len(methods)])
     ax.set_xlabel('Search Method')
     ax.set_ylabel('Mean Cost')
-    ax.set_title(f'{dim} - Cost of each search method')
+    ax.set_title(f'{dim} dimensions - Cost of each search method')
     fig.savefig(f"Graphs/cost_{dim}.png")
     plt.close(fig)
