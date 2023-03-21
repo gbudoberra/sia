@@ -1,7 +1,7 @@
-from tp1.ColorGridStatus import ColorGridStatus
-from tp1.Methods.search_method import SearchMethod
-from tp1.Methods.PriorityQueue import PriorityQueue
-from tp1.Methods.heuristics import heuristic_cells_pending_per_color_remaining, heuristic_grid_remaining_colors
+from ColorGridStatus import ColorGridStatus
+from Methods.search_method import SearchMethod
+from Methods.PriorityQueue import PriorityQueue
+from Methods.heuristics import heuristic_cells_pending_per_color_remaining, heuristic_grid_remaining_colors
 
 
 class StarA(SearchMethod):

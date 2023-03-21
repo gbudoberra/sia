@@ -1,7 +1,7 @@
-from tp1.ColorGridStatus import ColorGridStatus
-from tp1.Methods.search_method import SearchMethod
-from tp1.Methods.PriorityQueue import PriorityQueue
-from tp1.Methods.heuristics import heuristic_border_colors
+from ColorGridStatus import ColorGridStatus
+from Methods.search_method import SearchMethod
+from Methods.PriorityQueue import PriorityQueue
+from Methods.heuristics import heuristic_border_colors
 
 
 class Greedy(SearchMethod):

@@ -1,13 +1,13 @@
 import sys
 import timeit
 
-from tp1.ColorGridStatus import Color, create_root
-from tp1.Methods.bfs import Bfs
-from tp1.Methods.dfs import Dfs
-from tp1.Methods.greedy import Greedy
-from tp1.Methods.heuristics import heuristic_grid_remaining_colors
-from tp1.Methods.star_a import StarA
-from tp1.utils import color_matrix, parse_input_file, draw_matrix
+from ColorGridStatus import Color, create_root
+from Methods.bfs import Bfs
+from Methods.dfs import Dfs
+from Methods.greedy import Greedy
+from Methods.heuristics import heuristic_grid_remaining_colors
+from Methods.star_a import StarA
+from utils import color_matrix, parse_input_file, draw_matrix
 
 matrix = [
         [Color.GREEN, Color.PURPLE, Color.BLUE, Color.RED, Color.BLUE, Color.BLUE, Color.WHITE],

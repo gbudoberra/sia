@@ -1,5 +1,5 @@
-from tp1.Methods.search_method import SearchMethod
-from tp1.ColorGridStatus import ColorGridStatus
+from Methods.search_method import SearchMethod
+from ColorGridStatus import ColorGridStatus
 from queue import LifoQueue
 
 

@@ -1,5 +1,5 @@
-from tp1.Node import Node
-from tp1.ColorGridStatus import ColorGridStatus
+from Node import Node
+from ColorGridStatus import ColorGridStatus
 from abc import ABC, abstractmethod
 # from memory_profiler import profile
 

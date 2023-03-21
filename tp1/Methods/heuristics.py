@@ -1,4 +1,4 @@
-from tp1.Node import Node
+from Node import Node
 
 
 def heuristic_border_colors(node: Node):

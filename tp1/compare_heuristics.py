@@ -1,13 +1,13 @@
 import sys
 import timeit
 
-from tp1.ColorGridStatus import create_root
-from tp1.Methods.heuristics import heuristic_border_colors
-from tp1.Methods.heuristics import heuristic_cells_pending_per_color_remaining
-from tp1.Methods.heuristics import heuristic_grid_remaining_colors
-from tp1.Methods.star_a import StarA
-from tp1.utils import parse_input_file
-from tp1.utils import color_matrix, parse_input_file, draw_matrix
+from ColorGridStatus import create_root
+from Methods.heuristics import heuristic_border_colors
+from Methods.heuristics import heuristic_cells_pending_per_color_remaining
+from Methods.heuristics import heuristic_grid_remaining_colors
+from Methods.star_a import StarA
+from utils import parse_input_file
+from utils import color_matrix, parse_input_file, draw_matrix
 
 
 node = None
