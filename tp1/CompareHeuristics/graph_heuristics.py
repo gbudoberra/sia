@@ -21,8 +21,10 @@ def graph_util(data, err, x_label, y_label, title):
     ax3.set_title(title)
     ax3.set_xticks(np.arange(len(dims)))
     ax3.set_xticklabels(dims)
+    if y_label != 'Costo (pasos)':
+        ax3.set_yscale("log")
     ax3.legend()
-    plt.show()
+    plt.savefig(title)
     plt.clf()
 
 

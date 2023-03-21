@@ -14,7 +14,8 @@ def graph_util(data, err, x_label, y_label, title):
 
     ax3.set_ylabel(y_label)
     ax3.set_xlabel(x_label)
-    ax3.set_yscale("log")
+    if y_label != 'Costo (pasos)':
+        ax3.set_yscale("log")
     ax3.set_title(title)
     ax3.set_xticks(np.arange(len(dims)))
     ax3.set_xticklabels(dims)
