@@ -19,7 +19,7 @@ def print_to_csv(tree, name, dim):
 
 if __name__ == '__main__':
     f_initial_cond = open('matrix.txt', 'a')
-    dim = 5
+    dim = 10
     f = open('method_output_' + str(dim) + '.csv', 'a')
     sys.stdout = f
 
@@ -29,18 +29,15 @@ if __name__ == '__main__':
         f_initial_cond.write(str(matrix) + "\n")
         tree1 = StarA(create_root(matrix), heuristic_grid_remaining_colors)
         tree2 = Dfs(create_root(matrix))
-        tree3 = Bfs(create_root(matrix))
         tree4 = Greedy(create_root(matrix), heuristic_grid_remaining_colors)
 
         node1 = tree1.search_solution()
         node2 = tree2.search_solution()
-        node3 = tree3.search_solution()
         node4 = tree4.search_solution()
 
-        print_to_csv(tree1, 'A8', dim)
+        print_to_csv(tree1, 'A*', dim)
         print_to_csv(tree2, 'dfs', dim)
-        print_to_csv(tree3, 'bfs', dim)
-        print_to_csv(tree3, 'greedy', dim)
+        print_to_csv(tree4, 'greedy', dim)
 
     # Restaura la salida estándar
     sys.stdout = sys.__stdout__
