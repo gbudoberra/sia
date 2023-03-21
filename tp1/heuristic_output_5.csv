@@ -1,0 +1,16 @@
+dimension;method;time;cost;boundary_set_size;exploded_nodes
+5;heuristic_border_colors;0.004929429000185337;8;82;101
+5;heuristic_border_colors;0.004833104998397175;8;82;101
+5;heuristic_border_colors;0.004792751002241857;8;82;101
+5;heuristic_border_colors;0.004626705002010567;8;82;101
+5;heuristic_border_colors;0.005026609000196913;8;82;101
+5;heuristic_grid_remaining_colors;0.0020972319980501197;8;23;43
+5;heuristic_grid_remaining_colors;0.0019716250026249327;8;23;43
+5;heuristic_grid_remaining_colors;0.002125513001374202;8;23;43
+5;heuristic_grid_remaining_colors;0.0018609059989103116;8;23;43
+5;heuristic_grid_remaining_colors;0.0018043339987343643;8;23;43
+5;heuristic_cells_pending_per_color_remaining;0.015051552996737882;9;175;263
+5;heuristic_cells_pending_per_color_remaining;0.01600089699786622;9;175;263
+5;heuristic_cells_pending_per_color_remaining;0.01567703600085224;9;175;263
+5;heuristic_cells_pending_per_color_remaining;0.015712698997958796;9;175;263
+5;heuristic_cells_pending_per_color_remaining;0.01564146600139793;9;175;263
