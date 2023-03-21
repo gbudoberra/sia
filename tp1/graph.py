@@ -20,7 +20,7 @@ for dim, dim_data in method_groups:
             data_errors[dim[1]][method] = dim_data['time'].std()
 
 
-# Define the colors for the methods
+#Define the colors for the methods
 colors = ['r', 'g', 'b', 'm']
 
 # Convert the data into arrays
@@ -38,7 +38,7 @@ ax.set_xticks(x)
 ax.set_yscale("log")
 ax.set_title('Methods mean time vs Dimension')
 ax.set_xticklabels(x)
-ax.set_ylabel('Mean time')
+ax.set_ylabel('Mean time(s)')
 ax.legend(search_methods)
 
 plt.show()
@@ -52,7 +52,7 @@ plt.show()
 #     fig, ax = plt.subplots()
 #     ax.bar(methods, values, yerr=errors, capsize=5, color=colors[:len(methods)])
 #     ax.set_xlabel('Search Method')
-#     ax.set_ylabel('Mean Time')
+#     ax.set_ylabel('Mean Time(s)')
 #     ax.set_title(f'{dim} - Mean Time and Standard Deviation for Search Methods')
 #     fig.savefig(f"Graphs/time_{dim}.png")
 #     plt.close(fig)
