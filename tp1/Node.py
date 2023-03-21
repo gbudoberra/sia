@@ -1,4 +1,4 @@
-from ColorGridStatus import Color, ColorGridStatus
+from tp1.ColorGridStatus import Color, ColorGridStatus
 
 
 class Node:

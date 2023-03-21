@@ -4,13 +4,21 @@ from tp1.utils import random_grid
 from tp1.Methods.heuristics import heuristic_border_colors, heuristic_grid_remaining_colors, heuristic_cells_pending_per_color_remaining
 import sys
 
+def print_to_csv(tree, name, dim):
+    print(dim, end=";")
+    print(name, end=";")
+    print(str(0), end=";")
+    print(str(tree.get_cost()), end=";")
+    print(str(tree.boundary_nodes_size()), end=";")
+    print(str(tree.get_nodes_exploded_size()), end="\n")
+
 if __name__ == '__main__':
     f_initial_cond = open('matrix.txt', 'a')
     dim = 10
     f = open('heuristic_output_' + str(dim) + '.csv', 'a')
     sys.stdout = f
 
-    print("dimension;method;time;cost;boundary_set_size")
+    print("dimension;method;time;cost;boundary_set_size;exploded_nodes")
     for i in range(10):
         matrix = random_grid(dim, 6)
         f_initial_cond.write(str(matrix) + "\n")
@@ -22,23 +30,9 @@ if __name__ == '__main__':
         node2 = tree2.search_solution()
         node3 = tree3.search_solution()
 
-        print(str(len(matrix)), end=";")
-        print('heuristic_grid_remaining_colors', end=";")
-        print(str(0), end=";")
-        print(str(tree1.get_cost()), end=";")
-        print(str(tree1.boundary_nodes_size()), end="\n")
-
-        print(str(len(matrix)), end=";")
-        print('heuristic_border_colors', end=";")
-        print(str(0), end=";")
-        print(str(tree2.get_cost()), end=";")
-        print(str(tree2.boundary_nodes_size()), end="\n")
-
-        print(str(len(matrix)), end=";")
-        print('heuristic_cells_pending_per_color_remaining', end=";")
-        print(str(0), end=";")
-        print(str(tree3.get_cost()), end=";")
-        print(str(tree3.boundary_nodes_size()), end="\n")
+        print_to_csv(tree1, 'heuristic_grid_remaining_colors', dim)
+        print_to_csv(tree2, 'heuristic_border_colors', dim)
+        print_to_csv(tree3, 'heuristic_cells_pending_per_color_remaining', dim)
 
     # Restaura la salida estándar
     sys.stdout = sys.__stdout__

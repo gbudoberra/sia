@@ -2,7 +2,7 @@ import random
 
 import matplotlib.pyplot as plt
 
-from ColorGridStatus import Color
+from tp1.ColorGridStatus import Color
 
 import json
 
