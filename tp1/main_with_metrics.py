@@ -37,7 +37,7 @@ if __name__ == '__main__':
 
     f_initial_cond.write(str(matrix) + "\n")
 
-    #print("dimension;method;time;cost;boundary_set_size;exploded_nodes")
+    #print("dimension;method;time;cost;boundary_set_size")
     for method in ['dfs', 'greedy', 'A*', 'bfs']:
         for i in range(5):
             if method == 'dfs':
