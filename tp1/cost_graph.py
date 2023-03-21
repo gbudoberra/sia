@@ -29,6 +29,6 @@ for dim in data.keys():
     ax.bar(methods, values, yerr=errors, capsize=5, color=colors[:len(methods)])
     ax.set_xlabel('Search Method')
     ax.set_ylabel('Mean Cost')
-    ax.set_title(f'{dim} - Mean Time and Standard Deviation for Search Methods')
+    ax.set_title(f'{dim} - Cost of each search method')
     fig.savefig(f"Graphs/cost_{dim}.png")
     plt.close(fig)
