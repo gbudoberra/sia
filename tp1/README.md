@@ -2,12 +2,12 @@
 ## [Presentacion del proyecto](https://docs.google.com/presentation/d/1VXF63ETAOX4ev6w4Jyit8GFcDkQkWFuVxa9E8vRSutc/edit#slide=id.g22223e87909_2_23)
 ## Contenido
  - [Introduccion](#introduccion)
- - [Pre-requisitos](#pre-requisitos)
- - [Estructura del proyecto](#estructura-del-proyecto)
- - [Instalacion](#instalacion)
- - [Configuracion](#configuracion)
- - [Ejecucion](#ejecucion)
- - [Autores](#autores)
+ - [Pre-requisitos](#pre-requisitos-)
+ - [Estructura del proyecto](#estructura-del-proyecto-)
+ - [Instalacion](#instalacion-%EF%B8%8F)
+ - [Configuracion](#configuracion-%EF%B8%8F)
+ - [Ejecucion](#ejecucion-)
+ - [Autores](#autores-)
 
 ## Introduccion
 Este proyecto es una implementacion de los algoritmos de busqueda informada BFS, DFS, A* y Greedy para resolver el problema de buscar la solucion al juego conocido como [FillZone](http://www.mygamesworld.com/game/7682/Fill_Zone.html). El proyecto esta desarrollado en Python 3.6.5 y utiliza la libreria plotlib para la representacion de graficos.
