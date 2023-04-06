@@ -1,26 +1,20 @@
-from generic_genetic import GenericGenetic
 from random import randint
 import random
 
+from tp2.generic_selection_method import GenericSelectionMethod
 
-class ProbabilisticTournamentGenetic(GenericGenetic):
-    def __init__(self, population, size, participant_number, threshold):
-        super().__init__(population, size)
-        self.participant_number = participant_number
+
+class ProbabilisticTournamentGenetic(GenericSelectionMethod):
+    def __init__(self, size, threshold):
+        super().__init__(size)
         self.threshold = threshold
 
-    def _crossover(self):
-        pass
-
-    def _mutate_population(self):
-        pass
-
-    def _select_parents(self):
+    def _select_parents(self, population):
         current_new_generation_size = 0
         new_generation = []
         for i in range(self.new_generation_size):
             # agarra 2 elementos de la poblacion al azar
-            ind1, ind2 = random.sample(self.population, k=2)
+            ind1, ind2 = random.sample(population, k=2)
             r = random.random()
             # si r < threshold, agrega el mejor de los 2
             if ind1.get_fitness() > ind2.get_fitness():
@@ -35,8 +29,3 @@ class ProbabilisticTournamentGenetic(GenericGenetic):
                     new_generation.append(ind1)
         return new_generation
 
-    def _generate_new_population(self):
-        pass
-
-    def acceptable_solution(self):
-        pass
