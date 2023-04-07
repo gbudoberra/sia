@@ -28,3 +28,4 @@ class DeterministicTournamentGenetic(GenericSelectionMethod):
             new_generation.append(tournament_participant_fitness[self.participant_number - 1])
             added_genotype += 1
         return new_generation
+
