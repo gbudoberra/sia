@@ -1,7 +1,6 @@
-from random import randint
 import random
 
-from tp2.generic_selection_method import GenericSelectionMethod
+from tp2.methods.generic_selection_method import GenericSelectionMethod
 
 
 class ProbabilisticTournamentGenetic(GenericSelectionMethod):

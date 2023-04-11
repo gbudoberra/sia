@@ -1,9 +1,6 @@
 import random
 
-from generic_genetic import GenericGenetic
-from random import randint
-
-from tp2.generic_selection_method import GenericSelectionMethod
+from tp2.methods.generic_selection_method import GenericSelectionMethod
 
 
 class DeterministicTournamentGenetic(GenericSelectionMethod):
