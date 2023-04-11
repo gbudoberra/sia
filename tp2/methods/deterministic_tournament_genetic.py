@@ -10,7 +10,7 @@ class DeterministicTournamentGenetic(GenericSelectionMethod):
         super().__init__(size)
         self.participant_number = participant_number
 
-    def _select_parents(self, population):
+    def select(self, population):
         current_new_generation_size = 0
         new_generation = []
 

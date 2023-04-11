@@ -7,7 +7,7 @@ class RouletteGenetic(GenericSelectionMethod):
     def __init__(self, size):
         super().__init__(size)
 
-    def _select_parents(self, population):
+    def select(self, population):
         fitness_sum = sum([genotype.get_fitness() for genotype in population])
         fitness_relative = [(genotype, genotype.get_fitness() / fitness_sum) for genotype in population]
         fitness_relative_order = sorted(fitness_relative, key=lambda x: x[1])

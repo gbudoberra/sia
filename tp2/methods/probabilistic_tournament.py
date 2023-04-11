@@ -8,7 +8,7 @@ class ProbabilisticTournamentGenetic(GenericSelectionMethod):
         super().__init__(size)
         self.threshold = threshold
 
-    def _select_parents(self, population):
+    def select(self, population):
         current_new_generation_size = 0
         new_generation = []
         for i in range(self.new_generation_size):

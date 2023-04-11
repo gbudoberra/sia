@@ -5,14 +5,21 @@ from tp2.color_crossover.rgb_crossover import uniform_crossover
 
 class GenericGenetic(ABC):
 
-    def __init__(self, population, size, generated_son):
+    def __init__(self, population, size, generated_son, mutation_probability, delta,
+                 parent_selection, new_generation_selection):
         self.population = population
         self.generated_son = generated_son  # k = generated_son in each iteration
         self.population_size = size  # N = population size
+        self.mutation_probability = mutation_probability
+        self.delta = delta
+        self.parents_selection = parent_selection
+        self.new_generation_selection = new_generation_selection
 
-    @abstractmethod
     def _mutate_sons(self, sons):
-        pass
+        mutated_sons = []
+        for son in sons:
+            mutated_sons.append(self._mutate_each_son(son))
+        return mutated_sons
 
     def _generate_new_population(self):
         while not self.acceptable_solution():
@@ -28,16 +35,17 @@ class GenericGenetic(ABC):
             # truncate the new_population
             self.population = self.select_to_create_new_population(new_population)
 
-    @abstractmethod
     def acceptable_solution(self):
-        pass
+        return len(self.population) == self.population_size  #temp
 
-    @abstractmethod
     def select_parents_from_population(self, population):
-        pass
+        return self.parents_selection.select(self.population)
+
+    def select_to_create_new_population(self, population):
+        return self.new_generation_selection.select(self.population)
 
     @abstractmethod
-    def select_to_create_new_population(self, population):
+    def _mutate_each_son(self, son):
         pass
 
 

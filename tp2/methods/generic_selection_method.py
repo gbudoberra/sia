@@ -7,5 +7,5 @@ class GenericSelectionMethod(ABC):
         self.new_generation_size = size
 
     @abstractmethod
-    def _select_parents(self, population):
+    def select(self, population):
         pass

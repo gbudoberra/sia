@@ -10,7 +10,7 @@ class EliteGenetic(GenericSelectionMethod):
     def __init__(self, size):
         super().__init__(size)
 
-    def _select_parents(self, population):
+    def select(self, population):
         genotype_and_fitness = []
         for genotype in population:
             genotype_and_fitness.append(genotype)
