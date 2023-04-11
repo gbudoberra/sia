@@ -1,15 +1,26 @@
-from tp2.deterministic_tournament_genetic import DeterministicTournamentGenetic
-from tp2.elite_genetic import EliteGenetic
-from tp2.gentoype_impl import GenotypeImpl
+from tp2.configurations.jsonReader import JSONReader
+from tp2.genetics.generic_genetic import GenericGenetic
 
 if __name__ == '__main__':
-    print("Starting")
-    genotypes = []
-    for i in range(10):
-        genotypes.append(GenotypeImpl())
-        print(genotypes[i].value)
-    print('--------')
-    method = DeterministicTournamentGenetic(10, 4)
-    parents = method._select_parents(genotypes)
-    for p in parents:
-        print(p[0].get_fitness())
+
+    config = JSONReader("./configurations/model.json")
+
+    genetic = GenericGenetic(
+        config.initial_population,
+        config.population_size,
+        config.k_generated_sons,
+        config.parent_selector,
+        config.new_generation_selector,
+        config.mutation_function,
+        config.mutation_probability,
+        config.mutation_delta
+    )
+
+    population = genetic.generate_new_population()
+
+    print('Best candidate:')
+    print(max(population, key=lambda x: x.get_fitness(config.goal_color)))
+
+    print('Final population:')
+    for genotype in population:
+        print(genotype)
