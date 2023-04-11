@@ -12,5 +12,6 @@ def uniform_crossover(dad: ColorGenotype, mom: ColorGenotype):
         random_num = random()
         first_son.append(dad_properties[i] if random_num <= 0.5 else mom_properties[i])
         second_son.append(mom_properties[i] if random_num < 0.5 else dad_properties[i])
-    return ColorGenotype(first_son[0], first_son[1], first_son[2]), ColorGenotype(second_son[0], second_son[1],
-                                                                                  second_son[2])
+    return \
+        ColorGenotype(first_son[0], first_son[1], first_son[2]), \
+            ColorGenotype(second_son[0], second_son[1], second_son[2])

@@ -4,12 +4,12 @@ from tp2.methods.generic_selection_method import GenericSelectionMethod
 
 
 class RouletteGenetic(GenericSelectionMethod):
-    def __init__(self, size):
-        super().__init__(size)
+    def __init__(self, size, goal):
+        super().__init__(size, goal)
 
     def select(self, population):
-        fitness_sum = sum([genotype.get_fitness() for genotype in population])
-        fitness_relative = [(genotype, genotype.get_fitness() / fitness_sum) for genotype in population]
+        fitness_sum = sum([genotype.get_fitness(self.goal) for genotype in population])
+        fitness_relative = [(genotype, genotype.get_fitness(self.goal) / fitness_sum) for genotype in population]
         fitness_relative_order = sorted(fitness_relative, key=lambda x: x[1])
         cumulative_fitness = [(None, 0)]
         current_index = 0

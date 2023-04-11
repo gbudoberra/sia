@@ -1,13 +1,13 @@
 import random
 
+from tp2.genotype.color_genotype import ColorGenotype
 from tp2.methods.generic_selection_method import GenericSelectionMethod
 
 
 class DeterministicTournamentGenetic(GenericSelectionMethod):
 
-
-    def __init__(self, size, participant_number):
-        super().__init__(size)
+    def __init__(self, size, participant_number, goal: ColorGenotype):
+        super().__init__(size, goal)
         self.participant_number = participant_number
 
     def select(self, population):
@@ -17,9 +17,9 @@ class DeterministicTournamentGenetic(GenericSelectionMethod):
         while current_new_generation_size < self.new_generation_size:
             sample_size = self.participant_number  # totally arbitrary number
             tournament_participants = random.sample(population, sample_size)
-            tournament_participants_fitness = [(genotype, genotype.get_fitness()) for genotype in tournament_participants]
+            tournament_participants_fitness = [(genotype, genotype.get_fitness(self.goal)) for genotype in
+                                               tournament_participants]
             sorted(tournament_participants_fitness, key=lambda x: x[1])
             new_generation.append(tournament_participants_fitness[self.participant_number - 1])
             current_new_generation_size += 1
         return new_generation
-
