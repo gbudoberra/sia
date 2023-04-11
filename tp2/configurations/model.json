@@ -1,0 +1,78 @@
+{
+  "initial_population": [
+    {
+      "r": 255,
+      "g": 255,
+      "b": 0
+    },
+    {
+      "r": 255,
+      "g": 255,
+      "b": 255
+    },
+    {
+      "r": 255,
+      "g": 0,
+      "b": 0
+    },
+    {
+      "r": 0,
+      "g": 255,
+      "b": 0
+    },
+    {
+      "r": 0,
+      "g": 255,
+      "b": 255
+    },
+    {
+      "r": 0,
+      "g": 0,
+      "b": 255
+    },
+    {
+      "r": 255,
+      "g": 0,
+      "b": 255
+    },
+    {
+      "r": 0,
+      "g": 0,
+      "b": 0
+    },
+    {
+      "r": 70,
+      "g": 140,
+      "b": 210
+    },
+    {
+      "r": 210,
+      "g": 140,
+      "b": 70
+    },
+    {
+      "r": 140,
+      "g": 70,
+      "b": 210
+    },
+    {
+      "r": 140,
+      "g": 210,
+      "b": 70
+    }
+  ],
+  "population_size": 12,
+  "goal_color": {
+    "r": 120,
+    "g": 120,
+    "b": 120
+  },
+  "parent_selector": "ProbabilisticTournamentGenetic",
+  "new_generation_selector": "ProbabilisticTournamentGenetic",
+  "mutation_function": "mutation_uniform_gen",
+  "mutation_delta": 100,
+  "mutation_probability": 0.5,
+  "k_generated_sons": 12,
+  "probabilistic_tournament_threshold": 1,
+  "deterministic_tournament_participant_number": 6
+}
