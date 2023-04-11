@@ -1,4 +1,5 @@
 import json
+import random
 
 from tp2.genotype.color_genotype import ColorGenotype
 from tp2.methods.deterministic_tournament_genetic import DeterministicTournamentGenetic
@@ -6,6 +7,7 @@ from tp2.methods.elite_genetic import EliteGenetic
 from tp2.methods.probabilistic_tournament import ProbabilisticTournamentGenetic
 from tp2.methods.roulette_genetic import RouletteGenetic
 from tp2.mutation.mutation import mutation_limited_multigen, mutation_uniform_gen, complete_mutation
+from tp2.genotype.rgb_color_representation import RgbColor
 
 
 class JSONReader:
@@ -14,15 +16,15 @@ class JSONReader:
             properties_dict = json.load(f)
 
         # Populations information
-        self.initial_population = read_initial_population(properties_dict)
+        self.palette = [RgbColor(color['r'], color['g'], color['b']) for color in properties_dict["color_palette"]]
+        self.initial_population = create_first_generation(self.palette, properties_dict)
         self.population_size = properties_dict["population_size"]
         self.k_generated_sons = properties_dict["k_generated_sons"]
         self.solution_epsilon = properties_dict["solution_epsilon"]
 
-
         # Goal color
         goal_color_data = properties_dict['goal_color']
-        self.goal_color = ColorGenotype(
+        self.goal_color = RgbColor(
             goal_color_data['r'], goal_color_data['g'], goal_color_data['b']
         )
 
@@ -41,14 +43,17 @@ class JSONReader:
         self.mutation_probability = properties_dict["mutation_probability"]
 
 
-def read_initial_population(properties_dict):
-    population_data = properties_dict['initial_population']
+def create_first_generation(palette, properties_dict):
     population = []
-    for individual_data in population_data:
+    goal_color = properties_dict['goal_color']
+    goal_color = RgbColor(goal_color["r"], goal_color["g"], goal_color["b"])
+    for i in range(properties_dict['population_size']):
+        random_proportion = [random.random() for i in range(len(palette))]
+        random_proportion = [x / sum(random_proportion) for x in random_proportion]
         individual = ColorGenotype(
-            individual_data['r'],
-            individual_data['g'],
-            individual_data['b']
+            palette,
+            random_proportion,
+            goal_color
         )
         population.append(individual)
     return population

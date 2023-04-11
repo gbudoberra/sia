@@ -1,6 +1,7 @@
 import functools
 
 from tp2.genotype.color_genotype import ColorGenotype
+from tp2.genotype.rgb_color_representation import RgbColor
 from tp2.methods.generic_selection_method import GenericSelectionMethod
 
 
@@ -15,19 +16,13 @@ def calculate_individual_times(size, index):
 
 class EliteGenetic(GenericSelectionMethod):
 
-    def __init__(self, size, goal: ColorGenotype):
+    def __init__(self, size, goal: RgbColor):
         super().__init__(size, goal)
 
     def select(self, population):
-        genotype_and_fitness = []
-
-        # Crea una nueva función con el argumento adicional definido
-        sort_by_fitness_with_goal = functools.partial(sort_by_fitness, self.goal)
-
-        for genotype in population:
-            genotype_and_fitness.append(genotype)
+        genotype_and_fitness = [genotype for genotype in population]
         sorted_population = \
-            sorted(genotype_and_fitness, key=sort_by_fitness_with_goal, reverse=True)[:self.new_generation_size]
+            sorted(genotype_and_fitness, key=sort_by_fitness, reverse=True)[:self.new_generation_size]
 
         survivors = []
         for i in range(len(sorted_population)):

@@ -1,10 +1,11 @@
 from random import random
 
+from tp2.genotype.rgb_color_representation import RgbColor
 from tp2.methods.generic_selection_method import GenericSelectionMethod
 
 
 class RouletteGenetic(GenericSelectionMethod):
-    def __init__(self, size, goal):
+    def __init__(self, size, goal: RgbColor):
         super().__init__(size, goal)
 
     def select(self, population):

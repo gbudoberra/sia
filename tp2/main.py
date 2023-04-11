@@ -14,7 +14,8 @@ if __name__ == '__main__':
         config.mutation_function,
         config.mutation_probability,
         config.mutation_delta,
-        config.solution_epsilon
+        config.solution_epsilon,
+        config.goal_color
     )
 
     population = genetic.generate_new_population()

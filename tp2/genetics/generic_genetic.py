@@ -1,8 +1,9 @@
+import functools
 from typing import Callable, List
 
 from tp2.color_crossover.rgb_crossover import uniform_crossover
 from tp2.genotype.color_genotype import ColorGenotype
-from tp2.methods.elite_genetic import sort_by_fitness
+from tp2.genotype.rgb_color_representation import RgbColor
 
 
 class GenericGenetic:
@@ -14,13 +15,15 @@ class GenericGenetic:
                  mutation_function: Callable[[float, ColorGenotype, int], ColorGenotype],
                  mutation_probability: float,
                  mutation_delta: int,
-                 solution_epsilon
+                 solution_epsilon,
+                 goal
                  ):
 
         # Population information
         self.population = population
         self.k_generated_sons = k_generated_sons  # k = generated_son in each iteration
         self.population_size = size  # N = population size
+        self.goal = goal
 
         # Selector functions
         self.parents_selector = parents_selector
@@ -57,8 +60,14 @@ class GenericGenetic:
 
     def acceptable_solution(self):
         sorted_population = sorted(self.population, key=sort_by_fitness, reverse=True)
-        best_genotype = sorted_population[self.population - 1]
-        return best_genotype.get_fitness < self.solution_epsilon
+        best_genotype = sorted_population[0]
+        print(best_genotype.get_fitness())
+        return -1*best_genotype.get_fitness() < self.solution_epsilon
+
+
+def sort_by_fitness(genotype):
+    return genotype.get_fitness()
+
 
 def crossover(selection):
     i = 0

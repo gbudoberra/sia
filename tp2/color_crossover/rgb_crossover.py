@@ -4,14 +4,14 @@ from tp2.genotype.color_genotype import ColorGenotype
 
 
 def uniform_crossover(dad: ColorGenotype, mom: ColorGenotype):
-    dad_properties = [dad.red, dad.blue, dad.green]
-    mom_properties = [mom.red, mom.blue, mom.green]
-    first_son = []
-    second_son = []
-    for i in range(len(dad_properties)):
+    dad_proportion = dad.color_proportion
+    mom_proportion = mom.color_proportion
+    first_son_proportion = []
+    second_son_proportion = []
+    for i in range(len(dad_proportion)):
         random_num = random()
-        first_son.append(dad_properties[i] if random_num <= 0.5 else mom_properties[i])
-        second_son.append(mom_properties[i] if random_num < 0.5 else dad_properties[i])
-    return \
-        ColorGenotype(first_son[0], first_son[1], first_son[2]), \
-            ColorGenotype(second_son[0], second_son[1], second_son[2])
+        first_son_proportion.append(dad_proportion[i] if random_num <= 0.5 else mom_proportion[i])
+        second_son_proportion.append(mom_proportion[i] if random_num < 0.5 else dad_proportion[i])
+    return ColorGenotype(dad.color_palette, first_son_proportion, dad.goal), ColorGenotype(dad.color_palette,
+                                                                                           second_son_proportion,
+                                                                                           dad.goal)

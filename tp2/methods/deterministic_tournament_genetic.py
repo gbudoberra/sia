@@ -1,12 +1,12 @@
 import random
 
-from tp2.genotype.color_genotype import ColorGenotype
+from tp2.genotype.rgb_color_representation import RgbColor
 from tp2.methods.generic_selection_method import GenericSelectionMethod
 
 
 class DeterministicTournamentGenetic(GenericSelectionMethod):
 
-    def __init__(self, size, participant_number, goal: ColorGenotype):
+    def __init__(self, size, participant_number, goal: RgbColor):
         super().__init__(size, goal)
         self.participant_number = participant_number
 

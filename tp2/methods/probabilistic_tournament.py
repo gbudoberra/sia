@@ -1,10 +1,11 @@
 import random
 
+from tp2.genotype.rgb_color_representation import RgbColor
 from tp2.methods.generic_selection_method import GenericSelectionMethod
 
 
 class ProbabilisticTournamentGenetic(GenericSelectionMethod):
-    def __init__(self, size, threshold, goal):
+    def __init__(self, size, threshold, goal: RgbColor):
         super().__init__(size, goal)
         self.threshold = threshold
 
@@ -18,7 +19,7 @@ class ProbabilisticTournamentGenetic(GenericSelectionMethod):
             r = random.random()
 
             # si r < threshold, agrega el mejor de los 2
-            if ind1.get_fitness(self.goal) > ind2.get_fitness(self.goal):
+            if ind1.get_fitness() > ind2.get_fitness():
                 if r < self.threshold:
                     new_generation.append(ind1)
                 else:
