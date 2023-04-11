@@ -1,30 +1,45 @@
-from abc import ABC, abstractmethod
+from typing import Callable, List
 
 from tp2.color_crossover.rgb_crossover import uniform_crossover
+from tp2.genotype.color_genotype import ColorGenotype
 
 
-class GenericGenetic(ABC):
+class GenericGenetic:
 
-    def __init__(self, population, size, generated_son, mutation_probability, delta,
-                 parent_selection, new_generation_selection):
+    def __init__(self,
+                 population, size, k_generated_sons,
+                 parents_selector: Callable[[List[ColorGenotype]], List[ColorGenotype]],
+                 new_generation_selector: Callable[[List[ColorGenotype]], List[ColorGenotype]],
+                 mutation_function: Callable[[float, ColorGenotype, int], ColorGenotype],
+                 mutation_probability: float,
+                 mutation_delta: int
+                 ):
+
+        # Population information
         self.population = population
-        self.generated_son = generated_son  # k = generated_son in each iteration
+        self.k_generated_sons = k_generated_sons  # k = generated_son in each iteration
         self.population_size = size  # N = population size
+
+        # Selector functions
+        self.parents_selector = parents_selector
+        self.new_generation_selector = new_generation_selector
+
+        # Mutation information
+        self.mutation_function = mutation_function
         self.mutation_probability = mutation_probability
-        self.delta = delta
-        self.parents_selection = parent_selection
-        self.new_generation_selection = new_generation_selection
+        self.delta = mutation_delta
+        self.counter = 0
 
     def _mutate_sons(self, sons):
         mutated_sons = []
         for son in sons:
-            mutated_sons.append(self._mutate_each_son(son))
+            mutated_sons.append(self.mutation_function(self.mutation_probability, son, self.delta))
         return mutated_sons
 
-    def _generate_new_population(self):
+    def generate_new_population(self):
         while not self.acceptable_solution():
             # select generated_son parents to create generated_son sons
-            parents = self.select_parents_from_population(self.generated_son)
+            parents = self.parents_selector(self.population)
             # create the sons
             sons = crossover(parents)
             # mutate the sons
@@ -33,20 +48,12 @@ class GenericGenetic(ABC):
             new_population = self.population.copy()
             new_population.extend(mutated_sons)
             # truncate the new_population
-            self.population = self.select_to_create_new_population(new_population)
+            self.population = self.new_generation_selector(new_population)
+            self.counter = self.counter + 1
+        return self.population
 
     def acceptable_solution(self):
-        return len(self.population) == self.population_size  #temp
-
-    def select_parents_from_population(self, population):
-        return self.parents_selection.select(self.population)
-
-    def select_to_create_new_population(self, population):
-        return self.new_generation_selection.select(self.population)
-
-    @abstractmethod
-    def _mutate_each_son(self, son):
-        pass
+        return self.counter >= 1000  # temp
 
 
 def crossover(selection):

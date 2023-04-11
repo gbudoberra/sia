@@ -17,6 +17,7 @@ def mutation_limited_multigen(mutation_probability, genotype: ColorGenotype, del
         genotype.green = mutate(genotype.green, mutation_probability, delta)
     if gens_q > 2:
         genotype.blue = mutate(genotype.blue, mutation_probability, delta)
+    return genotype
 
 
 def mutation_uniform_gen(mutation_probability, genotype: ColorGenotype, delta):
@@ -30,5 +31,5 @@ def complete_mutation(mutation_probability, genotype: ColorGenotype, delta):
     if random() < mutation_probability:
         return ColorGenotype((genotype.red + randint(-delta, delta)) % 255,
                              (genotype.green + randint(-delta, delta)) % 255,
-                             (genotype.blue + randint(-delta, delta)) % 255, genotype.goal)
+                             (genotype.blue + randint(-delta, delta)) % 255)
     return genotype
