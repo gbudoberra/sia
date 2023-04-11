@@ -61,7 +61,7 @@
       "b": 70
     }
   ],
-  "population_size": 12,
+  "population_size": 120,
   "goal_color": {
     "r": 120,
     "g": 120,
@@ -71,9 +71,9 @@
   "new_generation_selector": "ProbabilisticTournamentGenetic",
   "mutation_function": "mutation_uniform_gen",
   "mutation_delta": 100,
-  "mutation_probability": 0.5,
-  "k_generated_sons": 12,
+  "mutation_probability": 0.50,
+  "k_generated_sons": 30,
   "probabilistic_tournament_threshold": 1,
   "deterministic_tournament_participant_number": 6,
-  "solution_epsilon": 0.01
+  "solution_epsilon": 0.07
 }

@@ -30,7 +30,7 @@ class JSONReader:
 
         # Parent selector
         self.parent_selector = get_selector(
-            properties_dict["parent_selector"], properties_dict, self.k_generated_sons * 2, self.goal_color
+            properties_dict["parent_selector"], properties_dict, self.k_generated_sons, self.goal_color
         )
 
         self.new_generation_selector = get_selector(

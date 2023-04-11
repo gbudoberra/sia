@@ -21,7 +21,7 @@ if __name__ == '__main__':
     population = genetic.generate_new_population()
 
     print('Best candidate:')
-    print(max(population, key=lambda x: x.get_fitness(config.goal_color)))
+    print(max(population, key=lambda x: x.get_fitness()))
 
     print('Final population:')
     for genotype in population:

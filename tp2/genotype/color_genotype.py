@@ -25,4 +25,7 @@ class ColorGenotype:
         return -1 * np.linalg.norm(p1 - p2)
 
     def __str__(self) -> str:
-        return '(' + self.color_proportion + ')'
+        proportion_str = ""
+        for proportion in self.color_proportion:
+            proportion_str += str(proportion) + " , "
+        return '(' + proportion_str + ')'
