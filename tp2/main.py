@@ -13,7 +13,8 @@ if __name__ == '__main__':
         config.new_generation_selector,
         config.mutation_function,
         config.mutation_probability,
-        config.mutation_delta
+        config.mutation_delta,
+        config.solution_epsilon
     )
 
     population = genetic.generate_new_population()

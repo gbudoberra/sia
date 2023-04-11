@@ -74,5 +74,6 @@
   "mutation_probability": 0.5,
   "k_generated_sons": 12,
   "probabilistic_tournament_threshold": 1,
-  "deterministic_tournament_participant_number": 6
+  "deterministic_tournament_participant_number": 6,
+  "solution_epsilon": 0.01
 }

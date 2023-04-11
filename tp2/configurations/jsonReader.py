@@ -17,6 +17,8 @@ class JSONReader:
         self.initial_population = read_initial_population(properties_dict)
         self.population_size = properties_dict["population_size"]
         self.k_generated_sons = properties_dict["k_generated_sons"]
+        self.solution_epsilon = properties_dict["solution_epsilon"]
+
 
         # Goal color
         goal_color_data = properties_dict['goal_color']

@@ -2,6 +2,7 @@ from typing import Callable, List
 
 from tp2.color_crossover.rgb_crossover import uniform_crossover
 from tp2.genotype.color_genotype import ColorGenotype
+from tp2.methods.elite_genetic import sort_by_fitness
 
 
 class GenericGenetic:
@@ -12,7 +13,8 @@ class GenericGenetic:
                  new_generation_selector: Callable[[List[ColorGenotype]], List[ColorGenotype]],
                  mutation_function: Callable[[float, ColorGenotype, int], ColorGenotype],
                  mutation_probability: float,
-                 mutation_delta: int
+                 mutation_delta: int,
+                 solution_epsilon
                  ):
 
         # Population information
@@ -29,6 +31,7 @@ class GenericGenetic:
         self.mutation_probability = mutation_probability
         self.delta = mutation_delta
         self.counter = 0
+        self.solution_epsilon = solution_epsilon
 
     def _mutate_sons(self, sons):
         mutated_sons = []
@@ -53,8 +56,9 @@ class GenericGenetic:
         return self.population
 
     def acceptable_solution(self):
-        return self.counter >= 1000  # temp
-
+        sorted_population = sorted(self.population, key=sort_by_fitness, reverse=True)
+        best_genotype = sorted_population[self.population - 1]
+        return best_genotype.get_fitness < self.solution_epsilon
 
 def crossover(selection):
     i = 0
