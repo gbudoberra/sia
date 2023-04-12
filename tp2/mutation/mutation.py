@@ -20,7 +20,7 @@ def mutation_limited_multigen(mutation_probability, genotype: ColorGenotype):
     return ColorGenotype(genotype.color_palette, new_color_proportion, genotype.goal)
 
 
-def mutation_uniform_gen(mutation_probability, genotype: ColorGenotype, delta):
+def mutation_uniform_gen(mutation_probability, genotype: ColorGenotype):
     new_color_proportion = [proportion for proportion in genotype.color_proportion]
     color_palette_size = len(new_color_proportion)
     for i in range(color_palette_size):
@@ -29,7 +29,7 @@ def mutation_uniform_gen(mutation_probability, genotype: ColorGenotype, delta):
     return ColorGenotype(genotype.color_palette, new_color_proportion, genotype.goal)
 
 
-def complete_mutation(mutation_probability, genotype: ColorGenotype, delta):
+def complete_mutation(mutation_probability, genotype: ColorGenotype):
     if random() < mutation_probability:
         new_color_proportion = [proportion for proportion in genotype.color_proportion]
         color_palette_size = len(new_color_proportion)

@@ -39,7 +39,7 @@ class GenericGenetic:
     def _mutate_sons(self, sons):
         mutated_sons = []
         for son in sons:
-            mutated_sons.append(self.mutation_function(self.mutation_probability, son, self.delta))
+            mutated_sons.append(self.mutation_function(self.mutation_probability, son))
         return mutated_sons
 
     def generate_new_population(self):
