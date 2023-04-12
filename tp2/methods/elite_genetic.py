@@ -20,15 +20,7 @@ class EliteGenetic(GenericSelectionMethod):
         super().__init__(size, goal)
 
     def select(self, population):
-        genotype_and_fitness = [genotype for genotype in population]
-        # sorted_population = \
-        return sorted(genotype_and_fitness, key=sort_by_fitness, reverse=True)[:self.new_generation_size]
+        sorted_collection = sorted(population, key=sort_by_fitness, reverse=True)
+        return sorted_collection[:self.new_generation_size]
 
-        # survivors = []
-        # for i in range(len(sorted_population)):
-        #     n_times = calculate_individual_times(len(population), i)
-        #     if n_times == 0:
-        #         break
-        #     for j in range(n_times):
-        #         survivors.append(sorted_population[i])
-        # return survivors
+

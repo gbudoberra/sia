@@ -36,3 +36,5 @@ def complete_mutation(mutation_probability, genotype: ColorGenotype):
         for i in range(color_palette_size):
             new_color_proportion[i] = random()
         return ColorGenotype(genotype.color_palette, new_color_proportion, genotype.goal)
+    else:
+        return genotype
