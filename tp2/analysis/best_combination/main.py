@@ -10,7 +10,7 @@ from tp2.methods.probabilistic_tournament import ProbabilisticTournamentGenetic
 from tp2.methods.roulette_genetic import RouletteGenetic
 from tp2.mutation.mutation import mutation_limited_multigen, mutation_uniform_gen, complete_mutation
 
-times = 2
+times = 10
 mutation_methods = [
     {
         'call': mutation_limited_multigen,
@@ -27,18 +27,18 @@ mutation_methods = [
 ]
 
 
-def analyze_method(method):
+def analyze_method(inner_analyze_method):
     data = []
     for mutation_method in mutation_methods:
-
         results = []
+        genetic = None
         for i in range(times):
             genetic = GenericGenetic(
                 config.initial_population,
                 config.population_size,
                 config.k_generated_sons,
-                method['call'],
-                method['call'],
+                inner_analyze_method['call'],
+                inner_analyze_method['call'],
                 mutation_method['call'],
                 config.mutation_probability,
                 config.mutation_delta,
@@ -47,12 +47,9 @@ def analyze_method(method):
             )
             population = genetic.generate_new_population()
             results.append(max(population, key=lambda x: x.get_fitness()).get_fitness())
-
-        average_fitness = sum(results) / len(results)
-
-        data.append([method['name'], mutation_method['name'], genetic.counter, average_fitness,
+        data.append([inner_analyze_method['name'], mutation_method['name'], genetic.counter, statistics.mean(results),
                      statistics.stdev(results)])
-    method['data'] = data
+    inner_analyze_method['data'] = data
 
 
 if __name__ == '__main__':
@@ -60,9 +57,6 @@ if __name__ == '__main__':
 
     headers = ["metodo_seleccion", "metodo_mutacion", "cantidad_iteraciones", "aptitud_max_promedio",
                "aptitud_max_desvio"]
-    with open("archivo.csv", "w", newline="") as archivo:
-        writer = csv.writer(archivo)
-        writer.writerow(headers)
 
     methods = [
         {
@@ -106,5 +100,9 @@ if __name__ == '__main__':
     for thread in threads:
         thread.join()
 
-    for method in methods:
-        writer.writerow(method['data'])
+    with open("archivo.csv", "w", newline="") as archivo:
+        writer = csv.writer(archivo)
+        writer.writerow(headers)
+        for method in methods:
+            for method_result in method["data"]:
+                writer.writerow(method_result)
