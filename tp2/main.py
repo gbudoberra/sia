@@ -4,7 +4,7 @@ from tp2.genetics.generic_genetic import GenericGenetic
 
 if __name__ == '__main__':
 
-    config = JSONReader("./configurations/model.json")
+    config = JSONReader("./configurations/model.json", "./configurations/model_colors.json")
 
     genetic = GenericGenetic(
         config.initial_population,

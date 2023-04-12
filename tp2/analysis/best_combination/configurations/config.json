@@ -1,0 +1,12 @@
+{
+  "population_size": 120,
+  "parent_selector": "",
+  "new_generation_selector": "",
+  "mutation_function": "",
+  "mutation_delta": 100,
+  "mutation_probability": 0.5,
+  "k_generated_sons": 30,
+  "deterministic_tournament_participant_number": 50,
+  "solution_epsilon": 25,
+  "probabilistic_tournament_threshold": 0.5
+}

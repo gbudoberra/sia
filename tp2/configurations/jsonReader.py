@@ -11,65 +11,78 @@ from tp2.genotype.rgb_color_representation import RgbColor
 
 
 class JSONReader:
-    def __init__(self, json_file_path):
-        with open(json_file_path, "r") as f:
-            properties_dict = json.load(f)
+    def __init__(self, json_config_path, json_colors_path):
+        with open(json_config_path, "r") as f:
+            config = json.load(f)
 
-        # Populations information
-        self.palette = [RgbColor(color['r'], color['g'], color['b']) for color in properties_dict["color_palette"]]
-        self.initial_population = create_first_generation(self.palette, properties_dict)
-        self.population_size = properties_dict["population_size"]
-        self.k_generated_sons = properties_dict["k_generated_sons"]
-        self.solution_epsilon = properties_dict["solution_epsilon"]
+        with open(json_colors_path, "r") as f:
+            colors = json.load(f)
 
         # Goal color
-        goal_color_data = properties_dict['goal_color']
+        goal_color_data = colors['goal_color']
         self.goal_color = RgbColor(
             goal_color_data['r'], goal_color_data['g'], goal_color_data['b']
         )
 
+        # Populations information
+        self.palette = [RgbColor(color['r'], color['g'], color['b']) for color in colors["color_palette"]]
+        self.initial_population = \
+            create_first_generation(self.palette, self.goal_color, config['population_size'])
+        self.population_size = config["population_size"]
+        self.k_generated_sons = config["k_generated_sons"]
+        self.solution_epsilon = config["solution_epsilon"]
+
+        self.deterministic_tournament_participant_number = config["deterministic_tournament_participant_number"]
+        self.probabilistic_tournament_threshold = config["probabilistic_tournament_threshold"]
+
         # Parent selector
         self.parent_selector = get_selector(
-            properties_dict["parent_selector"], properties_dict, self.k_generated_sons, self.goal_color
+            config["parent_selector"],
+            self.deterministic_tournament_participant_number,
+            self.probabilistic_tournament_threshold,
+            self.k_generated_sons, self.goal_color
         )
 
         self.new_generation_selector = get_selector(
-            properties_dict["new_generation_selector"], properties_dict, self.population_size, self.goal_color
+            config["new_generation_selector"],
+            self.deterministic_tournament_participant_number,
+            self.probabilistic_tournament_threshold,
+            self.population_size, self.goal_color
         )
 
-        self.mutation_function = get_mutation_function(properties_dict["mutation_function"])
 
-        self.mutation_delta = properties_dict["mutation_delta"]  # deprecated
-        self.mutation_probability = properties_dict["mutation_probability"]
+        self.mutation_function = get_mutation_function(config["mutation_function"])
+
+        self.mutation_delta = config["mutation_delta"]  # deprecated
+        self.mutation_probability = config["mutation_probability"]
 
 
-def create_first_generation(palette, properties_dict):
+def create_first_generation(palette, goal: RgbColor, population_size):
     population = []
-    goal_color = properties_dict['goal_color']
-    goal_color = RgbColor(goal_color["r"], goal_color["g"], goal_color["b"])
-    for i in range(properties_dict['population_size']):
+    for i in range(population_size):
         random_proportion = [random.random() for i in range(len(palette))]
         random_proportion = [x / sum(random_proportion) for x in random_proportion]
         individual = ColorGenotype(
             palette,
             random_proportion,
-            goal_color
+            goal
         )
         population.append(individual)
     return population
 
 
-def get_selector(selector, properties_dict, size, goal):
+def get_selector(selector, deterministic_tournament_participant_number, probabilistic_tournament_threshold, size, goal):
     if selector == 'DeterministicTournamentGenetic':
         return DeterministicTournamentGenetic(
-            size, properties_dict["deterministic_tournament_participant_number"], goal
+            size, deterministic_tournament_participant_number, goal
         ).select
     if selector == 'EliteGenetic':
         return EliteGenetic(size, goal).select
     if selector == 'ProbabilisticTournamentGenetic':
-        return ProbabilisticTournamentGenetic(size, random.uniform(0.5, 1), goal).select
+        return ProbabilisticTournamentGenetic(size, probabilistic_tournament_threshold, goal).select
     if selector == 'RouletteGenetic':
         return RouletteGenetic(size, goal).select
+    return None
 
 
 def get_mutation_function(function):
@@ -78,4 +91,4 @@ def get_mutation_function(function):
         "mutation_uniform_gen": mutation_uniform_gen,
         "complete_mutation": complete_mutation
     }
-    return cases[function]
+    return cases.get(function)
