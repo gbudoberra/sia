@@ -1,6 +1,12 @@
-from random import random, randint
-
+from random import random, randint, uniform
 from tp2.genotype.color_genotype import ColorGenotype
+
+
+def normalize_proportions(new_genotype: ColorGenotype):
+    size = len(new_genotype.color_proportion)
+    total = sum(new_genotype.color_proportion)
+    new_genotype.color_proportion = [new_genotype.color_proportion[i]/total for i in range(size)]
+    return new_genotype
 
 
 def mutation_limited_multigen(mutation_probability, genotype: ColorGenotype):

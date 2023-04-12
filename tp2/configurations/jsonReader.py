@@ -39,7 +39,7 @@ class JSONReader:
 
         self.mutation_function = get_mutation_function(properties_dict["mutation_function"])
 
-        self.mutation_delta = properties_dict["mutation_delta"]
+        self.mutation_delta = properties_dict["mutation_delta"]  # deprecated
         self.mutation_probability = properties_dict["mutation_probability"]
 
 
@@ -67,7 +67,7 @@ def get_selector(selector, properties_dict, size, goal):
     if selector == 'EliteGenetic':
         return EliteGenetic(size, goal).select
     if selector == 'ProbabilisticTournamentGenetic':
-        return ProbabilisticTournamentGenetic(size, properties_dict["probabilistic_tournament_threshold"], goal).select
+        return ProbabilisticTournamentGenetic(size, random.uniform(0.5, 1), goal).select
     if selector == 'RouletteGenetic':
         return RouletteGenetic(size, goal).select
 

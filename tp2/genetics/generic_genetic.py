@@ -1,9 +1,6 @@
-import functools
 from typing import Callable, List
-
 from tp2.color_crossover.rgb_crossover import uniform_crossover
 from tp2.genotype.color_genotype import ColorGenotype
-from tp2.genotype.rgb_color_representation import RgbColor
 
 
 class GenericGenetic:
@@ -35,6 +32,9 @@ class GenericGenetic:
         self.delta = mutation_delta
         self.counter = 0
         self.solution_epsilon = solution_epsilon
+        # generations without changing the best solution
+        self.unchanged_best_sol = 0
+        self.best_sol = max(population, key=lambda x: x.get_fitness())
 
     def _mutate_sons(self, sons):
         mutated_sons = []
@@ -59,10 +59,17 @@ class GenericGenetic:
         return self.population
 
     def acceptable_solution(self):
+        fitness = [genotype.get_fitness() for genotype in self.population]
+        total = sum(fitness) / len(self.population)
         sorted_population = sorted(self.population, key=sort_by_fitness, reverse=True)
         best_genotype = sorted_population[0]
-        print(best_genotype.get_fitness())
-        return -1*best_genotype.get_fitness() < self.solution_epsilon
+        print('( avg=' + str(total) + ' , best=' + str(best_genotype.get_fitness()) + ' )')
+        if abs(best_genotype.get_fitness() - self.best_sol.get_fitness()) < self.solution_epsilon:
+            self.unchanged_best_sol += 1
+        else:
+            self.unchanged_best_sol = 0
+        self.best_sol = best_genotype
+        return self.unchanged_best_sol > 100
 
 
 def sort_by_fitness(genotype):
@@ -74,7 +81,8 @@ def crossover(selection):
     sons = []
     while i < len(selection) - 1:
         (first_son, second_son) = uniform_crossover(selection[i], selection[i + 1])
-        i = i + 2
-        sons.append(first_son)
-        sons.append(second_son)
+        if first_son is not None and second_son is not None:
+            i = i + 2
+            sons.append(first_son)
+            sons.append(second_son)
     return sons

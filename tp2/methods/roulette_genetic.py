@@ -9,8 +9,8 @@ class RouletteGenetic(GenericSelectionMethod):
         super().__init__(size, goal)
 
     def select(self, population):
-        fitness_sum = sum([genotype.get_fitness(self.goal) for genotype in population])
-        fitness_relative = [(genotype, genotype.get_fitness(self.goal) / fitness_sum) for genotype in population]
+        fitness_sum = sum([genotype.get_fitness() for genotype in population])
+        fitness_relative = [(genotype, genotype.get_fitness() / fitness_sum) for genotype in population]
         fitness_relative_order = sorted(fitness_relative, key=lambda x: x[1])
         cumulative_fitness = [(None, 0)]
         current_index = 0
@@ -18,21 +18,15 @@ class RouletteGenetic(GenericSelectionMethod):
             cumulative_fitness.append((fitness_relative_order[current_index][0],
                                        cumulative_fitness[current_index][1] + fitness_relative_order[current_index][1]))
             current_index += 1
+
         new_generation = []
         current_new_generation_size = 0
         while current_new_generation_size < self.new_generation_size:
             random_number = random()
-            i = 1
-            prev = None
-            q, suma = cumulative_fitness[i]
-            while suma <= random_number:
-                q, suma = cumulative_fitness[i]
-                prev = cumulative_fitness[i - 1][0]
-                i += 1
-            new_generation.append(prev)
-            current_new_generation_size += 1
-            # for genotype, relative in cumulative_fitness:
-            #     if random_number <= relative <= random_number:
-            #         new_generation.append(genotype)
-            # current_new_generation_size += 1
+            for i in range(1, len(cumulative_fitness)):
+                genotype, genotype_cumulative_fitness = cumulative_fitness[i]
+                if random_number <= genotype_cumulative_fitness:
+                    new_generation.append(genotype)
+                    current_new_generation_size += 1
+                    break
         return new_generation
