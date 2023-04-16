@@ -5,10 +5,11 @@ df = pd.read_csv('../archivo1.csv')
 
 # Define color palette for mutations
 mutation_colors = {
-    'mutation_limited_multigen': 'tab:blue',
-    'mutation_uniform_gen': 'tab:orange',
-    'complete_mutation': 'tab:green',
+    'Multigen limitada': 'tab:blue',
+    'Multigen uniforme': 'tab:orange',
+    'Mutación completa': 'tab:green',
 }
+
 
 # Get unique selection methods
 selection_methods = df['metodo_seleccion'].unique()
@@ -26,7 +27,7 @@ for i, method in enumerate(selection_methods):
         x_labels.append(method)
 
 # Set y-axis label
-ax.set_ylabel('Avg Iteration number', fontsize=14, fontweight='bold')
+ax.set_ylabel('Iteraciones promedio', fontsize=14, fontweight='bold')
 
 # Plot bars for each mutation combination
 for i, method in enumerate(selection_methods):
@@ -53,9 +54,8 @@ ax.set_xticks([i + 0.4 for i in range(len(selection_methods))])
 ax.set_xticklabels(selection_methods, fontsize=12)
 
 # Set title
-ax.set_title('Avg Amount of Iterations by Selection Method and Mutation Combination', fontsize=16, fontweight='bold')
 y_min, y_max = ax.get_ylim()
 ax.set_ylim([0, y_max + 0.2 * (y_max - y_min)])
 
 # Show plot
-plt.show()
+plt.savefig("hla.png")

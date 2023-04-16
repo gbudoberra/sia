@@ -1,7 +1,7 @@
 {
-  "population_size": 120,
-  "parent_selector": "EliteGenetic",
-  "new_generation_selector": "EliteGenetic",
+  "population_size": 100,
+  "parent_selector": "RouletteGenetic",
+  "new_generation_selector": "RouletteGenetic",
   "mutation_function": "mutation_uniform_gen",
   "mutation_delta": 100,
   "mutation_probability": 0.5,

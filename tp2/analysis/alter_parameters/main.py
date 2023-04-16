@@ -5,7 +5,7 @@ import threading
 from tp2.configurations.jsonReader import JSONReader
 from tp2.genetics.generic_genetic import GenericGenetic
 
-times = 5
+times = 10
 headers = ["N", "K", "cantidad_iteraciones_promedio", "cantidad_iteraciones_desvio",
            "aptitud_max_promedio", "aptitud_max_desvio"]
 
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     config = JSONReader("./configurations/config.json", "./configurations/colors.json")
 
     threads = []
-    for value in [0.1, 0.5, 1, 2]:
+    for value in [0.1, 0.5, 1]:
         thread = threading.Thread(target=analyze, args=[value])
         threads.append(thread)
 
