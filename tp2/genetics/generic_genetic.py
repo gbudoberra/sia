@@ -21,6 +21,7 @@ class GenericGenetic:
         self.k_generated_sons = k_generated_sons  # k = generated_son in each iteration
         self.population_size = size  # N = population size
         self.goal = goal
+        self.max_generation = 1000
 
         # Selector functions
         self.parents_selector = parents_selector
@@ -56,15 +57,13 @@ class GenericGenetic:
             # truncate the new_population
             self.population = self.new_generation_selector(new_population)
             self.counter = self.counter + 1
-        print("Finished")
         return self.population
 
     def acceptable_solution(self):
-        fitness = [genotype.get_fitness() for genotype in self.population]
-        # total = sum(fitness) / len(self.population)
+        if not self.counter < self.max_generation:
+            return True
         sorted_population = sorted(self.population, key=sort_by_fitness, reverse=True)
         best_genotype = sorted_population[0]
-        # print('( avg=' + str(total) + ' , best=' + str(best_genotype.get_fitness()) + ' )')
         if abs(best_genotype.get_fitness() - self.best_sol.get_fitness()) < self.solution_epsilon:
             self.unchanged_best_sol += 1
         else:

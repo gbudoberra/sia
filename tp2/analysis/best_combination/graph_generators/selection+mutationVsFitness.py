@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv('../archivo.csv')
+df = pd.read_csv('../archivo1.csv')
 
 selection_methods = df['metodo_seleccion'].unique()
 

@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-df = pd.read_csv('../archivo.csv')
+df = pd.read_csv('../archivo1.csv')
 
 selection_methods = df['metodo_seleccion'].unique()
 
@@ -21,4 +21,4 @@ for method in selection_methods:
     ax.set_title(f'Avg. Number of iterations by Selection Method ({method})')
     ax.set_xticklabels(ax.get_xticklabels(), rotation=0)
     ax.get_legend().remove()
-    plt.show()
+    plt.savefig("hola")

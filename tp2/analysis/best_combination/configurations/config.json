@@ -4,9 +4,9 @@
   "new_generation_selector": "",
   "mutation_function": "",
   "mutation_delta": 100,
-  "mutation_probability": 0.5,
+  "mutation_probability": 0.2,
   "k_generated_sons": 50,
   "deterministic_tournament_participant_number": 30,
-  "solution_epsilon": 25,
+  "solution_epsilon": 10,
   "probabilistic_tournament_threshold": 0.5
 }

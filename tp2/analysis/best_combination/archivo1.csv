@@ -1,0 +1,13 @@
+metodo_seleccion,metodo_mutacion,cantidad_iteraciones_promedio,cantidad_iteraciones_desvio,aptitud_max_promedio,aptitud_max_desvio
+deterministic_tournament,mutation_limited_multigen,1000,0.0,419.111397202802,8.390732091439551
+deterministic_tournament,mutation_uniform_gen,1000,0.0,418.58793487417614,8.73154945484696
+deterministic_tournament,complete_mutation,1000,0.0,419.71357307341793,7.335538168205897
+elite,mutation_limited_multigen,101.2,1.0327955589886446,441.5106761458183,0.12339407848882046
+elite,mutation_uniform_gen,101.4,1.2649110640673518,441.55792368397624,0.09550424482557675
+elite,complete_mutation,102,0.816496580927726,440.80438628893734,0.7705910121655603
+probabilistic_tournament,mutation_limited_multigen,1000,0.0,421.11651390124234,7.439681754367642
+probabilistic_tournament,mutation_uniform_gen,1000,0.0,423.1673461912846,5.903549742017113
+probabilistic_tournament,complete_mutation,1000,0.0,427.2080056760251,6.058309332133112
+roulette,mutation_limited_multigen,177.9,85.43151903392825,433.2430597855629,3.2484366022248765
+roulette,mutation_uniform_gen,299.4,176.62779446558739,428.7482600485832,5.357449290892513
+roulette,complete_mutation,112.5,13.721434975168515,435.80665749627946,3.9092319295632088

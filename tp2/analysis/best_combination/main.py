@@ -113,7 +113,7 @@ if __name__ == '__main__':
     for thread in threads:
         thread.join()
 
-    with open("archivo.csv", "w", newline="") as archivo:
+    with open("archivo1.csv", "w", newline="") as archivo:
         writer = csv.writer(archivo)
         writer.writerow(headers)
         for method in methods:
