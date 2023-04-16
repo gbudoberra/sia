@@ -7,7 +7,7 @@ df = pd.read_csv('../archivo1.csv')
 mutation_colors = {
     'Multigen limitada': 'tab:blue',
     'Multigen uniforme': 'tab:orange',
-    'Mutación completa': 'tab:green',
+    'Mutacion completa': 'tab:green',
 }
 
 # Get unique selection methods

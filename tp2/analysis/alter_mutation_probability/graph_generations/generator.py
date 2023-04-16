@@ -16,14 +16,14 @@ if __name__ == '__main__':
     # Ciclar por los archivos y plotear las curvas en la primera figura con puntos
     for i, file in enumerate(files):
         ax1.errorbar(file['mutation_probability'], file['aptitud_max_promedio'],
-                     yerr=file['aptitud_max_desvio'], marker='o')
+                     yerr=file['aptitud_max_desvio'], marker='o', color='b')
 
     # Configurar las etiquetas y el título de la primera figura
     ax1.set_xlabel('Probabilidad de mutación')
     ax1.set_ylabel('Aptitud máxima promedio')
 
     # Establecer límite en el eje y de 0 al máximo valor
-    ax1.set_ylim(0, 500)
+    ax1.set_ylim(400, 500)
 
     # Crear la segunda figura
     fig2, ax2 = plt.subplots()
@@ -31,14 +31,14 @@ if __name__ == '__main__':
     # Ciclar por los archivos y plotear las curvas en la segunda figura con puntos
     for i, file in enumerate(files):
         ax2.errorbar(file['mutation_probability'], file['cantidad_iteraciones_promedio'],
-                     yerr=file['cantidad_iteraciones_desvio'], marker='o')  # Agregar el marker 'o' para puntos
+                     yerr=file['cantidad_iteraciones_desvio'], marker='o', color='b')  # Agregar el marker 'o' para puntos
 
     # Configurar las etiquetas y el título de la segunda figura
     ax2.set_xlabel('Probabilidad de mutación')
     ax2.set_ylabel('Iteraciones promedio')
 
     # Establecer límite en el eje y de 0 al máximo valor
-    ax2.set_ylim(-10, 2000)
+    ax2.set_ylim(0, 50)
 
     # Mostrar las figuras
     plt.show()

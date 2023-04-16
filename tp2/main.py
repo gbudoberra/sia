@@ -19,8 +19,8 @@ if __name__ == '__main__':
         config.goal_color
     )
     goal_color_rgb = [config.goal_color.red / 255,  config.goal_color.green / 255,  config.goal_color.blue / 255]
-    plt.bar(range(1), goal_color_rgb, color=goal_color_rgb)
-    plt.show()
+    # plt.bar(range(1), goal_color_rgb, color=goal_color_rgb)
+    # plt.show()
 
     population = genetic.generate_new_population()
 
@@ -32,10 +32,12 @@ if __name__ == '__main__':
     # plt.bar(range(1), best_rgb, color=best_rgb)
     # plt.show()
     # plt.clf()
-    rgb = [prop/255 for prop in best.get_total()]
-    plt.bar(range(1), rgb, color=rgb)
-    plt.show()
+    # rgb = [prop/255 for prop in best.get_total()]
+    # plt.bar(range(1), rgb, color=rgb)
+    # plt.show()
 
-    print('Final population:')
-    for genotype in population:
-        print(genotype)
+    print("Counter: " + str(genetic.counter))
+
+    # print('Final population:')
+    # for genotype in population:
+    #     print(genotype)
