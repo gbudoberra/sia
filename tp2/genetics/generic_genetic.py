@@ -1,3 +1,4 @@
+import random
 from typing import Callable, List
 from tp2.color_crossover.rgb_crossover import uniform_crossover
 from tp2.genotype.color_genotype import ColorGenotype
@@ -21,7 +22,7 @@ class GenericGenetic:
         self.k_generated_sons = k_generated_sons  # k = generated_son in each iteration
         self.population_size = size  # N = population size
         self.goal = goal
-        self.max_generation = 1000
+        self.max_generation = 2000
 
         # Selector functions
         self.parents_selector = parents_selector
@@ -46,7 +47,8 @@ class GenericGenetic:
     def generate_new_population(self):
         while not self.acceptable_solution():
             # select generated_son parents to create generated_son sons
-            parents = self.parents_selector(self.population)
+            # parents = self.parents_selector(self.population)
+            parents = random.sample(self.population, self.k_generated_sons)
             # create the sons
             sons = crossover(parents)
             # mutate the sons
@@ -69,7 +71,7 @@ class GenericGenetic:
         else:
             self.unchanged_best_sol = 0
         self.best_sol = best_genotype
-        return self.unchanged_best_sol > 100
+        return self.unchanged_best_sol > 25
 
 
 def sort_by_fitness(genotype):

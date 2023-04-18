@@ -1,12 +1,12 @@
 {
-  "population_size": 120,
+  "population_size": 600,
   "parent_selector": "EliteGenetic",
   "new_generation_selector": "EliteGenetic",
-  "mutation_function": "mutation_uniform_gen",
+  "mutation_function": "mutation_limited_multigen",
   "mutation_delta": 100,
   "mutation_probability": 0.5,
-  "k_generated_sons": 50,
-  "deterministic_tournament_participant_number": 30,
-  "solution_epsilon": 25,
+  "k_generated_sons": 300,
+  "deterministic_tournament_participant_number": 15,
+  "solution_epsilon": 10,
   "probabilistic_tournament_threshold": 0.5
 }

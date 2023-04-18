@@ -2,8 +2,9 @@ import csv
 import statistics
 import threading
 
-from tp2.configurations.jsonReader import JSONReader
+from tp2.configurations.jsonReader import JSONReader, create_first_generation
 from tp2.genetics.generic_genetic import GenericGenetic
+from tp2.methods.elite_genetic import EliteGenetic
 
 times = 10
 headers = ["N", "K", "cantidad_iteraciones_promedio", "cantidad_iteraciones_desvio",
@@ -12,17 +13,17 @@ headers = ["N", "K", "cantidad_iteraciones_promedio", "cantidad_iteraciones_desv
 
 def analyze(k):
     data = []
-    for N in [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]:
+    for N in [20,  200, 800, 1000]:
         results = []
         generation = []
         genetic = None
         for i in range(times):
             genetic = GenericGenetic(
-                [genotype for genotype in config.initial_population],
+                create_first_generation(config.palette, config.goal_color, N),
                 N,
                 round(k * N),
-                config.parent_selector,
-                config.new_generation_selector,
+                None,
+                EliteGenetic(N, config.goal_color).select,
                 config.mutation_function,
                 config.mutation_probability,
                 config.mutation_delta,

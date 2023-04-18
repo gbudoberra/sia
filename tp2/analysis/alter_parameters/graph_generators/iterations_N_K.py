@@ -24,7 +24,7 @@ if __name__ == '__main__':
     ax1.legend()
 
     # Establecer límite en el eje y de 0 al máximo valor
-    ax1.set_ylim(0, 500)
+    ax1.set_ylim(300, 500)
 
     # Crear la segunda figura
     fig2, ax2 = plt.subplots()
@@ -40,7 +40,7 @@ if __name__ == '__main__':
     ax2.legend()
 
     # Establecer límite en el eje y de 0 al máximo valor
-    ax2.set_ylim(-10, 2000)
+    ax2.set_ylim(-10, 100)
 
     # Mostrar las figuras
     plt.show()
