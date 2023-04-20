@@ -1,5 +1,8 @@
 import matplotlib.pyplot as plt
-from tp2.configurations.jsonReader import JSONReader
+import sys
+sys.path.append('..')
+
+from configurations.jsonReader import JSONReader
 from tp2.genetics.generic_genetic import GenericGenetic
 
 if __name__ == '__main__':
