@@ -17,10 +17,11 @@ def escalon(x):
 
 if __name__ == '__main__':
     points = [[-1, 1], [1, -1], [-1, -1], [1, 1]]
-    expected = [1, 1, -1, -1]
+    expected = [-1, -1, -1, 1]
     perceptron = SingleLayerPerceptron(points, 0.1, expected, 0.1, escalon)
     perceptron.get_solution()
     result_weights = perceptron.weights
+    print("Iterations: " + str(perceptron.current_iterations))
     plot_result(result_weights[0], result_weights[1], result_weights[2], points)
 
 
