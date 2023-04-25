@@ -12,12 +12,14 @@ def plot_result(w0, w1, w2, graph_points):
     plt.show()
 
 
+def escalon(x):
+    return 1 if x >= 0 else -1
+
 if __name__ == '__main__':
     points = [[-1, 1], [1, -1], [-1, -1], [1, 1]]
     expected = [1, 1, -1, -1]
-    perceptron = SingleLayerPerceptron(points, 0.1, expected)
+    perceptron = SingleLayerPerceptron(points, 0.1, expected, 0.1, escalon)
     perceptron.get_solution()
-    print(perceptron.old_weights)
     result_weights = perceptron.weights
     plot_result(result_weights[0], result_weights[1], result_weights[2], points)
 
