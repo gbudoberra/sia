@@ -1,11 +1,10 @@
 import numpy as np
-
 from tp3.multilayer.utils import initialize_network, update_layer, compute_multipliers
 
 
 # based
 # on https://openlearninglibrary.mit.edu/assets/courseware/v1/9c36c444e5df10eef7ce4d052e4a2ed1/asset-v1:MITx+6.036+1T2019+type@asset+block/notes_chapter_Neural_Networks.pdf
-class Multilayer:
+class MultiLayerPerceptron:
     activation_methods = {
         "relu": [lambda x: np.maximum(0, x), lambda x: 1 if x > 0 else 0],
         "sigmoid": [lambda x: 1 / (1 + np.exp(-x)), lambda x: (1 / (1 + np.exp(-x))) * (1 - (1 / (1 + np.exp(-x))))],
@@ -81,3 +80,10 @@ class Multilayer:
             self.differentiated_preactivate_by_layer,
             outputs_vs_expected_delta
         )
+
+    def get_result(self, points):
+        partial_output = np.insert(points, 0, -1)
+        for i in range(len(self.weights_by_layer)):
+            partial_output = np.dot(self.weights_by_layer[i], partial_output)
+        return self.activation_method(partial_output)
+

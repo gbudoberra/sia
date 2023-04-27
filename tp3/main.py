@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-from tp3.multilayer.multilayer import Multilayer
+from tp3.multilayer.multilayerperceptron import MultiLayerPerceptron
 
 
 def plot_result(w0, w1, w2, graph_points):
@@ -15,7 +15,7 @@ def plot_result(w0, w1, w2, graph_points):
 if __name__ == '__main__':
     points = [[-1, 1], [1, -1], [-1, -1], [1, 1]]
     expected = [[-1], [-1], [-1], [1]]
-    perceptron = Multilayer([3, 2, 1], points, "step", expected, 0.1, 0.1)
+    perceptron = MultiLayerPerceptron([3, 2, 1], points, "step", expected, 0.1, 0.1)
     perceptron.batch_iteration()
     print(type(perceptron.weights_by_layer[0]))
     print(perceptron.weights_by_layer[0][0])
