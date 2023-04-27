@@ -10,7 +10,7 @@ class Multilayer:
         "sigmoid": [lambda x: 1 / (1 + np.exp(-x)), lambda x: (1 / (1 + np.exp(-x))) * (1 - (1 / (1 + np.exp(-x))))],
         "id": [lambda x: x, lambda x: 1],
         "tanh": [lambda x: np.tanh(x), lambda x: 1 - np.square(np.tanh(x))],
-        "step": [lambda x: np.sign(x), lambda x: 0],
+        "step": [lambda x: 1 if x >= 0 else -1, lambda x: 1],
     }
 
     def __init__(self, perceptron_by_layer, data_set, activation_method, result_set, epsilon, learning_rate):
@@ -50,7 +50,7 @@ class Multilayer:
         while not self.has_converged():
             last_output = self.input_matrix
             for index in range(self.layer_number - 1):
-                self.pre_activation_by_layer[index] = np.dot(self.weights_by_layer[index], last_output)
+                self.pre_activation_by_layer[index] = np.matmul(self.weights_by_layer[index], last_output)
                 self.output_by_layer[index] = self.activation_method(self.pre_activation_by_layer[index])
                 self.differentiated_preactivate_by_layer[index] = self.activation_derivative(self.pre_activation_by_layer[index])
                 last_output = self.output_by_layer[index]
@@ -59,20 +59,20 @@ class Multilayer:
     def update_weights(self):
         for current_point in range(self.point_number):
             multipliers = self._compute_multipliers(current_point)
-            base = self.input_matrix.T[current_point].copy()
+            base = np.array(self.input_matrix[:, current_point])
             for layer in range(len(self.weights_by_layer)):
                 if layer > 0:
-                    base = self.output_by_layer[layer - 1]
-                self.weights_by_layer[layer] += -1 * self.learning_rate * base * np.transpose(multipliers[layer])
+                    base = self.output_by_layer[layer - 1][:, current_point]
+                self.weights_by_layer[layer] += -1 * self.learning_rate * np.transpose(np.outer(base, multipliers[layer]))
 
     def _compute_multipliers(self, index):
         multipliers = []
         current_layer = len(self.weights_by_layer) - 1
-        base = np.dot(np.diag(self.differentiated_preactivate_by_layer[current_layer].T[index]), (self.results_matrix.T[index] - self.output_by_layer[-1].T[index]))
+        base = np.matmul(np.diag(self.differentiated_preactivate_by_layer[current_layer][:, index]), (self.output_by_layer[-1][:, index]) - self.results_matrix[:, index])
         multipliers.append(base)
         current_layer -= 1
         while current_layer >= 0:
-            base = np.dot(np.dot(np.diag(self.differentiated_preactivate_by_layer[current_layer].T[index]), self.weights_by_layer[current_layer + 1]), base)
+            base = np.matmul(np.matmul(np.diag(self.differentiated_preactivate_by_layer[current_layer][:, index]), self.weights_by_layer[current_layer + 1]), base)
             multipliers.append(base)
             current_layer -= 1
         return multipliers[::-1]

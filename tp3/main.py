@@ -13,9 +13,14 @@ def plot_result(w0, w1, w2, graph_points):
 
 if __name__ == '__main__':
     points = [[-1, 1], [1, -1], [-1, -1], [1, 1]]
-    expected = [[-1, 0], [-1, 1], [-1, 1], [1, 1]]
-    perceptron = Multilayer([3, 2, 2, 2], points, "id", expected, 0.1, 0.1)
+    expected = [[-1], [-1], [-1], [1]]
+    perceptron = Multilayer([3, 1], points, "step", expected, 0.1, 0.1)
     perceptron.batch_iteration()
+    print(type(perceptron.weights_by_layer[0]))
+    print(perceptron.weights_by_layer[0][0])
+
+    plot_result(perceptron.weights_by_layer[0][0][0],perceptron.weights_by_layer[0][0][1],perceptron.weights_by_layer[0][0][2],points)
+    print(perceptron.output_by_layer)
     # perceptron.incremental_iteration()
     # result_weights = perceptron.weights
     # print("Iterations: " + str(perceptron.current_iterations))
