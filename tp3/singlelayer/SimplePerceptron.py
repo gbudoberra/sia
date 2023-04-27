@@ -2,7 +2,6 @@ import numpy as np
 
 
 class SimplePerceptron:
-
     activations_method = {
         "step": [lambda x: np.sign(x)],
         "id": [lambda x: x]
@@ -28,7 +27,7 @@ class SimplePerceptron:
     def update_weight(self, point, output_value, expected_value):
         if output_value != expected_value:
             self.weights = self.weights + \
-                       (self.learning_rate * (expected_value - output_value) * point)
+                           (self.learning_rate * (expected_value - output_value) * point)
 
     def batch_iteration(self):
         while not self.has_converged():
@@ -45,4 +44,3 @@ class SimplePerceptron:
                 vector_output = self.activation_function(self.current_weights_output[i])
                 self.update_weight(self.point_matrix[i], vector_output, self.expected_results[i])
             self.current_iterations += 1
-

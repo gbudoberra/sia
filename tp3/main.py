@@ -1,7 +1,8 @@
-import numpy as np
-from SimplePerceptron  import SimplePerceptron
 import matplotlib.pyplot as plt
-from multilayer import Multilayer
+
+from tp3.multilayer.multilayer import Multilayer
+
+
 def plot_result(w0, w1, w2, graph_points):
     x_vals = list(range(-2, 2))
     y_vals = [(w0 - w1 * x) / w2 for x in x_vals]
@@ -14,16 +15,15 @@ def plot_result(w0, w1, w2, graph_points):
 if __name__ == '__main__':
     points = [[-1, 1], [1, -1], [-1, -1], [1, 1]]
     expected = [[-1], [-1], [-1], [1]]
-    perceptron = Multilayer([3, 1], points, "step", expected, 0.1, 0.1)
+    perceptron = Multilayer([3, 2, 1], points, "step", expected, 0.1, 0.1)
     perceptron.batch_iteration()
     print(type(perceptron.weights_by_layer[0]))
     print(perceptron.weights_by_layer[0][0])
 
-    plot_result(perceptron.weights_by_layer[0][0][0],perceptron.weights_by_layer[0][0][1],perceptron.weights_by_layer[0][0][2],points)
+    plot_result(perceptron.weights_by_layer[0][0][0], perceptron.weights_by_layer[0][0][1],
+                perceptron.weights_by_layer[0][0][2], points)
     print(perceptron.output_by_layer)
     # perceptron.incremental_iteration()
     # result_weights = perceptron.weights
     # print("Iterations: " + str(perceptron.current_iterations))
     # plot_result(result_weights[0], result_weights[1], result_weights[2], points)
-
-
