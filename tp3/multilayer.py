@@ -26,20 +26,20 @@ class Multilayer:
         self.learning_rate = learning_rate
 
         self.output_by_layer = []
-        self.derivative_action_by_layer = []
+        self.differentiated_preactivate_by_layer = []
         self.weights_by_layer = []
         self.pre_activation_by_layer = []
 
         for index in range(self.layer_number - 1):
             self.weights_by_layer.append(np.zeros(
                 (perceptron_by_layer[index + 1], perceptron_by_layer[index])))
-            zero_matrix = np.zeros((perceptron_by_layer[index], self.point_number))
+            zero_matrix = np.zeros((perceptron_by_layer[index + 1], self.point_number))
             self.output_by_layer.append(zero_matrix.copy())
-            self.derivative_action_by_layer.append(zero_matrix.copy())
+            self.differentiated_preactivate_by_layer.append(zero_matrix.copy())
             self.pre_activation_by_layer.append(zero_matrix.copy())
 
     def error(self):
-        error = (self.output_by_layer[self.layer_number - 1] - self.results_matrix) ** 2
+        error = (self.output_by_layer[-1] - self.results_matrix) ** 2
         cumulative_error = np.sum(error)
         return (1 / 2) * cumulative_error
 
@@ -48,24 +48,30 @@ class Multilayer:
 
     def batch_iteration(self):
         while not self.has_converged():
-            base = self.input_matrix
+            last_output = self.input_matrix
             for index in range(self.layer_number - 1):
-                self.pre_activation_by_layer[index] = np.dot(self.weights_by_layer[index], base)
+                self.pre_activation_by_layer[index] = np.dot(self.weights_by_layer[index], last_output)
                 self.output_by_layer[index] = self.activation_method(self.pre_activation_by_layer[index])
-                self.derivative_action_by_layer[index] = self.activation_derivative(self.pre_activation_by_layer[index])
-                base = self.output_by_layer[index]
+                self.differentiated_preactivate_by_layer[index] = self.activation_derivative(self.pre_activation_by_layer[index])
+                last_output = self.output_by_layer[index]
             self.update_weights()
 
     def update_weights(self):
         for current_point in range(self.point_number):
-            current_layer = self.layer_number - 1
-            multiplier = self.learning_rate * (self.results_matrix.T[current_point] - self.output_by_layer[current_layer - 1].T[current_point])
-            layer_weight_delta = multiplier * self.output_by_layer[current_layer - 1].T[current_point]
-            layer_weight_delta *= self.derivative_action_by_layer[current_layer - 1].T[current_point]
-            self.weights_by_layer[current_layer - 1] += layer_weight_delta
-            while current_layer > 1:
-                layer_weight_delta = layer_weight_delta * self.weights_by_layer[current_layer - 1] * self.derivative_action_by_layer[current_layer - 1].T[current_point]
-                current_layer -= 1
-                self.weights_by_layer[current_layer] = layer_weight_delta
-        print("finished")
+            multipliers = self._compute_multipliers(current_point)
+            base = self.input_matrix.copy()
+            for layer in range(len(self.weights_by_layer)):
+                if layer > 0:
+                    base = self.output_by_layer[layer - 1]
+                self.weights_by_layer[layer] += -1 * self.learning_rate * base * np.transpose(multipliers[layer])
 
+    def _compute_multipliers(self, index):
+        multipliers = []
+        current_layer = self.layer_number - 2
+        base = np.diag(self.differentiated_preactivate_by_layer[current_layer].T[index]) * (self.results_matrix.T[index] - self.output_by_layer[-1].T[index])
+        multipliers.append(base)
+        current_layer -= 1
+        while current_layer >= 0:
+            base = np.diag(self.differentiated_preactivate_by_layer[current_layer].T[index]) * self.weights_by_layer[current_layer + 1]
+            multipliers.append(base)
+        return multipliers.reverse()
