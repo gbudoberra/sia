@@ -59,7 +59,7 @@ class Multilayer:
     def update_weights(self):
         for current_point in range(self.point_number):
             multipliers = self._compute_multipliers(current_point)
-            base = self.input_matrix.copy()
+            base = self.input_matrix.T[current_point].copy()
             for layer in range(len(self.weights_by_layer)):
                 if layer > 0:
                     base = self.output_by_layer[layer - 1]
@@ -67,11 +67,12 @@ class Multilayer:
 
     def _compute_multipliers(self, index):
         multipliers = []
-        current_layer = self.layer_number - 2
-        base = np.diag(self.differentiated_preactivate_by_layer[current_layer].T[index]) * (self.results_matrix.T[index] - self.output_by_layer[-1].T[index])
+        current_layer = len(self.weights_by_layer) - 1
+        base = np.dot(np.diag(self.differentiated_preactivate_by_layer[current_layer].T[index]), (self.results_matrix.T[index] - self.output_by_layer[-1].T[index]))
         multipliers.append(base)
         current_layer -= 1
         while current_layer >= 0:
-            base = np.diag(self.differentiated_preactivate_by_layer[current_layer].T[index]) * self.weights_by_layer[current_layer + 1]
+            base = np.dot(np.dot(np.diag(self.differentiated_preactivate_by_layer[current_layer].T[index]), self.weights_by_layer[current_layer + 1]), base)
             multipliers.append(base)
-        return multipliers.reverse()
+            current_layer -= 1
+        return multipliers[::-1]
