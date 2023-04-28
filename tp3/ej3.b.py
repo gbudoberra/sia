@@ -20,7 +20,7 @@ if __name__ == '__main__':
     expected = [[1], [-1], [1], [-1], [1], [-1], [1], [-1], [1]]
     points = [np.ravel(m) for m in matrices[0:len(matrices) - 1:1]]
     perceptron = MultiLayerPerceptron([36, 36, 36, 1], points, "step", expected, 0.1, 0.1)
-    perceptron.batch_iteration()
+    perceptron.train()
     result = perceptron.get_result(np.ravel(matrices[len(matrices)-1]))
     print(result)
     result = perceptron.get_result(np.ravel(matrices[5]))

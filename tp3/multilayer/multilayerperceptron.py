@@ -44,13 +44,12 @@ class MultiLayerPerceptron:
         return (1 / 2) * cumulative_error
 
     def has_converged(self):
-        return self.epochs > 5000 or self.error() < self.epsilon
+        return self.epochs > 1000 or self.error() < self.epsilon
 
-    def batch_iteration(self):
+    def train(self):
         while not self.has_converged():
             self.update_network(self.input_matrix)
             self.back_propagation()
-            print(self.output_by_layer[-1])
             self.epochs += 1
 
     def update_network(self, input_data):
@@ -87,8 +86,8 @@ class MultiLayerPerceptron:
     def get_result(self, points):
         partial_output = np.insert(points, 0, -1)
         for i in range(len(self.weights_by_layer)):
-            partial_output = np.dot(self.weights_by_layer[i], partial_output)
-        return self.activation_method(partial_output)
+            partial_output = self.activation_method(np.dot(self.weights_by_layer[i], partial_output))
+        return partial_output
 
 
 

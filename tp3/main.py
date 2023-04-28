@@ -16,7 +16,7 @@ if __name__ == '__main__':
     points = [[-1, 1], [1, -1], [-1, -1], [1, 1]]
     expected = [[-1], [-1], [-1], [1]]
     perceptron = MultiLayerPerceptron([3, 2, 1], points, "step", expected, 0.1, 0.1)
-    perceptron.batch_iteration()
+    perceptron.train()
     print(type(perceptron.weights_by_layer[0]))
     print(perceptron.weights_by_layer[0][0])
 

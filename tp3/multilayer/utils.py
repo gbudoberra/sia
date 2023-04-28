@@ -12,10 +12,9 @@ import numpy as np
 def create_weights_by_layer(perceptron_by_layer):
     weights_by_layer = []
     for index in range(len(perceptron_by_layer) - 1):
-        weights = np.random.rand(perceptron_by_layer[index + 1], perceptron_by_layer[index]) # Genera matriz con valores aleatorios
+        weights = np.random.normal(0, 0.5, size=(perceptron_by_layer[index + 1], perceptron_by_layer[index]))
         weights_by_layer.append(weights)
     return weights_by_layer
-
 
 
 def create_zero_matrices(perceptron_by_layer, point_number):
@@ -54,8 +53,7 @@ def compute_multipliers(index, weights_by_layer, differentiated_preactivate_by_l
     while current_layer >= 0:
         diagonal = np.diag(differentiated_preactivate_by_layer[current_layer][:, index])
         weights_transposed = weights_by_layer[current_layer + 1].T
-        aux1 = np.matmul(diagonal, weights_transposed)
-        base = np.matmul(aux1, base)
+        base = np.matmul(np.matmul(diagonal, weights_transposed), base)
         multipliers.append(base)
         current_layer -= 1
     return multipliers[::-1]
