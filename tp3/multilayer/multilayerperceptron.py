@@ -44,12 +44,13 @@ class MultiLayerPerceptron:
         return (1 / 2) * cumulative_error
 
     def has_converged(self):
-        return self.epochs > 100000 or self.error() < self.epsilon
+        return self.epochs > 5000 or self.error() < self.epsilon
 
     def batch_iteration(self):
         while not self.has_converged():
             self.update_network(self.input_matrix)
             self.back_propagation()
+            print(self.output_by_layer[-1])
             self.epochs += 1
 
     def update_network(self, input_data):

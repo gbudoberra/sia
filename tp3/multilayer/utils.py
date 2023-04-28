@@ -1,20 +1,20 @@
 import numpy as np
 
 
-def create_weights_by_layer(perceptron_by_layer):
-    weights_by_layer = []
-    for index in range(len(perceptron_by_layer) - 1):
-        weights_by_layer.append(np.zeros(
-            (perceptron_by_layer[index + 1], perceptron_by_layer[index])))
-    return weights_by_layer
-
-# create an initial random weight  matrix
 # def create_weights_by_layer(perceptron_by_layer):
 #     weights_by_layer = []
 #     for index in range(len(perceptron_by_layer) - 1):
-#         weights = np.random.rand(perceptron_by_layer[index + 1], perceptron_by_layer[index]) # Genera matriz con valores aleatorios
-#         weights_by_layer.append(weights)
+#         weights_by_layer.append(np.zeros(
+#             (perceptron_by_layer[index + 1], perceptron_by_layer[index])))
 #     return weights_by_layer
+
+# create an initial random weight  matrix
+def create_weights_by_layer(perceptron_by_layer):
+    weights_by_layer = []
+    for index in range(len(perceptron_by_layer) - 1):
+        weights = np.random.rand(perceptron_by_layer[index + 1], perceptron_by_layer[index]) # Genera matriz con valores aleatorios
+        weights_by_layer.append(weights)
+    return weights_by_layer
 
 
 

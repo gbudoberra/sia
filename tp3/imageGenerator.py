@@ -6,8 +6,8 @@ def save_number_image(number, filename):
     font_size = 36
     font = ImageFont.truetype('DejaVuSans.ttf', font_size)
 
-    # Crea una nueva imagen de 100x100 píxeles
-    image = Image.new('RGB', (100, 100), color='white')
+    # Crea una nueva imagen de 50x50 píxeles
+    image = Image.new('RGB', (35, 35), color='white')
 
     # Dibuja el número en la imagen
     draw = ImageDraw.Draw(image)

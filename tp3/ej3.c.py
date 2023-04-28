@@ -5,9 +5,8 @@ from tp3.multilayer.multilayerperceptron import MultiLayerPerceptron
 
 def output_matrix(n):
     diag = [-1 for _ in range(n)]
-    matriz = -1 * np.eye(n) + np.ones((n, n)) + np.diag(
-        diag)  # Genera la matriz con 1 en todos los demás lugares y -1 en la diagonal
-    return matriz
+    matriz = -1 * np.eye(n, dtype=int) + np.ones((n, n), dtype=int) + np.diag(diag)
+    return -1*matriz
 
 
 def load_number_image(png_filename):
@@ -26,7 +25,7 @@ if __name__ == '__main__':
         points.append(np.ravel(image_matrix))
     identity_matrix = output_matrix(10)
     expected = [row.tolist() for row in identity_matrix]
-    perceptron = MultiLayerPerceptron([10001, 2048, 1024, 512, 256, 128, 10], points, "step", expected, 0, 0.1)
+    perceptron = MultiLayerPerceptron([(35*35)+1,  100,100,100,100, 10], points, "step", expected, 0, 0.1)
     perceptron.batch_iteration()
 
     print("finished")
