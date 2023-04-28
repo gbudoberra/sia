@@ -1,6 +1,6 @@
 import numpy as np
 from tp3.multilayer.utils import initialize_network, update_layer, compute_multipliers
-
+import pandas as pd
 
 # based
 # on https://openlearninglibrary.mit.edu/assets/courseware/v1/9c36c444e5df10eef7ce4d052e4a2ed1/asset-v1:MITx+6.036+1T2019+type@asset+block/notes_chapter_Neural_Networks.pdf
@@ -22,6 +22,7 @@ class MultiLayerPerceptron:
 
         self.epsilon = epsilon
         self.learning_rate = learning_rate
+        self.epochs = 0
 
         self.point_number = len(data_set)
         self.layer_number = len(perceptron_by_layer)
@@ -43,12 +44,13 @@ class MultiLayerPerceptron:
         return (1 / 2) * cumulative_error
 
     def has_converged(self):
-        return self.error() < self.epsilon
+        return self.epochs > 100000 or self.error() < self.epsilon
 
     def batch_iteration(self):
         while not self.has_converged():
             self.update_network(self.input_matrix)
             self.back_propagation()
+            self.epochs += 1
 
     def update_network(self, input_data):
         last_output = input_data
@@ -86,4 +88,6 @@ class MultiLayerPerceptron:
         for i in range(len(self.weights_by_layer)):
             partial_output = np.dot(self.weights_by_layer[i], partial_output)
         return self.activation_method(partial_output)
+
+
 
