@@ -32,7 +32,7 @@ if __name__ == '__main__':
     expected = [row.tolist() for row in output_matrix(10)]
     perceptron_by_layer = [len(points[0]) + 1, 50, 20, 10]
 
-    perceptron = MultiLayerPerceptron(perceptron_by_layer, points, "step", expected, 0, 0.1)
+    perceptron = MultiLayerPerceptron(perceptron_by_layer, points, "step", expected, 0, 0.1,"adam")
     perceptron.train()
 
     print("finished")

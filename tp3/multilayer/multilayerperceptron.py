@@ -1,6 +1,7 @@
 import numpy as np
+
 from tp3.multilayer.utils import initialize_network, update_layer, compute_multipliers
-import pandas as pd
+
 
 # based
 # on https://openlearninglibrary.mit.edu/assets/courseware/v1/9c36c444e5df10eef7ce4d052e4a2ed1/asset-v1:MITx+6.036+1T2019+type@asset+block/notes_chapter_Neural_Networks.pdf
@@ -18,7 +19,15 @@ class MultiLayerPerceptron:
     #       2- WEIGHTS = [ W0, W1, ... ]
     #       3- Pre-activation = [ sum( Wi * Xi) para to i ]
     #       4- Pre-activation diff = [ deltas ]
-    def __init__(self, perceptron_by_layer, data_set, activation_method, result_set, epsilon, learning_rate):
+    def __init__(self, perceptron_by_layer, data_set, activation_method, result_set, epsilon, learning_rate,
+                 update_method="gradient_descent"):
+
+        if update_method == "gradient_descent":
+            self.update = self._gradient_descent_update
+        elif update_method == "adam":
+            self.update = self._adam_update
+        else:
+            raise RuntimeError("Incorrect update method was provided.")
 
         self.epsilon = epsilon
         self.learning_rate = learning_rate
@@ -35,8 +44,9 @@ class MultiLayerPerceptron:
 
         # Inicializa cada uno de estos vectores con matrices en 0 con sus respectivas dimensiones.
         self.weights_by_layer, self.output_by_layer, \
-            self.differentiated_preactivate_by_layer, self.pre_activation_by_layer \
-            = initialize_network(perceptron_by_layer, self.point_number)
+            self.differentiated_preactivate_by_layer, self.pre_activation_by_layer, \
+            self.mean, self.std = initialize_network(perceptron_by_layer, self.point_number)
+        self.adam_iteration = 0
 
     def error(self):
         error = (self.output_by_layer[-1] - self.results_matrix) ** 2
@@ -64,15 +74,34 @@ class MultiLayerPerceptron:
 
     def back_propagation(self):
         for current_point in range(self.point_number):
+            gradient = self._compute_gradient(current_point)
+            self.update(gradient)
 
-            multipliers = self._compute_multipliers(current_point)
-            base = np.array(self.input_matrix[:, current_point])
+    def _compute_gradient(self, point):
+        multipliers = self._compute_multipliers(point)
+        base = np.array(self.input_matrix[:, point])
+        gradient = []
+        for layer in range(len(self.weights_by_layer)):
+            if layer > 0:
+                base = self.output_by_layer[layer - 1][:, point]
+            gradient.append(np.transpose(np.outer(base, multipliers[layer])))
+        return gradient
 
-            for layer in range(len(self.weights_by_layer)):
-                if layer > 0:
-                    base = self.output_by_layer[layer - 1][:, current_point]
-                self.weights_by_layer[layer] += -1 * self.learning_rate * np.transpose(
-                    np.outer(base, multipliers[layer]))
+    def _gradient_descent_update(self, gradient):
+        for layer in range(len(self.weights_by_layer)):
+            self.weights_by_layer[layer] += -1 * self.learning_rate * gradient[layer]
+
+    def _adam_update(self, gradient):
+        b1 = 0.8
+        b2 = 0.8
+        e = 1e-8
+        self.adam_iteration += 1
+        for layer in range(len(self.weights_by_layer)):
+            self.mean[layer] = (b1 * self.mean[layer] + (1 - b1) * gradient[layer]) / (1 - (b1 ** self.adam_iteration))
+            self.std[layer] = (b2 * self.std[layer] + (1 - b2) * np.square(gradient[layer])) / (1 - (b2 ** self.adam_iteration))
+            self.weights_by_layer[layer] += -1 * self.learning_rate * (
+                    (np.reciprocal(np.sqrt(self.std[layer] + e))) * self.mean[layer]
+            )
 
     def _compute_multipliers(self, index):
         outputs_vs_expected_delta = ((self.output_by_layer[-1][:, index]) - self.results_matrix[:, index])
@@ -88,6 +117,3 @@ class MultiLayerPerceptron:
         for i in range(len(self.weights_by_layer)):
             partial_output = self.activation_method(np.dot(self.weights_by_layer[i], partial_output))
         return partial_output
-
-
-
