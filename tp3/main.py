@@ -14,7 +14,7 @@ def plot_result(w0, w1, w2, graph_points):
 
 if __name__ == '__main__':
     points = [[-1, 1], [1, -1], [-1, -1], [1, 1]]
-    expected = [[-1], [-1], [-1], [1]]
+    expected = [[1], [1], [-1], [-1]]
     perceptron = MultiLayerPerceptron([3, 2, 1], points, "step", expected, 0.1, 0.1)
     perceptron.train()
     print(type(perceptron.weights_by_layer[0]))

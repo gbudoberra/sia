@@ -1,5 +1,9 @@
 import os
-from PIL import Image, ImageDraw, ImageFont
+
+import numpy as np
+from PIL import Image
+from PIL import ImageDraw, ImageFont
+
 
 def save_number_image(number, filename):
     font_size = 36
@@ -26,6 +30,6 @@ def add_noise_to_image(img, noise_level, filename):
 
 if __name__ == '__main__':
     for i in range(10):
-        filename = f'{i}.png'
+        filename = f'{i}_digit'
         save_number_image(i, filename)
         print(f'Generating: {os.path.abspath(filename)}')
