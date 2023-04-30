@@ -37,7 +37,6 @@ if __name__ == '__main__':
     config = JsonReader("/home/bsquillari/PycharmProjects/sia/tp3/ej3/configurations/conf_B.json")
 
     points, nums = get_points()
-    print(points)
     # Get testing sets
     testing_set = [points.pop(), points.pop()]
     testing_expected = [[-1], [1]]
@@ -56,6 +55,7 @@ if __name__ == '__main__':
     perceptron.train()
 
     # Error vs Iterations
+    print(perceptron.error_by_iteration)
     plot_graph(range(len(perceptron.error_by_iteration)), perceptron.error_by_iteration, "Iteraciones", "Error",
                "/home/bsquillari/PycharmProjects/sia/tp3/ej3/graphs/B_error.png")
 

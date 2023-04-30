@@ -21,9 +21,11 @@ def plot_result(w0, w1, w2, graph_points, colors, saving_file):
     plt.savefig(saving_file)
 
 
-def plot_error(errors, filename):
+def plot_error(errors, filename, step, x_label):
     plt.clf()
-    plt.plot(range(len(errors[::1000])), errors[::1000])
+    plt.plot(range(len(errors[::step])), errors[::step])
+    plt.xlabel(x_label)
+    plt.ylabel("Error")
     plt.savefig(filename)
 
 
@@ -33,8 +35,10 @@ if __name__ == '__main__':
     points_colors = [and_colors, or_colors]
     save_files = ["./and_result.png", "./or_result.png"]
     error_files = ["./and_error.png", "./or_error.png"]
+    steps = [1, 1000]
+    x_labels = ['Epocas', 'Epocas (miles)']
 
-    for file, color, save_file, error_file in zip(config_files, points_colors, save_files, error_files):
+    for file, color, save_file, error_file, step, error_x_label in zip(config_files, points_colors, save_files, error_files, steps, x_labels):
         config = JsonReader(file)
         points = config.points
         expected = config.expected
@@ -43,10 +47,10 @@ if __name__ == '__main__':
             points,
             config.activation_method,
             expected,
-            0, 0.1, update_method=config.update_method
+            0.00000000001, 0.1, update_method=config.update_method
         )
         perceptron.train()
         plot_result(perceptron.weights_by_layer[0][0][0], perceptron.weights_by_layer[0][0][1],
                     perceptron.weights_by_layer[0][0][2], points, color, save_file)
-        plot_error(perceptron.error_by_iteration, error_file)
+        plot_error(perceptron.error_by_iteration, error_file, step, error_x_label)
 
