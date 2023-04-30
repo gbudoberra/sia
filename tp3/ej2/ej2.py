@@ -30,7 +30,7 @@ if __name__ == '__main__':
     points, expected = parse_csv()
     expected = rescale_expected(expected, -1, 1)
     perceptron = MultiLayerPerceptron(
-        [len(points[0]) + 1, 10, 10, 10, len(expected[0])],
+        [len(points[0]) + 1,  len(expected[0])],
         points,
         "tanh",
         expected,
