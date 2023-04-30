@@ -1,0 +1,7 @@
+{
+  "expected": [[1], [-1], [1], [-1], [1], [-1], [1], [-1], [1]],
+  "activation_method": "step",
+  "update_method": "gradient_descent,",
+  "learning_rate": 0.1,
+  "epsilon": 0.1
+}
