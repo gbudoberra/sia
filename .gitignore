@@ -246,3 +246,5 @@ fabric.properties
 
 # Program output file
 /tp1/output.txt
+/tp2/*
+/tp3/ej3/images
