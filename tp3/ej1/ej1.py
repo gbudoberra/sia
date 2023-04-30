@@ -29,10 +29,10 @@ def plot_error(errors, filename):
 
 if __name__ == '__main__':
 
-    config_files = ["./ej1/conf_and.json", "./ej1/conf_or_exclusive.json"]
+    config_files = ["./conf_and.json", "./conf_or_exclusive.json"]
     points_colors = [and_colors, or_colors]
-    save_files = ["./ej1/and_result.png", "./ej1/or_result.png"]
-    error_files = ["./ej1/and_error.png", "./ej1/or_error.png"]
+    save_files = ["./and_result.png", "./or_result.png"]
+    error_files = ["./and_error.png", "./or_error.png"]
 
     for file, color, save_file, error_file in zip(config_files, points_colors, save_files, error_files):
         config = JsonReader(file)
