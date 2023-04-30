@@ -30,9 +30,6 @@ def plot_graph(x, y, x_name, y_name, filename):
     # Guardar el gráfico en un archivo
     plt.savefig(filename)
 
-    # Mostrar el gráfico
-    plt.show()
-
 
 def plot_result(w0, w1, w2, graph_points, colors, saving_file):
     plt.clf()

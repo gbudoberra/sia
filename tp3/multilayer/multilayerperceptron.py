@@ -55,9 +55,7 @@ class MultiLayerPerceptron:
         self.error_by_iteration = []
 
     def error(self):
-        error = (self.output_by_layer[-1] - self.results_matrix) ** 2
-        cumulative_error = np.sum(error)
-        return (1 / 2) * cumulative_error
+        return np.sum(np.square(self.output_by_layer[-1] - self.results_matrix))
 
     def has_converged(self):
         return self.epochs > 50000 or self.error() < self.epsilon

@@ -65,7 +65,7 @@ def vary_update_method(times, noises, values, perceptron_adam, perceptron_gd):
         ax.set_title('Noise level = ' + str(noise))
         ax.legend()
 
-        plt.show()
+        plt.savefig(f'Aciertos_vs_Nro_por_ActMetodo_noise_{noise}.png')
         plt.clf()
 
         # Definir los valores de A y B
@@ -90,7 +90,7 @@ def vary_update_method(times, noises, values, perceptron_adam, perceptron_gd):
     ax.set_xticklabels(noises)
     ax.legend()
 
-    plt.show()
+    plt.savefig('Aciertos_vs_Ruido_por_ActMetodo.png')
     plt.clf()
 
     plt.plot(perceptron_adam.error_by_iteration, color='blue', label='Adam')
@@ -98,7 +98,7 @@ def vary_update_method(times, noises, values, perceptron_adam, perceptron_gd):
     plt.legend()
     plt.ylabel('Error')
     plt.xlabel('Epoca')
-    plt.show()
+    plt.savefig('Error_vs_Epoca_por_ActMetodo.png')
     plt.clf()
 
 
@@ -113,7 +113,7 @@ def basic_learning_rate_bar_graph(x, y, y_label):
     ax.set_xlabel('Tasa de aprendizaje')
     ax.set_ylabel(y_label)
 
-    plt.show()
+    plt.savefig(f'LA_vs_{y_label}.png')
     plt.clf()
 
 
@@ -130,7 +130,7 @@ def vary_learning_rate(times, values, perceptrons, learning_rates, noise):
                     result += 1
         percentage_by_learning_rate.append(100 * (result / (times * len(values))))
 
-    basic_learning_rate_bar_graph(learning_rates, percentage_by_learning_rate, 'Porcentaje de aciertos')
+    basic_learning_rate_bar_graph(learning_rates, percentage_by_learning_rate, 'Aciertos(%)')
 
     basic_learning_rate_bar_graph(learning_rates, [perceptron.epochs for perceptron in perceptrons], 'Epocas')
 
@@ -141,5 +141,5 @@ def vary_learning_rate(times, values, perceptrons, learning_rates, noise):
     plt.xlabel('Epoca')
     plt.ylabel('Error')
     plt.legend()
-    plt.show()
+    plt.savefig('Error_vs_Epoca_por_LA.png')
     plt.clf()
