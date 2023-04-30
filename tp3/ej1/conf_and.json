@@ -1,0 +1,6 @@
+{
+  "points": [[-1, 1], [1, -1], [-1, -1], [1, 1]],
+  "expected": [[1], [1], [1], [-1]],
+  "update_method": "adam",
+  "activation_method": "step"
+}

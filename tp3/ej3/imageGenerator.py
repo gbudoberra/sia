@@ -30,6 +30,6 @@ def add_noise_to_image(img, noise_level, filename):
 
 if __name__ == '__main__':
     for i in range(10):
-        filename = f'{i}_digit'
+        filename = f'./images/{i}_digit'
         save_number_image(i, filename)
         print(f'Generating: {os.path.abspath(filename)}')

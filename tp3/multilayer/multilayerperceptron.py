@@ -10,7 +10,7 @@ class MultiLayerPerceptron:
         "relu": [lambda x: np.maximum(0, x), lambda x: 1 if x > 0 else 0],
         "sigmoid": [lambda x: 1 / (1 + np.exp(-x)), lambda x: (1 / (1 + np.exp(-x))) * (1 - (1 / (1 + np.exp(-x))))],
         "id": [lambda x: x, lambda x: 1],
-        "tanh": [lambda x: np.tanh(x), lambda x: 1 - np.square(np.tanh(x))],
+        "tanh": [lambda x: np.tanh(x), lambda x: 1 / np.cosh(x)**2],
         "step": [lambda x: 1 if x >= 0 else -1, lambda x: 1],
     }
 
@@ -40,7 +40,11 @@ class MultiLayerPerceptron:
         self.input_matrix = np.transpose(np.array([np.insert(point, 0, -1) for point in data_set]))
 
         self.activation_method = np.vectorize(self.activation_methods[activation_method][0])
-        self.activation_derivative = np.vectorize(self.activation_methods[activation_method][1])
+
+        if self.layer_number == 2:
+            self.activation_derivative = np.vectorize(lambda x: 1)
+        else:
+            self.activation_derivative = np.vectorize(self.activation_methods[activation_method][1])
 
         # Inicializa cada uno de estos vectores con matrices en 0 con sus respectivas dimensiones.
         self.weights_by_layer, self.output_by_layer, \
@@ -48,18 +52,21 @@ class MultiLayerPerceptron:
             self.mean, self.std = initialize_network(perceptron_by_layer, self.point_number)
         self.adam_iteration = 0
 
+        self.error_by_iteration = []
+
     def error(self):
         error = (self.output_by_layer[-1] - self.results_matrix) ** 2
         cumulative_error = np.sum(error)
         return (1 / 2) * cumulative_error
 
     def has_converged(self):
-        return self.epochs > 1000 or self.error() < self.epsilon
+        return self.epochs > 50000 or self.error() < self.epsilon
 
     def train(self):
         while not self.has_converged():
             self.update_network(self.input_matrix)
             self.back_propagation()
+            self.error_by_iteration.append(self.error())
             self.epochs += 1
 
     def update_network(self, input_data):

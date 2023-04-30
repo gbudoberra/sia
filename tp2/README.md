@@ -94,7 +94,7 @@ También se puede configurar la paleta de colores y el color objetivo en el arch
 ## Ejecucion 🚀
 Para ejecutar el proyecto y resolver un tablero aleatorio se debe ejecutar el siguiente comando en la terminal:
 ```bash
-pipenv run python main.py
+pipenv run python ej1.py
 ```
 ## Analisis de resultados 📊
 Para realizar el analisis de los resultados, es necesario pararse en el directorio análisis, mediante el comando:
@@ -103,15 +103,15 @@ cd analysis
 ```
 Para ejecutar la comparación de los métodos y comparar los métodos de selección y mutación, se debe ejecutar el siguiente comando en la terminal:
 ```bash
-pipenv run python ./best_combination/main.py
+pipenv run python ./best_combination/ej1.py
 ```
 Para ejecutar la comparación de tamaño de población y cantidad de hijos generados, se debe ejecutar el siguiente comando en la terminal:
 ```bash
-pipenv run python ./alter_parameters/main.py
+pipenv run python ./alter_parameters/ej1.py
 ```
 Para ejecutar la comparación de distintas probabilidades de mutación, se debe ejecutar el siguiente comando en la terminal:
 ```bash
-pipenv run python ./alter_mutation_probability/main.py
+pipenv run python ./alter_mutation_probability/ej1.py
 ```
 
 ## Autores 💭
