@@ -46,7 +46,6 @@ class MultiLayerPerceptron:
         else:
             self.activation_derivative = np.vectorize(self.activation_methods[activation_method][1])
 
-        # Inicializa cada uno de estos vectores con matrices en 0 con sus respectivas dimensiones.
         self.weights_by_layer, self.output_by_layer, \
             self.differentiated_preactivate_by_layer, self.pre_activation_by_layer, \
             self.mean, self.std = initialize_network(perceptron_by_layer, self.point_number)

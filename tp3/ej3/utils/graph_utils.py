@@ -74,27 +74,20 @@ def plot_error(errors, filename):
 
 def plot_perceptrons_vs_iterations(perceptrons, filename):
     num_layers = len(perceptrons)
-    print("num_layers", num_layers)
     bar_width = 0.25
-    colors = ['r', 'g', 'b']
+    colors = ['tab:orange', 'tab:green', 'tab:blue']
 
     fig, ax = plt.subplots()
     for i in range(num_layers):
-        x = range(len(perceptrons[i][0]))
-        print("x", x)
-        y = perceptrons[i][0]
-        print("y", y)
-        ax.bar([xi + i * bar_width for xi in x],
+        x = range(1, len(perceptrons[i]) + 1)
+        y = perceptrons[i]
+        ax.bar([xi + i * bar_width - bar_width/2 for xi in x],
                y, width=bar_width, color=colors[i],
-               label=f'Layer {i + 1}')
+               label=f'#layers = {i + 1}')
 
     ax.set_xlabel('Amount of perceptrons per layer')
     ax.set_ylabel('Amount of iterations')
     ax.legend()
+    ax.set_yscale('log')
     plt.savefig(filename)
-    # plt.clf()
-    # plt.scatter(perceptrons, iterations)
-    # plt.xlabel('Perceptrons per layer')
-    # plt.ylabel('Iterations')
-    # plt.yscale('log')
-    # plt.savefig(filename)
+
