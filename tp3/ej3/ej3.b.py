@@ -18,23 +18,33 @@ def leer_archivo(nombre_archivo):
     return matrices
 
 
+def num_to_string(arr):
+    out = ''
+    for i in range(arr.shape[0]):
+        for j in range(arr.shape[1]):
+            out += str(arr[i, j]) + ' '
+        out += '\n'
+    return out
+
+
 def get_points():
     nums = leer_archivo('TP3-ej3-digitos.txt')
-    points = [np.ravel(m) for m in nums[0:len(nums) - 1:1]]
-    return points
+    points = [np.ravel(m) for m in nums]
+    return points, nums
 
 
 if __name__ == '__main__':
-    config = JsonReader("./ej3/configurations/config_A.json")
+    config = JsonReader("/home/bsquillari/PycharmProjects/sia/tp3/ej3/configurations/conf_B.json")
 
-    points = get_points()
+    points, nums = get_points()
+    print(points)
+    # Get testing sets
+    testing_set = [points.pop(), points.pop()]
+    testing_expected = [[-1], [1]]
 
+    perceptron_by_layer = [len(points[0]) + 1, 36, 36, 1]
 
-
-    perceptron_by_layer = [len(points) + 1, 36, 36, 1]
-
-    # Case 1
-    # Learning with all values
+    # Learning [0, 1, 2, 3, 4, 5, 6, 7]
     perceptron = MultiLayerPerceptron(
         perceptron_by_layer,
         points,
@@ -46,18 +56,27 @@ if __name__ == '__main__':
     perceptron.train()
 
     # Error vs Iterations
-    plot_graph(range(len(perceptron.error_by_iteration)), perceptron.error_by_iteration, "Iteraciones", "Error", "./ej3/graphs/B_error.png")
+    plot_graph(range(len(perceptron.error_by_iteration)), perceptron.error_by_iteration, "Iteraciones", "Error",
+               "/home/bsquillari/PycharmProjects/sia/tp3/ej3/graphs/B_error.png")
 
-    #
+    # Case 1: Already learned numbers
+    print('Casos ya aprendidos:')
+    for i in range(len(points)):
+        print('---------------------')
+        print(num_to_string(nums[i]))
+        if perceptron.get_result(points[i]) == 1:
+            print('Resultado: Par')
+        else:
+            print('Resultado: Impar')
+        print('---------------------')
 
-    # perceptron = MultiLayerPerceptron([36, 36, 36, 1], points, "step", config.expected, 0.1, 0.1)
-    # perceptron.train()
-    # result = perceptron.get_result(np.ravel(matrices[len(matrices)-1]))
-    # print(result)
-    # result = perceptron.get_result(np.ravel(matrices[5]))
-    # print(result)
-
-
-    # print(type(perceptron.weights_by_layer[0]))
-    # print(perceptron.weights_by_layer[0][0])
-    # print(perceptron.output_by_layer)
+    # Case 2: Testing set
+    print('Conjunto de testeo:')
+    for i in range(len(testing_set)):
+        print('---------------------')
+        print(num_to_string(nums[i + len(nums) - 2]))
+        if perceptron.get_result(testing_set[i]) == 1:
+            print('Resultado: Par')
+        else:
+            print('Resultado: Impar')
+        print('---------------------')
