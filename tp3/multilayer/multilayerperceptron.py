@@ -3,12 +3,20 @@ import numpy as np
 from tp3.multilayer.utils import initialize_network, update_layer, compute_multipliers
 
 
+# Definir la función sigmoidal
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+# Definir la función para la derivada de la función sigmoidal
+def sigmoid_deriv(x):
+    return sigmoid(x) * (1 - sigmoid(x))
+
 # based
 # on https://openlearninglibrary.mit.edu/assets/courseware/v1/9c36c444e5df10eef7ce4d052e4a2ed1/asset-v1:MITx+6.036+1T2019+type@asset+block/notes_chapter_Neural_Networks.pdf
 class MultiLayerPerceptron:
     activation_methods = {
         "relu": [lambda x: np.maximum(0, x), lambda x: 1 if x > 0 else 0],
-        "sigmoid": [lambda x: 1 / (1 + np.exp(-x)), lambda x: (1 / (1 + np.exp(-x))) * (1 - (1 / (1 + np.exp(-x))))],
+        "sigmoid": [lambda x: sigmoid(x), lambda x: sigmoid_deriv(x)],
         "id": [lambda x: x, lambda x: 1],
         "tanh": [lambda x: np.tanh(x), lambda x: 1 / np.cosh(x)**2],
         "step": [lambda x: 1 if x >= 0 else -1, lambda x: 1],

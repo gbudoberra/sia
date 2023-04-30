@@ -1,6 +1,7 @@
 import numpy as np
 
 
+# this class is not used as a multilayer with one layer is equivalent.
 class SimplePerceptron:
     activations_method = {
         "step": [lambda x: np.sign(x)],

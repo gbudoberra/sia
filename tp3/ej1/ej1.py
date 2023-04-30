@@ -23,7 +23,7 @@ def plot_result(w0, w1, w2, graph_points, colors, saving_file):
 
 def plot_error(errors, filename):
     plt.clf()
-    plt.scatter(range(len(errors)), errors)
+    plt.plot(range(len(errors[::1000])), errors[::1000])
     plt.savefig(filename)
 
 
@@ -43,7 +43,7 @@ if __name__ == '__main__':
             points,
             config.activation_method,
             expected,
-            0.1, 0.1, update_method=config.update_method
+            0, 0.1, update_method=config.update_method
         )
         perceptron.train()
         plot_result(perceptron.weights_by_layer[0][0][0], perceptron.weights_by_layer[0][0][1],
