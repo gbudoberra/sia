@@ -7,7 +7,6 @@
  - [Instalación](#instalacion-)
  - [Configuración](#configuracion-)
  - [Ejecución](#ejecucion-)
- - [Análisis de resultados](#analisis-de-resultados-)
  - [Autores](#autores-)
 
 ## Introduccion
@@ -24,15 +23,22 @@ pip install matplotlib && pip install pandas && pip install numpy
 ```
 
 ## Estructura del proyecto 🧱
-El proyecto está compuesto por los siguientes archivos y directorios:
- - [README.md](README.md): Contiene la información del proyecto.
- - [configurations](configurations): JSON Parser
- - [singelayer](singlelayer): Implementación del perceptrón simple.
- - [multilayer](multilayer): Implementación del perceptrón multicapa.
- - [ej1](ej1): Ejercicio 1
- - [ej2](ej2): Ejercicio 2
- - [ej3](ej3): Ejercicio 3
-
+El proyecto está compuesto por los siguientes archivos:
+ - [jsonReader.py](configurations/jsonReader.py): Este archivo contiene la clase JsonReader que se encarga de leer el archivo de configuración y parsearlo.
+ - [SimplePerceptron.py](singlelayer/SimplePerceptron.py): Este archivo contiene la clase SimplePerceptron que se encarga de entrenar un perceptrón simple.
+ - [MultilayerPerceptron.py](multilayer/multilayerperceptron.py): Este archivo contiene la clase MultilayerPerceptron que se encarga de entrenar un perceptrón multicapa.
+ - [ej1](ej1): 
+   - [ej1.py](ej1/ej1.py): Codigo fuente del ejercicio 1.
+   - [conf_and.json](ej1/conf_and.json): Archivo de configuracion del operador AND para el ejercicio 1.
+   - [conf_or.json](ej1/conf_or.json): Archivo de configuracion del operador OR para el ejercicio 1.
+ - [ej2](ej2):
+   - [ej2.py](ej2/ej2.py): Codigo fuente del ejercicio 2.
+   - [TP3-ej2-conjunto.csv](ej2/TP3-ej2-conjunto.csv): Conjunto de datos para el ejercicio 2.
+ - [ej3](ej3):
+   - [ej.3a.py](ej3/ej3.a.py), [ej3.b.py](ej3/ej3.b.py), [ej3.c.py](ej3/ej3.c.py): Codigos fuente para la resolucion de cada enunciado
+   - [configurations](ej3/configurations): Directorio que contiene los archivos de configuración para el problema de clasificación de dígitos.
+   - [graphs](ej3/graphs): Directorio que contiene los gráficos generados por el programa.
+   - [utils](ej3/utils): Directorio que contiene los archivos de utilidades para el problema de clasificación de dígitos.
 
 ## Instalacion 🛠️
 Para instalar el proyecto se debe clonar el repositorio en la carpeta deseada:
@@ -49,15 +55,24 @@ pip install matplotlib && pip install pandas && pip install numpy
 ```
 
 ## Configuracion ⚙️
-En cada carpeta de ejercicio, donde corresponda, se encuentra un JSON que contiene los parámetros necesarios para correr el algoritmo. 
+Para configurar el proyecto cada ejercicio cuenta con un archivo .json de configuracion.
+Por ejemplo, en el ejercicio 1 puede modificarse [conf_and.json](ej1/conf_and.json) para elegir diferentes metodos activacion o actualizacion:
+```json
+{
+  "points": [[-1, 1], [1, -1], [-1, -1], [1, 1]],
+  "expected": [[1], [1], [1], [-1]],
+  "update_method": "adam",
+  "activation_method": "step"
+}
+```
 
 ## Ejecucion 🚀
-Para ejecutar el proyecto se debe correr el siguiente comando:
+Para ejecutar el proyecto se puede ejecutar cada uno de los items del enunciado de forma individual. Para ello se debe ingresar a la carpeta del item y ejecutar el siguiente comando en la terminal
 ```bash
-pipenv run python ejX.py
+pipenv run python ejX/ejX.py
 ```
-## Analisis de resultados 📊
-Para realizar el analisis de los resultados, en cada carpeta de ejercicio se encuentran los gráficos relacionados al mismo.
+Donde X es el numero de ejercicio que se desea ejecutar.
+
 
 ## Autores 💭
  - [Gaspar Budó Berra](https://github.com/gbudoberra)
