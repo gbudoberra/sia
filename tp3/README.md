@@ -24,7 +24,14 @@ pip install matplotlib && pip install pandas && pip install numpy
 ```
 
 ## Estructura del proyecto 🧱
-El proyecto está compuesto por los siguientes archivos:
+El proyecto está compuesto por los siguientes archivos y directorios:
+ - [README.md](README.md): Contiene la información del proyecto.
+ - [configurations](configurations): JSON Parser
+ - [singelayer](singlelayer): Implementación del perceptrón simple.
+ - [multilayer](multilayer): Implementación del perceptrón multicapa.
+ - [ej1](ej1): Ejercicio 1
+ - [ej2](ej2): Ejercicio 2
+ - [ej3](ej3): Ejercicio 3
 
 
 ## Instalacion 🛠️
@@ -42,30 +49,15 @@ pip install matplotlib && pip install pandas && pip install numpy
 ```
 
 ## Configuracion ⚙️
-
+En cada carpeta de ejercicio, donde corresponda, se encuentra un JSON que contiene los parámetros necesarios para correr el algoritmo. 
 
 ## Ejecucion 🚀
-Para ejecutar el proyecto y resolver un tablero aleatorio se debe ejecutar el siguiente comando en la terminal:
+Para ejecutar el proyecto se debe correr el siguiente comando:
 ```bash
-pipenv run python ej1.py
+pipenv run python ejX.py
 ```
 ## Analisis de resultados 📊
-Para realizar el analisis de los resultados, es necesario pararse en el directorio análisis, mediante el comando:
-```bash
-cd analysis
-```
-Para ejecutar la comparación de los métodos y comparar los métodos de selección y mutación, se debe ejecutar el siguiente comando en la terminal:
-```bash
-pipenv run python ./best_combination/ej1.py
-```
-Para ejecutar la comparación de tamaño de población y cantidad de hijos generados, se debe ejecutar el siguiente comando en la terminal:
-```bash
-pipenv run python ./alter_parameters/ej1.py
-```
-Para ejecutar la comparación de distintas probabilidades de mutación, se debe ejecutar el siguiente comando en la terminal:
-```bash
-pipenv run python ./alter_mutation_probability/ej1.py
-```
+Para realizar el analisis de los resultados, en cada carpeta de ejercicio se encuentran los gráficos relacionados al mismo.
 
 ## Autores 💭
  - [Gaspar Budó Berra](https://github.com/gbudoberra)
