@@ -39,7 +39,6 @@ El proyecto está compuesto por los siguientes archivos:
    - [configurations](ej3/configurations): Directorio que contiene los archivos de configuración para el problema de clasificación de dígitos.
    - [graphs](ej3/graphs): Directorio que contiene los gráficos generados por el programa.
    - [utils](ej3/utils): Directorio que contiene los archivos de utilidades para el problema de clasificación de dígitos.
-
 ## Instalacion 🛠️
 Para instalar el proyecto se debe clonar el repositorio en la carpeta deseada:
 ```bash
@@ -72,7 +71,6 @@ Para ejecutar el proyecto se puede ejecutar cada uno de los items del enunciado 
 pipenv run python ejX/ejX.py
 ```
 Donde X es el numero de ejercicio que se desea ejecutar.
-
 
 ## Autores 💭
  - [Gaspar Budó Berra](https://github.com/gbudoberra)
