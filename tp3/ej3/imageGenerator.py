@@ -31,6 +31,6 @@ def add_noise_to_image(img, noise_level, filename):
 if __name__ == '__main__':
     for noise in [70, 160, 255]:
         for i in range(10):
-            filename = f'/home/bsquillari/PycharmProjects/sia/tp3/ej3/images/noise_{noise}/{i}_digit'
-            save_number_image(i, filename, noise)
+            filename = f'images/noise_{noise}/{i}_digit'
+            save_number_image(i, os.path.join(filename), noise)
             print(f'Generating: {os.path.abspath(filename)}')

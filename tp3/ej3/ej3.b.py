@@ -3,6 +3,7 @@ import numpy as np
 from tp3.configurations.jsonReader import JsonReader
 from tp3.ej3.utils.graph_utils import plot_graph
 from tp3.multilayer.multilayerperceptron import MultiLayerPerceptron
+import os
 
 
 def leer_archivo(nombre_archivo):
@@ -34,12 +35,16 @@ def get_points():
 
 
 if __name__ == '__main__':
-    config = JsonReader("/home/bsquillari/PycharmProjects/sia/tp3/ej3/configurations/conf_B.json")
+    json_path = os.path.join(os.path.dirname(__file__), 'configurations', 'conf_B.json')
+
+    config = JsonReader(json_path)
 
     points, nums = get_points()
     # Get testing sets
     testing_set = [points.pop(), points.pop()]
     testing_expected = [[-1], [1]]
+    config.expected.pop(9)
+    config.expected.pop(8)
 
     perceptron_by_layer = [len(points[0]) + 1, 36, 36, 1]
 
@@ -56,8 +61,9 @@ if __name__ == '__main__':
 
     # Error vs Iterations
     print(perceptron.error_by_iteration)
+    png_path = os.path.join('graphs', 'B_error.png')
     plot_graph(range(len(perceptron.error_by_iteration)), perceptron.error_by_iteration, "Iteraciones", "Error",
-               "/home/bsquillari/PycharmProjects/sia/tp3/ej3/graphs/B_error.png")
+               png_path)
 
     # Case 1: Already learned numbers
     print('Casos ya aprendidos:')
