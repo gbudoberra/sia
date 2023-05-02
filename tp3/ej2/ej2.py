@@ -41,12 +41,12 @@ def rescale_expected(expected_values, min_from_interval, max_from_interval):
     return [[value] for value in rescaled_values]
 
 
-def print_result(data, title, file):
+def print_result(data, error, title, file):
     names = [x[0][0] for x in data]
     colors = ['tab:orange' if x[0][1] == 'gradient_descent' else 'tab:blue' for x in data]
     values = [x[1] for x in data]
     fig, ax = plt.subplots(figsize=(10, 6))
-    ax.bar(names, np.ravel(values), color=colors, capsize=4)
+    ax.bar(names, np.ravel(values), color=colors, capsize=4, error=error)
     plt.xticks(horizontalalignment="center")
     ax.set_title(title)
     plt.yscale('log')
@@ -64,24 +64,32 @@ if __name__ == '__main__':
     training_errors = []
     for activation, limit, rescale in zip(activation_methods, limits, rescale_need):
         for update in update_methods:
-            if activation == "id" and update == "gradient_descent":
-                break
-            if rescale:
-                expected = rescale_expected(expected, limit[0], limit[1])
-            training, generalize = split_vector(points, expected, 0.8)
-            training_points, training_expected = zip(*training)
-            perceptron = MultiLayerPerceptron(
-                [len(points[0]) + 1, len(expected[0])],
-                training_points,
-                activation,
-                training_expected,
-                0.000001, 0.1, update_method=update)
-            perceptron.train()
-            training_errors.append(((activation, update), perceptron.error() / len(training_points)))
-            generalize_error = 0
-            for p, r in generalize:
-                generalize_error += np.square(perceptron.get_result(p) - r)
-            generalize_errors.append(((activation, update), generalize_error / len(generalize)))
+            g_err_counter = []
+            t_err_counter = []
 
-    print_result(generalize_errors, "Error promedio de generalización.", "ErrorPromedioGeneralizacion.png")
-    print_result(training_errors, "Error promedio de entrenamiento.", "ErrorPromedioEntrenamiento.png")
+            for i in range(10):
+                if activation == "id" and update == "gradient_descent":
+                    break
+                if rescale:
+                    expected = rescale_expected(expected, limit[0], limit[1])
+                training, generalize = split_vector(points, expected, 0.8)
+                training_points, training_expected = zip(*training)
+                perceptron = MultiLayerPerceptron(
+                    [len(points[0]) + 1, len(expected[0])],
+                    training_points,
+                    activation,
+                    training_expected,
+                    0.000001, 0.1, update_method=update)
+                perceptron.train()
+
+                t_err_counter.append(((activation, update), perceptron.error() / len(training_points)))
+                generalize_error = 0
+                for p, r in generalize:
+                    generalize_error += np.square(perceptron.get_result(p) - r)
+                g_err_counter.append(((activation, update), generalize_error / len(generalize)))
+            generalize_errors.append(np.mean(g_err_counter))
+            g_std = np.std(g_err_counter)
+            training_errors.append(t_err_counter)
+            t_std = np.std(np.mean(t_err_counter))
+    print_result(generalize_errors, g_std, "Error promedio de generalización.", "ErrorPromedioGeneralizacion.png")
+    print_result(training_errors, t_std, "Error promedio de entrenamiento.", "ErrorPromedioEntrenamiento.png")
