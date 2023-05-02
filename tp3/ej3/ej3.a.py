@@ -1,5 +1,5 @@
 from tp3.configurations.jsonReader import JsonReader
-from tp3.ej3.utils.graph_utils import plot_perceptrons_vs_iterations
+from tp3.ej3.utils.graph_utils import plot_perceptrons_vs_iterations, plot_perceptrons_vs_iterations2
 from tp3.multilayer.multilayerperceptron import MultiLayerPerceptron
 
 if __name__ == '__main__':
@@ -24,18 +24,23 @@ if __name__ == '__main__':
         for i in range(3):
             iteration = []
             for perceptrons in range(1, 10):
-                architecture = [first]
-                [architecture.append(perceptrons) for _ in range(i)]
-                architecture.append(last)
-                perceptron = MultiLayerPerceptron(
-                    architecture,
-                    points,
-                    activation_method,
-                    expected,
-                    0.00000001, 0.1, update_method=update_method
-                )
-                perceptron.train()
-                iteration.append(len(perceptron.error_by_iteration))
+                average = []
+                for count in range(7):
+                    architecture = [first]
+                    [architecture.append(perceptrons) for _ in range(i)]
+                    architecture.append(last)
+                    perceptron = MultiLayerPerceptron(
+                        architecture,
+                        points,
+                        activation_method,
+                        expected,
+                        0.0001, 0.1, update_method=update_method
+                    )
+                    perceptron.train()
+                    average.append(len(perceptron.error_by_iteration))
+                iteration.append(average)
             layer.append(iteration)
+        print("layer", layer)
         plot_perceptrons_vs_iterations(layer, save_file)
+        plot_perceptrons_vs_iterations2(layer, save_file+"2.png")
 
