@@ -1,3 +1,5 @@
+import random
+
 import numpy as np
 
 
@@ -12,7 +14,10 @@ def create_mean_and_std_matrix(perceptron_by_layer):
 # create an initial random weight  matrix
 def create_weights_by_layer(perceptron_by_layer):
     weights_by_layer = []
+
     for index in range(len(perceptron_by_layer) - 1):
+        random.seed(100541)
+        np.random.seed(100541)
         weights = np.random.normal(0, 0.5, size=(perceptron_by_layer[index + 1], perceptron_by_layer[index]))
         weights_by_layer.append(weights)
     return weights_by_layer
