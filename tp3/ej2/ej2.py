@@ -40,41 +40,35 @@ def rescale_expected(expected_values, min_from_interval, max_from_interval):
             max_expected - min_expected) + min_from_interval for value in expected_array]
     return [[value] for value in rescaled_values]
 
+def print_result(title, file):
 
-def print_result( title, file):
-    data = [(('sigmoid', 'adam'), 0.03132415942643508), (('sigmoid', 'adam'), 0.04392158909462643), (('sigmoid', 'adam'), 0.07597313752446842), (('sigmoid', 'adam'), 0.02208998408406998), (('sigmoid', 'adam'), 0.04892797113699527), (('sigmoid', 'adam'), 0.018268080442000026), (('sigmoid', 'adam'), 0.08883977724515081), (('sigmoid', 'adam'), 0.04574821300938939), (('sigmoid', 'adam'), 0.0651108610015363), (('sigmoid', 'adam'), 0.0318935016779679)]
-    activations = set([d[0][0] for d in data])
-    updates = set([d[0][1] for d in data])
+    means = [0.02692471128399586, 0.01089788146381082, 0.44831968229815616, 0.10263003956180095, 1.8829079640442428]
 
-    # Initialize arrays to hold data for each activation and update combination
-    means = np.zeros((len(activations), len(updates)))
-    stds = np.zeros((len(activations), len(updates)))
+    errors = [0.0, 0.00801341491009252, 0.2025307693263399, 0.1772737690990664, 0.7121613423291503]
 
-    # Populate arrays with means and standard deviations
-    for i, act in enumerate(activations):
-        for j, upd in enumerate(updates):
-            values = [d[1] for d in data if d[0] == (act, upd)]
-            means[i, j] = np.mean(values)
-            stds[i, j] = np.std(values)
+    # Set up the X-axis labels and positions
+    labels = ['sigmoid', 'tanh', 'id']
+    x = np.arange(len(labels))
+    # Set up the width of each bar
+    width = 0.2
 
-    # Set up plot
+    # Create the plot
     fig, ax = plt.subplots()
+    for i, value in enumerate(means):
+        if i % 2 == 0:
+            ax.bar(x[i // 2], value, width, yerr=errors[i], color='#1f77b4')
+        if i % 2 == 1:
+            ax.bar(x[i // 2] + width, value, width, yerr=errors[i], color='#ff7f0e')
 
-    # Set up bar plot
-    bar_width = 0.2
-    x_positions = np.arange(len(activations))
-    colors = ['blue', 'orange']
-    for j, upd in enumerate(updates):
-        ax.bar(x_positions + (j - 0.5) * bar_width, means[:, j], yerr=stds[:, j], width=bar_width, label=upd,
-               color=colors[j])
-    # Add legend and axis labels
-    ax.legend()
-    ax.set_xticks(x_positions)
-    ax.set_xticklabels(activations)
-    ax.set_xlabel('Activation Method')
-    ax.set_ylabel('Value')
     ax.set_title(title)
+
+    ax.set_ylim(bottom=0)
+    ax.set_xticks(np.arange(len(labels)))
+    ax.set_xticklabels(labels)
+    ax.legend()
+
     plt.savefig(file)
+
 
 
 if __name__ == '__main__':
