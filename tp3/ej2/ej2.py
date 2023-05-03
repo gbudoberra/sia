@@ -45,7 +45,7 @@ def print_result(means, errors, title, file):
     labels = ['sigmoid', 'tanh', 'id']
     x = np.arange(len(labels))
     # Set up the width of each bar
-    width = 0.2
+    width = 0.4
 
     # Create the plot
     fig, ax = plt.subplots()
@@ -77,11 +77,12 @@ if __name__ == '__main__':
     points, expected = parse_csv()
     generalize_errors = []
     training_errors = []
+    t_std = []
+    g_std = []
     for activation, limit, rescale in zip(activation_methods, limits, rescale_need):
         for update in update_methods:
             g_err_counter = []
             t_err_counter = []
-
             for i in range(10):
                 if activation == "id" and update == "gradient_descent":
                     break
@@ -104,8 +105,10 @@ if __name__ == '__main__':
                 g_err_counter.append(((activation, update), generalize_error / len(generalize)))
 
             generalize_errors.append(np.mean([x[1] for x in g_err_counter]))
+            g_std.append(np.std([x[1] for x in g_err_counter]))
 
-            training_errors.append([x[1] for x in t_err_counter])
+            training_errors.append(np.mean([x[1] for x in t_err_counter]))
+            t_std.append(np.std([x[1] for x in t_err_counter]))
 
-    #print_result(generalize_errors, , "Error promedio de generalización.", "ErrorPromedioGeneralizacion.png")
-    #print_result(, "Error promedio de entrenamiento.", "ErrorPromedioEntrenamiento.png")
+    print_result(generalize_errors, g_std, "Error promedio de generalización.", "ErrorPromedioGeneralizacion.png")
+    print_result(training_errors, t_std, "Error promedio de entrenamiento.", "ErrorPromedioEntrenamiento.png")
