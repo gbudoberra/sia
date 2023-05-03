@@ -24,23 +24,25 @@ if __name__ == '__main__':
         for i in range(3):
             iteration = []
             for perceptrons in range(1, 10):
-                average = []
-                for count in range(7):
-                    architecture = [first]
-                    [architecture.append(perceptrons) for _ in range(i)]
-                    architecture.append(last)
-                    perceptron = MultiLayerPerceptron(
-                        architecture,
-                        points,
-                        activation_method,
-                        expected,
-                        0.0001, 0.1, update_method=update_method
-                    )
-                    perceptron.train()
-                    average.append(len(perceptron.error_by_iteration))
-                iteration.append(average)
+                # for count in range(7):
+                architecture = [first]
+                [architecture.append(perceptrons) for _ in range(i)]
+                architecture.append(last)
+                perceptron = MultiLayerPerceptron(
+                    architecture,
+                    points,
+                    activation_method,
+                    expected,
+                    0.0001, 0.1, update_method=update_method
+                )
+                perceptron.train()
+                # average.append()
+                iteration.append(len(perceptron.error_by_iteration))
             layer.append(iteration)
+        # layer = [[50001, 50001, 50001, 50001, 50001, 50001, 50001, 50001, 50001],
+        #          [50001, 50001, 285, 61, 62, 63, 64, 33, 5],
+        #          [50001, 50001, 165, 28, 6, 13, 41, 10, 45]]
+
         print("layer", layer)
         plot_perceptrons_vs_iterations(layer, save_file)
-        plot_perceptrons_vs_iterations2(layer, save_file+"2.png")
 

@@ -79,18 +79,17 @@ def plot_perceptrons_vs_iterations(perceptrons, filename):
     colors = ['tab:orange', 'tab:green', 'tab:blue']
 
     fig, ax = plt.subplots()
-    y = []
     for i in range(num_layers):
         x = range(1, len(perceptrons[i]) + 1)
         # print(x)
         # y = np.mean(perceptrons[i])
-        y = [np.mean(perceptrons[i][j]) for j in range(len(perceptrons[i]))]
+        y = perceptrons[i]
         # print(perceptrons[i])
         # error = np.std(perceptrons[i])
-        error = [np.std(perceptrons[i][j]) for j in range(len(perceptrons[i]))]
+        # error = [np.std(perceptrons[i][j]) for j in range(len(perceptrons[i]))]
         ax.bar([xi + i * bar_width - bar_width/2 for xi in x],
                y, width=bar_width, color=colors[i],
-               label=f'#layers = {i + 1}', yerr=error)
+               label=f'#layers = {i + 1}', )
     ax.set_xlabel('Amount of perceptrons per layer')
     ax.set_ylabel('Amount of iterations')
     ax.legend()
