@@ -32,7 +32,10 @@ if __name__ == '__main__':
     vary_update_method(times, noises, values, perceptron_adam, perceptron_gd)
 
     learning_rates = [(0.1 + 0.1 * i) for i in range(10)]
-    perceptrons = [MultiLayerPerceptron(perceptron_by_layer, points, "step", expected, 0.00001, learning_rate, "adam")
+    perceptrons_a = [MultiLayerPerceptron(perceptron_by_layer, points, "step", expected, 0.00001, learning_rate, "adam")
                    for learning_rate in learning_rates]
 
-    vary_learning_rate(times, values, perceptrons, learning_rates, 160)
+    perceptrons_b = [MultiLayerPerceptron(perceptron_by_layer, points, "step", expected, 0.00001, learning_rate, "gradient_descent")
+               for learning_rate in learning_rates]
+
+    vary_learning_rate(times, values, perceptrons_a, perceptrons_b, learning_rates, 160)

@@ -35,6 +35,7 @@ def get_image_path(num, noise, noisy, i):
 def vary_update_method(times, noises, values, perceptron_adam, perceptron_gd):
     results_by_noise = []
     for noise in noises:
+        print(f'Noise: {noise}')
         adam_correct_percentage = []
         gd_correct_percentage = []
         for num in values:
@@ -62,7 +63,7 @@ def vary_update_method(times, noises, values, perceptron_adam, perceptron_gd):
         # Añadir etiquetas y leyendas
         ax.set_ylabel('Porcentaje')
         ax.set_xticks(indices)
-        ax.set_title('Noise level = ' + str(noise))
+        ax.set_ylim(0, 110)
         ax.legend()
 
         plt.savefig(f'Aciertos_vs_Nro_por_ActMetodo_noise_{noise}.png')
@@ -88,6 +89,7 @@ def vary_update_method(times, noises, values, perceptron_adam, perceptron_gd):
     ax.set_ylabel('Porcentaje de aciertos totales')
     ax.set_xticks(indices)
     ax.set_xticklabels(noises)
+    ax.set_ylim(0, 110)
     ax.legend()
 
     plt.savefig('Aciertos_vs_Ruido_por_ActMetodo.png')
@@ -97,7 +99,7 @@ def vary_update_method(times, noises, values, perceptron_adam, perceptron_gd):
     plt.plot(perceptron_gd.error_by_iteration, color='orange', label='Gradiente descendente')
     plt.legend()
     plt.ylabel('Error')
-    plt.xlabel('Epoca')
+    plt.xlabel('Época')
     plt.savefig('Error_vs_Epoca_por_ActMetodo.png')
     plt.clf()
 
@@ -117,28 +119,68 @@ def basic_learning_rate_bar_graph(x, y, y_label):
     plt.clf()
 
 
-def vary_learning_rate(times, values, perceptrons, learning_rates, noise):
-    percentage_by_learning_rate = []
-    for perceptron in perceptrons:
-        perceptron.train()
-        result = 0
+def vary_learning_rate(times, values, perceptrons_a, perceptrons_b, learning_rates, noise):
+    percentage_by_learning_rate_a = []
+    percentage_by_learning_rate_b = []
+    for p_a, p_b in zip(perceptrons_a, perceptrons_b):
+        p_a.train()
+        p_b.train()
+        r_a = 0
+        r_b = 0
         for num in values:
             for i in range(times):
                 test_matrix = load_number_image(get_image_path(num['digit'], noise, True, i))
                 test = np.ravel(test_matrix)
-                if np.array_equal(np.array(perceptron.get_result(test)), np.array(num['expected'])):
-                    result += 1
-        percentage_by_learning_rate.append(100 * (result / (times * len(values))))
+                if np.array_equal(np.array(p_a.get_result(test)), np.array(num['expected'])):
+                    r_a += 1
+                if np.array_equal(np.array(p_b.get_result(test)), np.array(num['expected'])):
+                    r_b += 1
+        percentage_by_learning_rate_a.append(100 * (r_a / (times * len(values))))
+        percentage_by_learning_rate_b.append(100 * (r_b / (times * len(values))))
 
-    basic_learning_rate_bar_graph(learning_rates, percentage_by_learning_rate, 'Aciertos(%)')
+    plt.clf()
+    indices = np.array([0.1 * (1 + i) for i in range(10)])
 
-    basic_learning_rate_bar_graph(learning_rates, [perceptron.epochs for perceptron in perceptrons], 'Epocas')
+    width = 0.025
+
+    plt.bar(indices - width / 2, percentage_by_learning_rate_a, width, color='orange', label='adam')
+    plt.bar(indices + width / 2, percentage_by_learning_rate_b, width, color='blue', label='gradiente descendente')
+
+    plt.xlabel('Tasa de aprendizaje')
+    plt.ylabel('Porcentaje de aciertos')
+    plt.ylim(0, 110)
+    plt.title('')
+    plt.xticks(indices)
+    plt.legend()
+    plt.savefig('LA_vs_Aciertos(%).png')
+    plt.clf()
+
+    plt.clf()
+    indices = np.array([0.1 * (1 + i) for i in range(10)])
+
+    width = 0.025
+
+    plt.bar(indices - width / 2, [p.epochs for p in perceptrons_a], width, color='orange', label='adam')
+    plt.bar(indices + width / 2, [p.epochs for p in perceptrons_b], width, color='blue', label='gradiente descendente')
+
+    plt.xlabel('Tasa de aprendizaje')
+    plt.ylabel('Épocas totales')
+    plt.title('')
+    plt.xticks(indices)
+    plt.legend()
+    plt.savefig(f'LA_vs_Epocas.png')
+    plt.clf()
+
+    # basic_learning_rate_bar_graph(learning_rates, percentage_by_learning_rate, 'Aciertos(%)')
+    #
+    # basic_learning_rate_bar_graph(learning_rates, [perceptron.epochs for perceptron in perceptrons], 'Epocas')
 
     # Plot error by iteration for 3 cases
-    plt.plot(perceptrons[0].error_by_iteration, color='red', label='T.A. = 0.1')
-    plt.plot(perceptrons[4].error_by_iteration, color='blue', label='T.A. = 0.5')
-    plt.plot(perceptrons[9].error_by_iteration, color='green', label='T.A. = 1.0')
-    plt.xlabel('Epoca')
+    plt.plot(perceptrons_a[0].error_by_iteration, color='red', label='adam & T.A. = 0.1')
+    plt.plot(perceptrons_a[9].error_by_iteration, color='blue', label='adam & T.A. = 1.0')
+    plt.plot(perceptrons_b[0].error_by_iteration, color='green', label='Gradiente Descendente & T.A. = 0.1')
+    plt.plot(perceptrons_b[9].error_by_iteration, color='orange', label='Gradiente Descendente & T.A. = 1.0')
+    plt.xlabel('Época')
     plt.ylabel('Error')
     plt.legend()
     plt.savefig('Error_vs_Epoca_por_LA.png')
