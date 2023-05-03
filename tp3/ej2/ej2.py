@@ -86,7 +86,7 @@ if __name__ == '__main__':
         for update in update_methods:
             g_err_counter = []
             t_err_counter = []
-            for i in range(10):
+            for i in range(2):
                 if activation == "id" and update == "gradient_descent":
                     break
                 if rescale:
