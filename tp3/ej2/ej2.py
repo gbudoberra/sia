@@ -40,12 +40,7 @@ def rescale_expected(expected_values, min_from_interval, max_from_interval):
             max_expected - min_expected) + min_from_interval for value in expected_array]
     return [[value] for value in rescaled_values]
 
-def print_result(title, file):
-
-    means = [0.02692471128399586, 0.01089788146381082, 0.44831968229815616, 0.10263003956180095, 1.8829079640442428]
-
-    errors = [0.0, 0.00801341491009252, 0.2025307693263399, 0.1772737690990664, 0.7121613423291503]
-
+def print_result(means, errors, title, file):
     # Set up the X-axis labels and positions
     labels = ['sigmoid', 'tanh', 'id']
     x = np.arange(len(labels))
@@ -60,54 +55,56 @@ def print_result(title, file):
         if i % 2 == 1:
             ax.bar(x[i // 2] + width, value, width, yerr=errors[i], color='#ff7f0e')
 
-    ax.set_title(title)
+        # Create custom legend
+    blue_patch = plt.Rectangle((0, 0), 1, 1, color='#1f77b4', label='adam')
+    orange_patch = plt.Rectangle((0, 0), 1, 1, color='#ff7f0e', label='gradient')
+    ax.legend(handles=[blue_patch, orange_patch], loc='upper left')
 
+    ax.set_title(title)
     ax.set_ylim(bottom=0)
     ax.set_xticks(np.arange(len(labels)))
     ax.set_xticklabels(labels)
-    ax.legend()
-
     plt.savefig(file)
 
 
 
 if __name__ == '__main__':
-    # activation_methods = ["sigmoid", "tanh", "id"]
-    # update_methods = ["adam", "gradient_descent"]
-    # rescale_need = [True, True, False]
-    # limits = [(0, 1), (-1, 1), None]
-    # points, expected = parse_csv()
-    # generalize_errors = []
-    # training_errors = []
-    # for activation, limit, rescale in zip(activation_methods, limits, rescale_need):
-    #     for update in update_methods:
-    #         g_err_counter = []
-    #         t_err_counter = []
-    #
-    #         for i in range(10):
-    #             if activation == "id" and update == "gradient_descent":
-    #                 break
-    #             if rescale:
-    #                 expected = rescale_expected(expected, limit[0], limit[1])
-    #             training, generalize = split_vector(points, expected, 0.8)
-    #             training_points, training_expected = zip(*training)
-    #             perceptron = MultiLayerPerceptron(
-    #                 [len(points[0]) + 1, len(expected[0])],
-    #                 training_points,
-    #                 activation,
-    #                 training_expected,
-    #                 0.000001, 0.1, update_method=update)
-    #             perceptron.train()
-    #
-    #             t_err_counter.append(((activation, update), perceptron.error() / len(training_points)))
-    #             generalize_error = 0
-    #             for p, r in generalize:
-    #                 generalize_error += np.square(perceptron.get_result(p) - r)
-    #             g_err_counter.append(((activation, update), generalize_error / len(generalize)))
-    #
-    #         generalize_errors.append(np.mean([x[1] for x in g_err_counter]))
-    #
-    #         training_errors.append([x[1] for x in t_err_counter])
+    activation_methods = ["sigmoid", "tanh", "id"]
+    update_methods = ["adam", "gradient_descent"]
+    rescale_need = [True, True, False]
+    limits = [(0, 1), (-1, 1), None]
+    points, expected = parse_csv()
+    generalize_errors = []
+    training_errors = []
+    for activation, limit, rescale in zip(activation_methods, limits, rescale_need):
+        for update in update_methods:
+            g_err_counter = []
+            t_err_counter = []
 
-    print_result("Error promedio de generalización.", "ErrorPromedioGeneralizacion.png")
-    print_result("Error promedio de entrenamiento.", "ErrorPromedioEntrenamiento.png")
+            for i in range(10):
+                if activation == "id" and update == "gradient_descent":
+                    break
+                if rescale:
+                    expected = rescale_expected(expected, limit[0], limit[1])
+                training, generalize = split_vector(points, expected, 0.8)
+                training_points, training_expected = zip(*training)
+                perceptron = MultiLayerPerceptron(
+                    [len(points[0]) + 1, len(expected[0])],
+                    training_points,
+                    activation,
+                    training_expected,
+                    0.000001, 0.1, update_method=update)
+                perceptron.train()
+
+                t_err_counter.append(((activation, update), perceptron.error() / len(training_points)))
+                generalize_error = 0
+                for p, r in generalize:
+                    generalize_error += np.square(perceptron.get_result(p) - r)
+                g_err_counter.append(((activation, update), generalize_error / len(generalize)))
+
+            generalize_errors.append(np.mean([x[1] for x in g_err_counter]))
+
+            training_errors.append([x[1] for x in t_err_counter])
+
+    #print_result(generalize_errors, , "Error promedio de generalización.", "ErrorPromedioGeneralizacion.png")
+    #print_result(, "Error promedio de entrenamiento.", "ErrorPromedioEntrenamiento.png")
