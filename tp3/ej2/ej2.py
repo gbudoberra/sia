@@ -61,9 +61,10 @@ def print_result(means, errors, title, file):
     ax.legend(handles=[blue_patch, orange_patch], loc='upper left')
 
     ax.set_title(title)
-    ax.set_ylim(bottom=0)
+    ax.set_ylim(bottom=0, ymin=0, ymax=max(means))
     ax.set_xticks(np.arange(len(labels)))
     ax.set_xticklabels(labels)
+
     plt.savefig(file)
 
 
