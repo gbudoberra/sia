@@ -61,10 +61,13 @@ def print_result(means, errors, title, file):
     ax.legend(handles=[blue_patch, orange_patch], loc='upper left')
 
     ax.set_title(title)
-    ax.set_ylim(bottom=0, ymin=0, ymax=max(means))
+    ax.set_yscale("log")
+    ax.set_ylim(bottom=0, ymax=max(means)+ 0.5)
     ax.set_xticks(np.arange(len(labels)))
     ax.set_xticklabels(labels)
 
+    plt.ylabel("Error")
+    plt.xlabel("Activation Functions")
     plt.savefig(file)
 
 
@@ -104,11 +107,13 @@ if __name__ == '__main__':
                     generalize_error += np.square(perceptron.get_result(p) - r)
                 g_err_counter.append(((activation, update), generalize_error / len(generalize)))
 
-            generalize_errors.append(np.mean([x[1] for x in g_err_counter]))
-            g_std.append(np.std([x[1] for x in g_err_counter]))
+            resultados_gen = [x[1] for x in g_err_counter]
+            generalize_errors.append(np.mean(resultados_gen))
+            g_std.append(np.std(resultados_gen))
 
-            training_errors.append(np.mean([x[1] for x in t_err_counter]))
-            t_std.append(np.std([x[1] for x in t_err_counter]))
+            resultados_train = [x[1] for x in t_err_counter]
+            training_errors.append(np.mean(resultados_train))
+            t_std.append(np.std(resultados_train))
 
     print_result(generalize_errors, g_std, "Error promedio de generalización.", "ErrorPromedioGeneralizacion.png")
     print_result(training_errors, t_std, "Error promedio de entrenamiento.", "ErrorPromedioEntrenamiento.png")
