@@ -32,6 +32,12 @@ def get_image_path(num, noise, noisy, i):
         return f'./images/noise_{noise}/' + str(num) + '_digit_with_error_' + str(i) + '.png'
 
 
+def compare_arrays_expected(results, expected):
+    if len(results) != len(expected):
+        raise Exception("Error!!!!!!!!")
+    return np.argmax(results) == np.argmax(expected)
+
+
 def vary_update_method(times, noises, values, perceptron_adam, perceptron_gd):
     results_by_noise = []
     for noise in noises:
@@ -44,9 +50,9 @@ def vary_update_method(times, noises, values, perceptron_adam, perceptron_gd):
             for i in range(times):
                 test_matrix = load_number_image(get_image_path(num['digit'], noise, True, i))
                 test = np.ravel(test_matrix)
-                if np.array_equal(np.array(perceptron_gd.get_result(test)), np.array(num['expected'])):
+                if compare_arrays_expected(np.array(perceptron_gd.get_result(test)), np.array(num['expected'])):
                     result_gd += 1
-                if np.array_equal(np.array(perceptron_adam.get_result(test)), np.array(num['expected'])):
+                if compare_arrays_expected(np.array(perceptron_adam.get_result(test)), np.array(num['expected'])):
                     result_adam += 1
             adam_correct_percentage.append(100 * (result_adam / times))
             gd_correct_percentage.append(100 * (result_gd / times))
@@ -131,9 +137,9 @@ def vary_learning_rate(times, values, perceptrons_a, perceptrons_b, learning_rat
             for i in range(times):
                 test_matrix = load_number_image(get_image_path(num['digit'], noise, True, i))
                 test = np.ravel(test_matrix)
-                if np.array_equal(np.array(p_a.get_result(test)), np.array(num['expected'])):
+                if compare_arrays_expected(np.array(p_a.get_result(test)), np.array(num['expected'])):
                     r_a += 1
-                if np.array_equal(np.array(p_b.get_result(test)), np.array(num['expected'])):
+                if compare_arrays_expected(np.array(p_b.get_result(test)), np.array(num['expected'])):
                     r_b += 1
         percentage_by_learning_rate_a.append(100 * (r_a / (times * len(values))))
         percentage_by_learning_rate_b.append(100 * (r_b / (times * len(values))))
@@ -141,34 +147,70 @@ def vary_learning_rate(times, values, perceptrons_a, perceptrons_b, learning_rat
     plt.clf()
     indices = np.array([0.1 * (1 + i) for i in range(10)])
 
-    width = 0.025
+    width = 0.05
 
-    plt.bar(indices - width / 2, percentage_by_learning_rate_a, width, color='orange', label='adam')
-    plt.bar(indices + width / 2, percentage_by_learning_rate_b, width, color='blue', label='gradiente descendente')
+    plt.bar(indices, percentage_by_learning_rate_a, width, color='orange', label='adam')
+    # plt.bar(indices + width / 2, percentage_by_learning_rate_b, width, color='blue', label='gradiente descendente')
 
     plt.xlabel('Tasa de aprendizaje')
     plt.ylabel('Porcentaje de aciertos')
     plt.ylim(0, 110)
     plt.title('')
     plt.xticks(indices)
-    plt.legend()
+    # plt.legend()
     plt.savefig('LA_vs_Aciertos(%).png')
     plt.clf()
 
     plt.clf()
-    indices = np.array([0.1 * (1 + i) for i in range(10)])
 
-    width = 0.025
+    plt.clf()
+    indices = np.array([0.001 * (1 + i) for i in range(10)])
 
-    plt.bar(indices - width / 2, [p.epochs for p in perceptrons_a], width, color='orange', label='adam')
-    plt.bar(indices + width / 2, [p.epochs for p in perceptrons_b], width, color='blue', label='gradiente descendente')
+    width = 0.0005
+
+    # plt.bar(indices - width / 2, percentage_by_learning_rate_a, width, color='orange', label='adam')
+    plt.bar(indices, percentage_by_learning_rate_b, width, color='blue', label='gradiente descendente')
+
+    plt.xlabel('Tasa de aprendizaje')
+    plt.ylabel('Porcentaje de aciertos')
+    plt.ylim(0, 110)
+    plt.title('')
+    plt.xticks(indices)
+    # plt.legend()
+    plt.savefig('LA_vs_Aciertos(%)_GD.png')
+    plt.clf()
+
+    plt.clf()
+
+    indices = np.array([0.001 * (1 + i) for i in range(10)])
+
+    width = 0.0005
+
+    # plt.bar(indices - width / 2, [p.epochs for p in perceptrons_a], width, color='orange', label='adam')
+    plt.bar(indices, [p.epochs for p in perceptrons_b], width, color='blue', label='gradiente descendente')
 
     plt.xlabel('Tasa de aprendizaje')
     plt.ylabel('Épocas totales')
     plt.title('')
     plt.xticks(indices)
-    plt.legend()
-    plt.savefig(f'LA_vs_Epocas.png')
+    # plt.legend()
+    plt.savefig(f'TA_vs_Epocas_GD.png')
+    plt.clf()
+
+    plt.clf()
+    indices = np.array([0.1 * (1 + i) for i in range(10)])
+
+    width = 0.05
+
+    # plt.bar(indices - width / 2, [p.epochs for p in perceptrons_a], width, color='orange', label='adam')
+    plt.bar(indices, [p.epochs for p in perceptrons_a], width, color='orange', label='gradiente descendente')
+
+    plt.xlabel('Tasa de aprendizaje')
+    plt.ylabel('Épocas totales')
+    plt.title('')
+    plt.xticks(indices)
+    # plt.legend()
+    plt.savefig(f'TA_vs_Epocas_ADAM.png')
     plt.clf()
 
     # basic_learning_rate_bar_graph(learning_rates, percentage_by_learning_rate, 'Aciertos(%)')
@@ -176,8 +218,8 @@ def vary_learning_rate(times, values, perceptrons_a, perceptrons_b, learning_rat
     # basic_learning_rate_bar_graph(learning_rates, [perceptron.epochs for perceptron in perceptrons], 'Epocas')
 
     # Plot error by iteration for 3 cases
-    plt.plot(perceptrons_a[0].error_by_iteration, color='red', label='adam & T.A. = 0.1')
-    plt.plot(perceptrons_a[9].error_by_iteration, color='blue', label='adam & T.A. = 1.0')
+    plt.plot(perceptrons_a[0].error_by_iteration, color='red', label='adam & T.A. = 0.001')
+    plt.plot(perceptrons_a[9].error_by_iteration, color='blue', label='adam & T.A. = 0.01')
     plt.plot(perceptrons_b[0].error_by_iteration, color='green', label='Gradiente Descendente & T.A. = 0.1')
     plt.plot(perceptrons_b[9].error_by_iteration, color='orange', label='Gradiente Descendente & T.A. = 1.0')
     plt.xlabel('Época')
