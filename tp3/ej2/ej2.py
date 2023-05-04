@@ -40,18 +40,36 @@ def rescale_expected(expected_values, min_from_interval, max_from_interval):
             max_expected - min_expected) + min_from_interval for value in expected_array]
     return [[value] for value in rescaled_values]
 
+def print_result(means, errors, title, file):
+    # Set up the X-axis labels and positions
+    labels = ['sigmoid', 'tanh', 'id']
+    x = np.arange(len(labels))
+    # Set up the width of each bar
+    width = 0.4
 
-def print_result(data, error, title, file):
-    names = [x[0][0] for x in data]
-    colors = ['tab:orange' if x[0][1] == 'gradient_descent' else 'tab:blue' for x in data]
-    values = [x[1] for x in data]
-    fig, ax = plt.subplots(figsize=(10, 6))
-    ax.bar(names, np.ravel(values), color=colors, capsize=4, error=error)
-    plt.xticks(horizontalalignment="center")
+    # Create the plot
+    fig, ax = plt.subplots()
+    for i, value in enumerate(means):
+        if i % 2 == 0:
+            ax.bar(x[i // 2], value, width, yerr=errors[i], color='#1f77b4')
+        if i % 2 == 1:
+            ax.bar(x[i // 2] + width, value, width, yerr=errors[i], color='#ff7f0e')
+
+        # Create custom legend
+    blue_patch = plt.Rectangle((0, 0), 1, 1, color='#1f77b4', label='adam')
+    orange_patch = plt.Rectangle((0, 0), 1, 1, color='#ff7f0e', label='gradient')
+    ax.legend(handles=[blue_patch, orange_patch], loc='upper left')
+
     ax.set_title(title)
-    plt.yscale('log')
-    plt.legend(handles=[mpatches.Patch(color='tab:orange', label='gradient_descent'), mpatches.Patch(color='tab:blue', label='adam')], fontsize=12)
+    ax.set_yscale("log")
+    ax.set_ylim(bottom=0, ymax=max(means)+ 0.5)
+    ax.set_xticks(np.arange(len(labels)))
+    ax.set_xticklabels(labels)
+
+    plt.ylabel("Error")
+    plt.xlabel("Activation Functions")
     plt.savefig(file)
+
 
 
 if __name__ == '__main__':
@@ -62,11 +80,12 @@ if __name__ == '__main__':
     points, expected = parse_csv()
     generalize_errors = []
     training_errors = []
+    t_std = []
+    g_std = []
     for activation, limit, rescale in zip(activation_methods, limits, rescale_need):
         for update in update_methods:
             g_err_counter = []
             t_err_counter = []
-
             for i in range(10):
                 if activation == "id" and update == "gradient_descent":
                     break
@@ -87,9 +106,14 @@ if __name__ == '__main__':
                 for p, r in generalize:
                     generalize_error += np.square(perceptron.get_result(p) - r)
                 g_err_counter.append(((activation, update), generalize_error / len(generalize)))
-            generalize_errors.append(np.mean(g_err_counter))
-            g_std = np.std(g_err_counter)
-            training_errors.append(t_err_counter)
-            t_std = np.std(np.mean(t_err_counter))
+
+            resultados_gen = [x[1] for x in g_err_counter]
+            generalize_errors.append(np.mean(resultados_gen))
+            g_std.append(np.std(resultados_gen))
+
+            resultados_train = [x[1] for x in t_err_counter]
+            training_errors.append(np.mean(resultados_train))
+            t_std.append(np.std(resultados_train))
+
     print_result(generalize_errors, g_std, "Error promedio de generalización.", "ErrorPromedioGeneralizacion.png")
     print_result(training_errors, t_std, "Error promedio de entrenamiento.", "ErrorPromedioEntrenamiento.png")
