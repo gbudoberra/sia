@@ -7,9 +7,11 @@ from tp3.multilayer.utils import initialize_network, update_layer, compute_multi
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
+
 # Definir la función para la derivada de la función sigmoidal
 def sigmoid_deriv(x):
     return sigmoid(x) * (1 - sigmoid(x))
+
 
 # based
 # on https://openlearninglibrary.mit.edu/assets/courseware/v1/9c36c444e5df10eef7ce4d052e4a2ed1/asset-v1:MITx+6.036+1T2019+type@asset+block/notes_chapter_Neural_Networks.pdf
@@ -18,7 +20,7 @@ class MultiLayerPerceptron:
         "relu": [lambda x: np.maximum(0, x), lambda x: 1 if x > 0 else 0],
         "sigmoid": [lambda x: sigmoid(x), lambda x: sigmoid_deriv(x)],
         "id": [lambda x: x, lambda x: 1],
-        "tanh": [lambda x: np.tanh(x), lambda x: 1 / np.cosh(x)**2],
+        "tanh": [lambda x: np.tanh(x), lambda x: 1 / (np.cosh(x) ** 2)],
         "step": [lambda x: 1 if x >= 0 else -1, lambda x: 1],
     }
 
@@ -47,12 +49,12 @@ class MultiLayerPerceptron:
         self.results_matrix = np.transpose(np.array([point for point in result_set]))
         self.input_matrix = np.transpose(np.array([np.insert(point, 0, -1) for point in data_set]))
 
-        self.activation_method = np.vectorize(self.activation_methods[activation_method][0])
+        self.activation_method = self.activation_methods[activation_method][0]
 
         if self.layer_number == 2:
-            self.activation_derivative = np.vectorize(lambda x: 1)
+            self.activation_derivative = (lambda x: 1)
         else:
-            self.activation_derivative = np.vectorize(self.activation_methods[activation_method][1])
+            self.activation_derivative = (self.activation_methods[activation_method][1])
 
         self.weights_by_layer, self.output_by_layer, \
             self.differentiated_preactivate_by_layer, self.pre_activation_by_layer, \
@@ -65,7 +67,9 @@ class MultiLayerPerceptron:
         return np.sum(np.square(self.output_by_layer[-1] - self.results_matrix))
 
     def has_converged(self):
-        return self.epochs > 50000 or self.error() < self.epsilon
+        if self.epochs % 100 == 0:
+            print(self.epochs)
+        return self.epochs > 10000 or self.error() < self.epsilon
 
     def train(self):
         while not self.has_converged():
@@ -105,14 +109,15 @@ class MultiLayerPerceptron:
 
     def _adam_update(self, gradient):
         b1 = 0.8
-        b2 = 0.8
+        b2 = 0.8  # 0.999
         e = 1e-8
         self.adam_iteration += 1
         for layer in range(len(self.weights_by_layer)):
             self.mean[layer] = (b1 * self.mean[layer] + (1 - b1) * gradient[layer]) / (1 - (b1 ** self.adam_iteration))
-            self.std[layer] = (b2 * self.std[layer] + (1 - b2) * np.square(gradient[layer])) / (1 - (b2 ** self.adam_iteration))
+            self.std[layer] = (b2 * self.std[layer] + (1 - b2) * np.square(gradient[layer])) / (
+                        1 - (b2 ** self.adam_iteration))
             self.weights_by_layer[layer] += -1 * self.learning_rate * (
-                    (np.reciprocal(np.sqrt(self.std[layer] + e))) * self.mean[layer]
+                    np.divide(self.mean[layer], (np.sqrt(self.std[layer] + e)))
             )
 
     def _compute_multipliers(self, index):
