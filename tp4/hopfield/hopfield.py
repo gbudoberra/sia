@@ -11,7 +11,7 @@ class Hopfield:
         for i in range(neuron_number):
             self.weight[i][i] = 0
 
-    def get_pattern(self, pattern, filename):
+    def get_pattern(self, pattern, filename, png_size):
         before = pattern
         has_changed = True
         iteration = 0
@@ -19,7 +19,7 @@ class Hopfield:
 
             iter_filename = f'{filename}_i{iteration}.png'
             before_for_graph = [b for b in before]
-            plot_array(before_for_graph, iter_filename)
+            plot_array(before_for_graph, iter_filename, png_size)
 
             current = np.sign(np.dot(self.weight, before))
             has_changed = self._error_by_position(current, before)

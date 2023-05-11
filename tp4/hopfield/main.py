@@ -1,3 +1,5 @@
+import numpy as np
+
 from utils import initialize_points
 from config import Config
 from tp4.imageGenerator import generate_character_list

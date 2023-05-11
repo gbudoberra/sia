@@ -13,9 +13,9 @@ def map_minus_one(data):
         data[i] = np.where(data[i] == 1, 255, data[i])
 
 
-def plot_array(array, filename):
+def plot_array(array, filename, png_size):
     map_minus_one(array)
-    matrix = np.reshape(array, (50, 50))
+    matrix = np.reshape(array, (png_size, png_size))
     matrix = matrix.astype(np.uint8)
     image = Image.fromarray(matrix)
     image.save(filename)
