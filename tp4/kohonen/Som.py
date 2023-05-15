@@ -5,16 +5,19 @@ import numpy as np
 
 
 class Som:
-    def __init__(self, map_dim, point_set, learning_rate, iteration_limit):
+    def __init__(self, map_dim, point_set, iteration_limit, update_radius, update_learning_rate):
         self.k = map_dim
         self._initialize_neuron_matrix(map_dim, len(point_set[0]))
 
         self.iterations = 0
-        self.radius = 1
-        self.learning_rate = 1
 
         self.point_set = point_set
-        self.iteration_limit = iteration_limit
+        self.iteration_limit = iteration_limit * self.k * self.k
+
+        self._varying_learning_rate = update_learning_rate
+        self._varying_radius = update_radius
+        self.radius = map_dim if self._varying_radius else 1
+        self.learning_rate = 1 if self._varying_learning_rate else 0.1
 
     def _initialize_neuron_matrix(self, map_dim, point_dim):
         self.neurons = []
@@ -40,20 +43,39 @@ class Som:
                 'minimum_col': minimum_col}
 
     def _update_neurons(self, minimum_distance, minimum_row, minimum_col):
-        offset = [(0, -1), (-1, 0), (0, 1), (1, 0)]
-        for row_offset, col_offset in offset:
-            if self.k > minimum_row + row_offset >= 0 and self.k > minimum_col + col_offset >= 0:
-                self.neurons[minimum_row + row_offset][minimum_col + col_offset]\
-                    .update_weights((self.learning_rate / (self.iterations + 1)) * minimum_distance)
+        adjacent_cells = self._get_adjacent_cells(minimum_row, minimum_col)
+        for row, col in adjacent_cells:
+            if self.k > row >= 0 and self.k > col >= 0:
+                self.neurons[row][col] \
+                    .update_weights(self.learning_rate * minimum_distance)
 
     def train(self):
         while self.iterations < self.iteration_limit:
             train_iteration = self._train_iteration()
             self._update_neurons(train_iteration['minimum_distance'], train_iteration['minimum_row'],
                                  train_iteration['minimum_col'])
+            self._update_radius()
+            self._update_learning_rate()
             self.iterations += 1
 
     def get_row_and_column(self, point):
         minimum = self._get_minimum_distance(point)
         return minimum['minimum_row'], minimum['minimum_col']
 
+    def _update_radius(self):
+        if self._varying_radius and self.radius > 1:
+            self.radius = 1
+
+    def _update_learning_rate(self):
+        if self._varying_learning_rate:
+            self.learning_rate = (self.learning_rate / (self.iterations + 1))
+
+    def _get_adjacent_cells(self, row, col):
+        radius = self.radius
+        adjacent_cells = []
+        for current_row in range(-radius, radius + 1):
+            for current_col in range(-radius, radius + 1):
+                distance = np.sqrt((current_row - row) ** 2 + (current_col - col) ** 2)
+                if distance <= radius:
+                    adjacent_cells.append((current_row, current_col))
+        return adjacent_cells

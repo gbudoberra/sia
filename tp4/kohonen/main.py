@@ -19,8 +19,8 @@ def parse_csv(filename='europe.csv'):
 if __name__ == '__main__':
     country_map = parse_csv()
     points = [points for points in country_map.values()]
-    k = 4
-    som = Som(k, points, 0.1, 1000)
+    k = 10
+    som = Som(k, points,  500, True, True)
     som.train()
 
     result_map = {}
