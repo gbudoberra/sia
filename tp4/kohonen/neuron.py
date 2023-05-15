@@ -1,4 +1,5 @@
 import numpy as np
+from utils import get_distance
 
 
 class Neuron:
@@ -12,7 +13,7 @@ class Neuron:
         return neuron
 
     def evaluate_point(self, point):
-        return np.linalg.norm(self.weights - point)
+        return get_distance(self.weights, point)
 
     def update_weights(self, delta):
         delta_vector = np.ones(len(self.weights)) * delta

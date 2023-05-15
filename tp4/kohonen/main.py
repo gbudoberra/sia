@@ -1,6 +1,6 @@
 import pandas as pd
 from tp4.kohonen.Som import Som
-from graph_generators import plot_heat_map
+from graph_generators import plot_heat_map, plot_avg_distance
 
 def parse_csv(filename='europe.csv'):
     df = pd.read_csv(filename)
@@ -19,7 +19,7 @@ def parse_csv(filename='europe.csv'):
 if __name__ == '__main__':
     country_map = parse_csv()
     points = [points for points in country_map.values()]
-    k = 10
+    k = 4
     som = Som(k, points,  500, True, True)
     som.train()
 
@@ -29,3 +29,6 @@ if __name__ == '__main__':
         result_map.setdefault((row, col), []).append(country_name)
 
     plot_heat_map(result_map)
+    avg_distance = som.get_avg_distance()
+    print(avg_distance)
+    plot_avg_distance(avg_distance)

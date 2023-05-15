@@ -2,6 +2,7 @@ import random
 
 from neuron import Neuron
 import numpy as np
+from utils import get_distance
 
 
 class Som:
@@ -73,9 +74,26 @@ class Som:
     def _get_adjacent_cells(self, row, col):
         radius = self.radius
         adjacent_cells = []
-        for current_row in range(-radius, radius + 1):
-            for current_col in range(-radius, radius + 1):
+        for current_row in range(row - radius, row + radius + 1):
+            for current_col in range(col - radius, col + radius + 1):
                 distance = np.sqrt((current_row - row) ** 2 + (current_col - col) ** 2)
-                if distance <= radius:
+                if 0 < distance <= radius:
                     adjacent_cells.append((current_row, current_col))
         return adjacent_cells
+
+    def compute_avg_distance(self, row, col):
+        adjacent_cells = self._get_adjacent_cells(row, col)
+        adjacent_diff = []
+        for adj_row, adj_col in adjacent_cells:
+            if self.k > adj_row >= 0 and self.k > adj_col >= 0:
+                adjacent_diff = get_distance(self.neurons[adj_row][adj_col].weights, self.neurons[row][col].weights)
+        return adjacent_diff.mean()
+
+    def get_avg_distance(self):
+        result_matrix = []
+        for row in range(self.k):
+            result_row = []
+            for col in range(self.k):
+                result_row.append(self.compute_avg_distance(row, col))
+            result_matrix.append(result_row)
+        return result_matrix

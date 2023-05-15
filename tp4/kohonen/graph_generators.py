@@ -21,3 +21,9 @@ def plot_heat_map(data):
             plt.text(j, i, country_matrix[i, j], ha='center', va='center', color='black', fontsize=8)
     plt.colorbar()
     plt.show()
+
+
+def plot_avg_distance(matriz):
+    plt.imshow(matriz, cmap='gray', interpolation='nearest')
+    plt.colorbar()
+    plt.show()
