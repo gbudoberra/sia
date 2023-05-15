@@ -8,12 +8,12 @@ from utils import get_distance
 class Som:
     def __init__(self, map_dim, point_set, iteration_limit, update_radius, update_learning_rate):
         self.k = map_dim
-        self._initialize_neuron_matrix(map_dim, len(point_set[0]))
-
         self.iterations = 0
 
         self.point_set = point_set
         self.iteration_limit = iteration_limit * self.k * self.k
+
+        self._initialize_neuron_matrix(map_dim, len(point_set[0]))
 
         self._varying_learning_rate = update_learning_rate
         self._varying_radius = update_radius
@@ -25,7 +25,7 @@ class Som:
         for i in range(map_dim):
             neuron_row = []
             for j in range(map_dim):
-                neuron_row.append(Neuron(point_dim))
+                neuron_row.append(Neuron.init_with_initial_value(self.point_set[random.randint(0, len(self.point_set) - 1)]))
             self.neurons.append(neuron_row)
 
     def _train_iteration(self):
@@ -86,8 +86,8 @@ class Som:
         adjacent_diff = []
         for adj_row, adj_col in adjacent_cells:
             if self.k > adj_row >= 0 and self.k > adj_col >= 0:
-                adjacent_diff = get_distance(self.neurons[adj_row][adj_col].weights, self.neurons[row][col].weights)
-        return adjacent_diff.mean()
+                adjacent_diff.append(get_distance(self.neurons[adj_row][adj_col].weights, self.neurons[row][col].weights))
+        return np.mean(adjacent_diff)
 
     def get_avg_distance(self):
         result_matrix = []
