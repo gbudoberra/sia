@@ -15,7 +15,7 @@ class Neuron:
     def evaluate_point(self, point):
         return get_distance(self.weights, point)
 
-    def update_weights(self, delta):
-        delta_vector = np.ones(len(self.weights)) * delta
+    def update_weights(self, learning_rate, training_point):
+        delta_vector = (np.ones(len(self.weights)) * learning_rate) * (training_point - self.weights)
         self.weights += delta_vector
 
