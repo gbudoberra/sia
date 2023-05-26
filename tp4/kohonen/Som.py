@@ -100,3 +100,13 @@ class Som:
                 result_row.append(self.compute_avg_distance(row, col))
             result_matrix.append(result_row)
         return result_matrix
+
+    def get_avg_elements_per_cell(self, data):
+        result_array = []
+        cells_with_elements = 0
+        for key, countries in data.items():
+            row, col = key
+            if len(countries) > 0:
+                result_array.append(len(countries))
+                cells_with_elements += 1
+        return np.mean(result_array), cells_with_elements
