@@ -1,6 +1,5 @@
 from tp4.hopfield.hopfield import Hopfield
 import numpy as np
-from tp4.hopfield.utils import plot_array
 
 patterns = [
     [
@@ -50,4 +49,7 @@ if __name__ == '__main__':
     modified_p = noise_with_p(patterns[3], 0.3)
     filename = f'./images/results/harcoded_result'
     result = hopfield.get_pattern(modified_p, filename, 5)
+
+
+
 

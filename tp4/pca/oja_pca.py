@@ -15,14 +15,18 @@ def plot_error(error):
 
 
 if __name__ == '__main__':
-    normalized_map = parse_csv(True)
-    eigv, r = get_result(normalized_map)
-    points = [p for p in normalized_map.values()]
-    oja = Oja(points, .001, 10000, eigv[:, 0])
-    oja.iterate()
-    result = {}
-    for country, y1 in zip(normalized_map.keys(), oja.get_y1()):
-        result[country] = y1, y1
+    error = 100
+    while error > 0.5:
+        print("iterating")
+        normalized_map = parse_csv(True)
+        eigv, r = get_result(normalized_map)
+        points = [p for p in normalized_map.values()]
+        oja = Oja(points, .001, 1000, eigv[:, 0])
+        oja.iterate()
+        result = {}
+        for country, y1 in zip(normalized_map.keys(), oja.get_y1()):
+            result[country] = y1, y1
 
-    plot_error(oja.error)
-    plot_y1(result, "result_with_oja.png")
+        plot_error(oja.error)
+        plot_y1(result, "result_with_oja.png")
+        error = oja.error[-1]

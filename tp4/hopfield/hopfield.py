@@ -10,21 +10,24 @@ class Hopfield:
         self.weight = ((1 / neuron_number) * np.dot(np.transpose(pattern_set), pattern_set))
         for i in range(neuron_number):
             self.weight[i][i] = 0
+        self.energy = []
 
     def get_pattern(self, pattern, filename, png_size):
         before = pattern
         has_changed = True
+        self.energy = []
         iteration = 0
         while has_changed and iteration < self.iteration_limit:
 
             iter_filename = f'{filename}_i{iteration}.png'
             before_for_graph = [b for b in before]
             plot_array(before_for_graph, iter_filename, png_size)
-
+            self.energy.append(self.calculate_energy(before))
             current = np.sign(np.dot(self.weight, before))
             has_changed = self._error_by_position(current, before)
             iteration += 1
             before = current
+
         return before
 
     def _error_by_position(self, current, before):
@@ -34,4 +37,4 @@ class Hopfield:
         return False
 
     def calculate_energy(self, pattern):
-        return -1 / 2 * pattern.T * self.weight * pattern
+        return (-1 / 2) * np.dot(np.array(pattern), np.dot(self.weight, np.array(pattern).T))
