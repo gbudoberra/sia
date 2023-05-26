@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def biplot(result: dict, vectors_x, vectors_y, filename="biplot.png"):
@@ -48,9 +49,33 @@ def plot_y1(data: dict, filename="y_1_bar_plot.png"):
     ax = fig.add_subplot()
 
     ax.bar(keys, [v[0] for v in values])
-    ax.set_ylim(-4, 5)
+    ax.set_ylim(-5, 5)
     ax.set_ylabel("PC1")
     plt.title('PC1 por país')
     ax.set_xticklabels(keys, rotation='vertical')
+    plt.savefig(filename)
+    plt.clf()
+
+
+def plot_y1_comparison(pca: dict, pca_oja: dict, filename="y_1_bar_plot_comparison.png"):
+    keys = list(pca.keys())
+    values1 = list(pca.values())
+    values2 = list(pca_oja.values())
+
+    fig, ax = plt.subplots(figsize=(12, 12))
+
+    width = 0.35  # Ancho de las barras
+    ind = np.arange(len(keys))  # Índices para las barras
+
+    rects1 = ax.bar(ind, [v[0] for v in values1], width, label='pca')
+    rects2 = ax.bar(ind + width, [v[0] for v in values2], width, label='oja')
+
+    ax.set_ylim(-5, 5)
+    ax.set_ylabel("PC1")
+    plt.title('PC1 por país')
+    ax.set_xticks(ind + width / 2)
+    ax.set_xticklabels(keys, rotation='vertical')
+    ax.legend()
+
     plt.savefig(filename)
     plt.clf()
