@@ -19,6 +19,6 @@ if __name__ == '__main__':
 
     for point, character in zip(points, config.characters):
         filename = f'./images/results/{character}_character'
-        hopfield_net.get_pattern(point, filename)
+        hopfield_net.get_pattern(point, filename, 50)
     print("finished")
 
