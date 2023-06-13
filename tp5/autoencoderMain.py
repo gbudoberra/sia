@@ -1,9 +1,9 @@
-from tp3.multilayer.multilayerperceptron import MultiLayerPerceptron
-from font import get_font_as_xis
-from configurations.JsonReader import JsonReader
 import numpy as np
 
-from tp5.utils.file_utils import write_list_to_file
+from configurations.JsonReader import JsonReader
+from font import get_font_as_xis
+from tp3.multilayer.multilayerperceptron import MultiLayerPerceptron
+from tp5.utils.file_utils import write_weights_to_file
 
 if __name__ == '__main__':
     config = JsonReader()
@@ -21,10 +21,11 @@ if __name__ == '__main__':
 
     nn.train()
 
-    write_list_to_file(nn.get_weights(), "weights.txt")
+    file_prefix = "weights"
+    write_weights_to_file(nn.get_weights(), file_prefix)
 
     distances = []
     for i in range(len(data_set)):
         result = nn.get_result(data_set[i])
-        distances.append(np.linalg.norm(result-data_set[i]))
+        distances.append(np.linalg.norm(result - data_set[i]))
     print(distances)
