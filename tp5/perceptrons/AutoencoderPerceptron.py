@@ -7,9 +7,10 @@ from tp5.perceptrons.result_functions import get_latent_result, generate_from_la
 class AutoencoderPerceptron(MultiLayerPerceptron):
 
     def __init__(self, perceptron_by_layer, data_set, activation_methods, result_set, epsilon, learning_rate,
-                 update_method="gradient_descent"):
+                 update_method="gradient_descent", iteration_limit=10000):
         super().__init__(perceptron_by_layer, data_set, activation_methods, result_set, epsilon, learning_rate,
                          update_method)
+        self.iteration_limit = iteration_limit
         for i in range(len(perceptron_by_layer)):
             if perceptron_by_layer[i] == 2:
                 self.latent_layer = i
@@ -22,6 +23,12 @@ class AutoencoderPerceptron(MultiLayerPerceptron):
 
     def get_result(self, points):
         return get_result(points, self.activation_method_by_layer, self.weights_by_layer)
+
+    def has_converged(self):
+        error = self.error()
+        if self.epochs % 10 == 0:
+            print(f'{self.epochs} {error}')
+        return self.epochs > self.iteration_limit or error < self.epsilon
 
     def get_latent_result(self, points):
         return get_latent_result(points, self.activation_method_by_layer, self.weights_by_layer, self.latent_layer)

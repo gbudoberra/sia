@@ -81,6 +81,20 @@ def draw_flattened_char(flattened, i):
     plt.show()
 
 
+def draw_flattened_char_with_title(flattened, title):
+    monocromatic_cmap = plt.get_cmap('binary')
+    encoded_character = flattened.reshape((7, -1))
+    heatmap(
+        encoded_character,
+        linewidths=0.2,
+        cbar=False,
+        square=True,
+        cmap=monocromatic_cmap,
+        linecolor='k')
+    plt.title(title)
+    plt.show()
+
+
 def get_font_as_xis():
     xis = []
     for x in font:

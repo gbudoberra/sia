@@ -17,7 +17,7 @@ def bar_graph(values, labels, filename, x_name, y_name):
     plt.savefig(filename)
 
 
-def plot_graph(x, y, x_name, y_name, filename):
+def plot_graph(x, y, x_name, y_name, filename, log=False):
     # Crear una figura y un conjunto de ejes
     fig, ax = plt.subplots()
 
@@ -27,6 +27,9 @@ def plot_graph(x, y, x_name, y_name, filename):
     # Añadir etiquetas a los ejes
     ax.set_xlabel(x_name)
     ax.set_ylabel(y_name)
+
+    if log:
+        ax.set_yscale('log')
 
     # Guardar el gráfico en un archivo
     plt.savefig(filename)
