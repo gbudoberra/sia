@@ -1,7 +1,7 @@
 import numpy as np
 
 from font import get_font_as_xis
-from tp3.multilayer.multilayerperceptron import MultiLayerPerceptron
+from tp5.perceptrons.AutoencoderPerceptron import AutoencoderPerceptron
 from tp5.utils.JsonReader import JsonReader
 from tp5.utils.file_utils import write_weights_to_file
 
@@ -10,7 +10,7 @@ if __name__ == '__main__':
     data_set = get_font_as_xis()
     result_set = data_set
 
-    nn = MultiLayerPerceptron(
+    nn = AutoencoderPerceptron(
         config.perceptron_by_layer,
         data_set,
         config.activation_method,

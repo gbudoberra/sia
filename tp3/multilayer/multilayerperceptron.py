@@ -47,9 +47,6 @@ class MultiLayerPerceptron:
 
         self.point_number = len(data_set)
         self.layer_number = len(perceptron_by_layer)
-        for i in range(len(perceptron_by_layer)):
-            if perceptron_by_layer[i] == 2:
-                self.latent_layer = i
 
         self.results_matrix = np.transpose(np.array([point for point in result_set]))
         self.input_matrix = np.transpose(np.array([point for point in data_set]))
@@ -68,10 +65,7 @@ class MultiLayerPerceptron:
         self.error_by_iteration = []
 
     def error(self):
-        matrix = self.output_by_layer[-1]
-        binary_matrix = np.zeros(matrix.shape, dtype=int)
-        binary_matrix[matrix >= 0.5] = 1
-        return np.sum(np.square(binary_matrix - self.results_matrix))
+        return np.sum(np.square(self.output_by_layer[-1] - self.results_matrix))
 
     def has_converged(self):
         error = self.error()
@@ -142,22 +136,7 @@ class MultiLayerPerceptron:
         partial_output = points
         for i in range(len(self.weights_by_layer)):
             partial_output = self.activation_method_by_layer[i](np.dot(self.weights_by_layer[i], partial_output))
-        binary_array = np.zeros_like(partial_output, dtype=int)
-        binary_array[partial_output >= 0.5] = 1
-        return binary_array
+        return partial_output
 
     def get_weights(self):
         return self.weights_by_layer
-
-    def get_latent_result(self, points):
-        partial_output = points
-        for i in range(self.latent_layer):
-            partial_output = self.activation_method_by_layer[i](np.dot(self.weights_by_layer[i], partial_output))
-        return partial_output
-
-    # receives a point, and multiply back from the latent space to the initial space
-    def generate_from_latent_space(self, point):
-        partial_output = point
-        for i in range(self.latent_layer, len(self.weights_by_layer)):
-            partial_output = self.activation_method_by_layer[i](np.dot(self.weights_by_layer[i], partial_output))
-        return partial_output
