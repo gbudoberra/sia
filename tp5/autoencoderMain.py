@@ -1,8 +1,8 @@
 import numpy as np
 
-from configurations.JsonReader import JsonReader
 from font import get_font_as_xis
 from tp3.multilayer.multilayerperceptron import MultiLayerPerceptron
+from tp5.utils.JsonReader import JsonReader
 from tp5.utils.file_utils import write_weights_to_file
 
 if __name__ == '__main__':

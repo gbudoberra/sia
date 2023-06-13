@@ -13,16 +13,18 @@ def sigmoid_deriv(x):
     return sigmoid(x) * (1 - sigmoid(x))
 
 
+activation_methods_dictionary = {
+    "relu": [np.vectorize(lambda x: np.maximum(0, x)), np.vectorize(lambda x: 1 if x > 0 else 0)],
+    "sigmoid": [np.vectorize(sigmoid), np.vectorize(sigmoid_deriv)],
+    "id": [np.vectorize(lambda x: x), np.vectorize(lambda x: 1)],
+    "tanh": [np.vectorize(lambda x: np.tanh(x)), np.vectorize(lambda x: 1 / (np.cosh(x) ** 2))],
+    "step": [np.vectorize(lambda x: 1 if x >= 0 else -1), np.vectorize(lambda x: 1)],
+}
+
+
 # based
 # on https://openlearninglibrary.mit.edu/assets/courseware/v1/9c36c444e5df10eef7ce4d052e4a2ed1/asset-v1:MITx+6.036+1T2019+type@asset+block/notes_chapter_Neural_Networks.pdf
 class MultiLayerPerceptron:
-    activation_methods = {
-        "relu": [np.vectorize(lambda x: np.maximum(0, x)), np.vectorize(lambda x: 1 if x > 0 else 0)],
-        "sigmoid": [np.vectorize(sigmoid), np.vectorize(sigmoid_deriv)],
-        "id": [np.vectorize(lambda x: x), np.vectorize(lambda x: 1)],
-        "tanh": [np.vectorize(lambda x: np.tanh(x)), np.vectorize(lambda x: 1 / (np.cosh(x) ** 2))],
-        "step": [np.vectorize(lambda x: 1 if x >= 0 else -1), np.vectorize(lambda x: 1)],
-    }
 
     # 4 Matrices por layer:
     #       1- OUTPUTS = [ O1, O2, ... ]
@@ -55,8 +57,8 @@ class MultiLayerPerceptron:
         self.activation_method_by_layer = []
         self.activation_derivative_by_layer = []
         for am in activation_methods:
-            self.activation_method_by_layer.append(self.activation_methods[am][0])
-            self.activation_derivative_by_layer.append(self.activation_methods[am][1])
+            self.activation_method_by_layer.append(activation_methods_dictionary[am][0])
+            self.activation_derivative_by_layer.append(activation_methods_dictionary[am][1])
 
         self.weights_by_layer, self.output_by_layer, \
             self.differentiated_preactivate_by_layer, self.pre_activation_by_layer, \
@@ -75,7 +77,7 @@ class MultiLayerPerceptron:
         error = self.error()
         if self.epochs % 100 == 0:
             print(f'{self.epochs} {error}')
-        return self.epochs > 100 or error < self.epsilon
+        return self.epochs > 10000 or error < self.epsilon
 
     def train(self):
         while not self.has_converged():
