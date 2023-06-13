@@ -17,11 +17,11 @@ def sigmoid_deriv(x):
 # on https://openlearninglibrary.mit.edu/assets/courseware/v1/9c36c444e5df10eef7ce4d052e4a2ed1/asset-v1:MITx+6.036+1T2019+type@asset+block/notes_chapter_Neural_Networks.pdf
 class MultiLayerPerceptron:
     activation_methods = {
-        "relu": [lambda x: np.maximum(0, x), lambda x: 1 if x > 0 else 0],
-        "sigmoid": [lambda x: sigmoid(x), lambda x: sigmoid_deriv(x)],
-        "id": [lambda x: x, lambda x: 1],
-        "tanh": [lambda x: np.tanh(x), lambda x: 1 / (np.cosh(x) ** 2)],
-        "step": [lambda x: 1 if x >= 0 else -1, lambda x: 1],
+        "relu": [np.vectorize(lambda x: np.maximum(0, x)), np.vectorize(lambda x: 1 if x > 0 else 0)],
+        "sigmoid": [np.vectorize(sigmoid), np.vectorize(sigmoid_deriv)],
+        "id": [np.vectorize(lambda x: x), np.vectorize(lambda x: 1)],
+        "tanh": [np.vectorize(lambda x: np.tanh(x)), np.vectorize(lambda x: 1 / (np.cosh(x) ** 2))],
+        "step": [np.vectorize(lambda x: 1 if x >= 0 else -1), np.vectorize(lambda x: 1)],
     }
 
     # 4 Matrices por layer:
@@ -29,7 +29,7 @@ class MultiLayerPerceptron:
     #       2- WEIGHTS = [ W0, W1, ... ]
     #       3- Pre-activation = [ sum( Wi * Xi) para to i ]
     #       4- Pre-activation diff = [ deltas ]
-    def __init__(self, perceptron_by_layer, data_set, activation_method, result_set, epsilon, learning_rate,
+    def __init__(self, perceptron_by_layer, data_set, activation_methods, result_set, epsilon, learning_rate,
                  update_method="gradient_descent"):
 
         if update_method == "gradient_descent":
@@ -45,16 +45,18 @@ class MultiLayerPerceptron:
 
         self.point_number = len(data_set)
         self.layer_number = len(perceptron_by_layer)
+        for i in range(len(perceptron_by_layer)):
+            if perceptron_by_layer[i] == 2:
+                self.latent_layer = i
 
         self.results_matrix = np.transpose(np.array([point for point in result_set]))
-        self.input_matrix = np.transpose(np.array([np.insert(point, 0, -1) for point in data_set]))
+        self.input_matrix = np.transpose(np.array([point for point in data_set]))
 
-        self.activation_method = self.activation_methods[activation_method][0]
-
-        if self.layer_number == 2:
-            self.activation_derivative = (lambda x: 1)
-        else:
-            self.activation_derivative = (self.activation_methods[activation_method][1])
+        self.activation_method_by_layer = []
+        self.activation_derivative_by_layer = []
+        for am in activation_methods:
+            self.activation_method_by_layer.append(self.activation_methods[am][0])
+            self.activation_derivative_by_layer.append(self.activation_methods[am][1])
 
         self.weights_by_layer, self.output_by_layer, \
             self.differentiated_preactivate_by_layer, self.pre_activation_by_layer, \
@@ -64,12 +66,16 @@ class MultiLayerPerceptron:
         self.error_by_iteration = []
 
     def error(self):
-        return np.sum(np.square(self.output_by_layer[-1] - self.results_matrix))
+        matrix = self.output_by_layer[-1]
+        binary_matrix = np.zeros(matrix.shape, dtype=int)
+        binary_matrix[matrix >= 0.5] = 1
+        return np.sum(np.square(binary_matrix - self.results_matrix))
 
     def has_converged(self):
+        error = self.error()
         if self.epochs % 100 == 0:
-            print(self.epochs)
-        return self.epochs > 10000 or self.error() < self.epsilon
+            print(f'{self.epochs} {error}')
+        return self.epochs > 100 or error < self.epsilon
 
     def train(self):
         while not self.has_converged():
@@ -84,8 +90,9 @@ class MultiLayerPerceptron:
             self.pre_activation_by_layer[index], self.output_by_layer[index], \
                 self.differentiated_preactivate_by_layer[index] = update_layer(last_output,
                                                                                self.weights_by_layer[index],
-                                                                               self.activation_method,
-                                                                               self.activation_derivative)
+                                                                               self.activation_method_by_layer[index],
+                                                                               self.activation_derivative_by_layer[
+                                                                                   index])
             last_output = self.output_by_layer[index]
 
     def back_propagation(self):
@@ -115,9 +122,9 @@ class MultiLayerPerceptron:
         for layer in range(len(self.weights_by_layer)):
             self.mean[layer] = (b1 * self.mean[layer] + (1 - b1) * gradient[layer]) / (1 - (b1 ** self.adam_iteration))
             self.std[layer] = (b2 * self.std[layer] + (1 - b2) * np.square(gradient[layer])) / (
-                        1 - (b2 ** self.adam_iteration))
+                    1 - (b2 ** self.adam_iteration))
             self.weights_by_layer[layer] += -1 * self.learning_rate * (
-                    np.divide(self.mean[layer], (np.sqrt(self.std[layer] + e)))
+                np.divide(self.mean[layer], (np.sqrt(self.std[layer] + e)))
             )
 
     def _compute_multipliers(self, index):
@@ -130,7 +137,25 @@ class MultiLayerPerceptron:
         )
 
     def get_result(self, points):
-        partial_output = np.insert(points, 0, -1)
+        partial_output = points
         for i in range(len(self.weights_by_layer)):
-            partial_output = self.activation_method(np.dot(self.weights_by_layer[i], partial_output))
+            partial_output = self.activation_method_by_layer[i](np.dot(self.weights_by_layer[i], partial_output))
+        binary_array = np.zeros_like(partial_output, dtype=int)
+        binary_array[partial_output >= 0.5] = 1
+        return binary_array
+
+    def get_weights(self):
+        return self.weights_by_layer
+
+    def get_latent_result(self, points):
+        partial_output = points
+        for i in range(self.latent_layer):
+            partial_output = self.activation_method_by_layer[i](np.dot(self.weights_by_layer[i], partial_output))
+        return partial_output
+
+    # receives a point, and multiply back from the latent space to the initial space
+    def generate_from_latent_space(self, point):
+        partial_output = point
+        for i in range(self.latent_layer, len(self.weights_by_layer)):
+            partial_output = self.activation_method_by_layer[i](np.dot(self.weights_by_layer[i], partial_output))
         return partial_output

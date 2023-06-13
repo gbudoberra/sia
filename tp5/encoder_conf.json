@@ -1,0 +1,7 @@
+{
+  "perceptron_by_layer": [35, 20, 10, 2 , 10 ,20,  35],
+  "activation_methods":[ "sigmoid","sigmoid","sigmoid","sigmoid","sigmoid","sigmoid","sigmoid"],
+  "update_method": "adam",
+  "learning_rate": 0.0005,
+  "epsilon": 1
+}
