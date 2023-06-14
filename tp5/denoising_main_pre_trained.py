@@ -18,6 +18,21 @@ def get_noisy_image(data, noise_rate):
     return index, noisy_image
 
 
+def get_gaussian_noisy_image(data, std):
+    index = random.randint(0, len(data) - 1)
+    noisy_image = data[index].copy()
+    noisy_image = noisy_image.astype(np.float64)
+    noisy_image += np.random.normal(0, std, len(noisy_image))  # add noise
+    return index, noisy_image
+
+
+def get_gaussian_noisy_image_by_index(index, data, std):
+    noisy_image = data[index].copy()
+    noisy_image = noisy_image.astype(np.float64)
+    noisy_image += np.random.normal(0, std, (7, 5))  # add noise
+    return index, noisy_image
+
+
 def get_closer_image(data, output):
     distance = []
     for image in data:
@@ -25,7 +40,7 @@ def get_closer_image(data, output):
     return distance.index(min(distance))
 
 
-weights_file = "denoising_weights_1.txt"
+weights_file = "denoising_weights_5.txt"
 latent_layer = 3
 
 if __name__ == '__main__':
@@ -42,7 +57,7 @@ if __name__ == '__main__':
     counter = 0
     image_total = 1000
     for i in range(image_total):
-        index, noisy_image = get_noisy_image([data_set[4]], 0.01)
+        index, noisy_image = get_noisy_image(data_set, 0.1)
         nn_result = pre_trained.get_result(noisy_image)
         result_index = get_closer_image(data_set, nn_result)
         if result_index == index:

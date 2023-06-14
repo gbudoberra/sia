@@ -26,7 +26,7 @@ class AutoencoderPerceptron(MultiLayerPerceptron):
 
     def has_converged(self):
         error = self.error()
-        if self.epochs % 10 == 0:
+        if self.epochs % 100 == 0:
             print(f'{self.epochs} {error}')
         return self.epochs > self.iteration_limit or error < self.epsilon
 
