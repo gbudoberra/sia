@@ -110,7 +110,7 @@ class MultiLayerPerceptron:
         for layer in range(len(self.weights_by_layer)):
             self.weights_by_layer[layer] += -1 * self.learning_rate * gradient[layer]
 
-    def _adam_update(self, gradient):
+    def adam_update(self, gradient):
         b1 = 0.9
         b2 = 0.95  # 0.999
         e = 1e-8
