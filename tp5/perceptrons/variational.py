@@ -55,6 +55,3 @@ class Variational:
         mean = encoder_result[:len(encoder_result) / 2]
         std = encoder_result[len(encoder_result) / 2:]
         return -0.5 * (1 + std - np.square(mean) - np.exp(std))
-
-
-

@@ -32,6 +32,22 @@ def create_zero_matrices(perceptron_by_layer, point_number):
     return matrix
 
 
+def initialize_weights(perceptron_by_layer):
+    w = create_weights_by_layer(perceptron_by_layer)
+    r = []
+    for matrix in w:
+        r.append(np.array(matrix))
+    return r
+
+
+def initialize_outputs(perceptron_by_layer, point_number):
+    zero_matrix = create_zero_matrices(perceptron_by_layer, point_number)
+    r = []
+    for matrix in zero_matrix:
+        r.append(np.array(matrix))
+    return r
+
+
 def initialize_network(perceptron_by_layer, point_number):
     weights_by_layer = create_weights_by_layer(perceptron_by_layer)
     mean, std = create_mean_and_std_matrix(perceptron_by_layer)
