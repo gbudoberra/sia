@@ -1,10 +1,10 @@
 import numpy as np
 
+from tp3.multilayer.multilayerperceptron import sigmoid, sigmoid_deriv
 from tp5.font import get_font_as_xis
 from tp5.perceptrons.Perceptron import Perceptron
 from tp5.perceptrons.VariationalPerceptron import VariationalPerceptron
 from tp5.utils.JsonReader import JsonReader
-from tp3.multilayer.multilayerperceptron import sigmoid, sigmoid_deriv
 
 
 def activation(preactivation):

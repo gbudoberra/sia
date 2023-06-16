@@ -22,7 +22,7 @@ class VariationalPerceptron:
         self.sample_size = sample_size
 
     def train(self):
-        while True:
+        for _ in range(1000):
             m = self.m_encoder.feed(np.array(self.data_set).T)
             s = self.s_encoder.feed(np.array(self.data_set).T)
 
@@ -32,22 +32,25 @@ class VariationalPerceptron:
             result = self.decoder.feed(z)
 
             current_point_index = 0
-            for r, e, input in zip(result.T, self.data_set, z.T):
-                dloss = self.decoder.back_propagation(r - e, current_point_index, input)
-                # self.m_encoder.back_propagation(dloss * 1 - m[:, current_point_index], current_point_index,
-                #                                 e)  # dlossdecoder/dz * dz/dm + dKL/dm = d(MSE + KL) / dm
-                # self.s_encoder.back_propagation(dloss * e - 0.5 * (1 - math.e ** s), current_point_index,
-                #                                 e)  # dloss/z * dz/ds + dKL/ds
-                self.m_encoder.back_propagation([0, 0], current_point_index,
-                                                e)  # dlossdecoder/dz * dz/dm + dKL/dm = d(MSE + KL) / dm
-                self.s_encoder.back_propagation([1, 1], current_point_index,
-                                                e)  # dloss/z * dz/ds + dKL/ds
+            for r, expected, z_i in zip(result.T, self.data_set, z.T):
+                dloss = self.decoder.back_propagation(r - expected, current_point_index, z_i)
+                # dlossdecoder/dz * dz/dm + dKL/dm = d(MSE + KL) / dm
+                m_dloss = dloss * 1 - m[:, current_point_index]
+                self.m_encoder.back_propagation(m_dloss, current_point_index, expected)
+                # dloss/z * dz/ds + dKL/ds
+                s_dloss = dloss * e.T[current_point_index] - 0.5 * (1 - math.e ** s[:, current_point_index])
+                self.s_encoder.back_propagation(s_dloss, current_point_index, expected)
                 current_point_index += 1
-                VariationalPerceptron.loss(e, r, m[:, current_point_index], s[:, current_point_index])
+            VariationalPerceptron.loss(self.data_set, result.T, m, s)
 
     @staticmethod
     def loss(expected, result, mean, std):
-        kl = - 0.5 * (1 + std - np.square(mean) - np.exp(std))
-        mse = np.linalg.norm(expected - result)
-        print(str(mse + kl))
-        return mse + kl
+        total_kl = 0
+        total_mse = 0
+        for i in range(len(expected)):
+            kl = - 0.5 * (1 + std[:, i] - np.square(mean[:, i]) - np.exp(std[:, i]))
+            mse = np.linalg.norm(expected[i] - result[i])
+            total_kl += sum(kl)
+            total_mse += mse
+        print(f'MSE: {total_mse} --- KL: {total_kl} --- TOTAL: {total_mse + total_kl}')
+        return total_kl + total_mse
