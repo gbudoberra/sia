@@ -43,21 +43,56 @@ class Perceptron:
             x = self.outputs[i] = self.activation_method(preactivation)
         return x
 
-    def back_propagation(self, dloss):
-        for i, weights in enumerate(reversed(self.weights)):
-            real_i = (len(self.weights) - 1) - i
+    def back_propagation(self, dloss, current_point, expected):
+        multipliers = []
+        current_layer = len(self.weights) - 1
+        base = np.matmul(np.diag(self.derivatives[current_layer][:, current_point]),
+                         dloss)
+        multipliers.append(base)
+        current_layer -= 1
+        while current_layer >= 0:
+            diagonal = np.diag(self.derivatives[current_layer][:, current_point])
+            weights_transposed = self.weights[current_layer + 1].T
+            base = np.matmul(np.matmul(diagonal, weights_transposed), base)
+            multipliers.append(base)
+            current_layer -= 1
+        multipliers = multipliers[::-1]
 
-            if real_i > 0:
-                dloss_dw = np.matmul(np.matmul(dloss, self.derivatives[real_i]),
-                                     self.outputs[real_i - 1].T)  # dloss/dx' * dx'/dwn = dloss/dx' * h'(preac) * I
-                # (35,32) * (35,32) * (32,10) => 35 10
+        last_gradient = None
+        for layer in reversed(range(len(self.weights))):
+            if layer == 0:
+                base = np.array(expected)
             else:
-                dloss_dw = np.matmul(np.matmul(dloss, self.derivatives[real_i]), self.input.T)
-            self.weights[real_i] += self.update(dloss_dw, self.learning_rate)
+                base = self.outputs[layer - 1][:, current_point]
+            last_gradient = np.transpose(np.outer(base, multipliers[layer]))
+            self.weights[layer] += self.update(last_gradient, self.learning_rate)
 
-            dloss_di = np.matmul(np.matmul(np.diag(dloss), self.weights[real_i]).T, self.derivatives[real_i])  # dloss/dx' * dx'/dI = dloss/dx' * h'(preac) * Wn => dloss/dO
-            dloss = dloss_di
-        return dloss
+        return last_gradient
+
+
+
+
+# def back_propagation(self, dloss, current_point):
+    #     for i, weights in enumerate(reversed(self.weights)):
+    #         real_i = (len(self.weights) - 1) - i
+    #
+    #         if real_i > 0:
+    #             dloss_dw = np.matmul(np.matmul(dloss, self.derivatives[real_i]),
+    #                                  self.outputs[real_i - 1].T)  # dloss/dx' * dx'/dwn = dloss/dx' * h'(preac) * I
+    #             # (35,32) * (35,32) * (32,10) => 35 10
+    #             self.outputs[real_i - 1][:, current_point]
+    #
+    #
+    #         else:
+    #             dloss_dw = np.matmul(np.matmul(dloss, self.derivatives[real_i]), self.input.T)
+    #         self.weights[real_i] += self.update(dloss_dw, self.learning_rate)
+    #
+    #         dloss_di = np.matmul(np.matmul(np.diag(dloss), self.weights[real_i]).T, self.derivatives[real_i])  # dloss/dx' * dx'/dI = dloss/dx' * h'(preac) * Wn => dloss/dO
+    #         dloss = dloss_di
+    #     return dloss
+
+
+
 
     # I + W1 -> O2 -> O2 + W2 -> X'
     # d(||X-X'||)/dX'
