@@ -1,32 +1,13 @@
 import numpy as np
 
 from tp3.multilayer.utils import initialize_weights, initialize_outputs
-
-
-def gradient_descendent(gradient, learning_rate):
-    return -1 * learning_rate * gradient
-
-
-# def adam_update(self, gradient):
-#         b1 = 0.9
-#         b2 = 0.95  # 0.999
-#         e = 1e-8
-#         self.adam_iteration += 1
-#         for layer in range(len(self.weights_by_layer)):
-#             self.mean[layer] = (b1 * self.mean[layer] + (1 - b1) * gradient[layer]) / (1 - (b1 ** self.adam_iteration))
-#             self.std[layer] = (b2 * self.std[layer] + (1 - b2) * np.square(gradient[layer])) / (
-#                     1 - (b2 ** self.adam_iteration))
-#             self.weights_by_layer[layer] += -1 * self.learning_rate * (
-#                 np.divide(self.mean[layer], (np.sqrt(self.std[layer] + e)))
-#             )
+from tp5.update_methods.UpdateMethod import UpdateMethod
 
 
 class Perceptron:
 
-    def __init__(self, architecture, data_dim, activation_methods, activation_derivatives, learning_rate,
-                 update_method=gradient_descendent):
+    def __init__(self, architecture, data_dim, activation_methods, activation_derivatives, update_method: UpdateMethod):
         self.update = update_method
-        self.learning_rate = learning_rate
         self.architecture = architecture
         self.activation_method = activation_methods
         self.activation_derivative = activation_derivatives
@@ -63,7 +44,7 @@ class Perceptron:
             else:
                 base = self.outputs[layer - 1][:, current_point]
             last_gradient = np.transpose(np.outer(base, multipliers[layer]))
-            self.weights[layer] += self.update(last_gradient, self.learning_rate)
+            self.weights[layer] += self.update.get_delta(last_gradient, layer)
 
         weights_transposed = self.weights[0].T
         return np.matmul(weights_transposed, multipliers[0])
