@@ -43,12 +43,13 @@ class VariationalPerceptron:
         return
 
     def train(self):
-        for epoch in range(30):
+        for epoch in range(100):
             print(epoch)
             for point in self.data_set:
                 m = self.m_encoder.feed(np.array(point).T)
                 s = self.s_encoder.feed(np.array(point).T)
-                print(f'm:{m} s:{s}')
+                self.e = np.random.standard_normal((2, self.sample_size))
+                # print(f'm:{m} s:{s}')
                 zs = []
                 for e_i in self.e.T:
                     zs.append(sample(m, s, e_i))
@@ -56,23 +57,28 @@ class VariationalPerceptron:
                 if epoch % 10 == 0:
                     plt.scatter([z[0] for z in zs], [z[1] for z in zs])
 
-                kl_lambda = 1
+                kl_lambda = 0.1
+                mse_total = 0
+                kl_total = 0
                 for i, z in enumerate(zs):
                     result = self.decoder.feed(z)
-                    dloss = self.decoder.back_propagation(sum(result - point), z)
+                    dloss = self.decoder.back_propagation((result - point) / np.linalg.norm(point - result), z)
 
-                    m_dloss = dloss * 1 + kl_lambda * m
+                    m_dloss = np.dot(dloss, np.ones([dloss.size, ])) + kl_lambda * m
                     self.m_encoder.back_propagation(m_dloss, point)
 
                     s_dloss = dloss * self.e.T[i] - kl_lambda * 0.5 * (1 - np.exp(s))
                     self.s_encoder.back_propagation(s_dloss, point)
+                    # mse_total =
             print(f'Error: {self.loss(point, result, m, s)}')
             plt.show()
             plt.clf()
 
     def loss(self, x, r, m, s):
-        return 0.5 * sum((x - r) ** 2) - 0.5 * (len(m) - sum(m ** 2) - sum(np.exp(s)) + sum(s))
+        return np.linalg.norm(x - r) - 0.5 * (len(m) - sum(m ** 2) - sum(np.exp(s)) + sum(s))
 
+    def mse(self, x, r):
+        return np.linalg.norm(x-r)
 
     # receive a point on the latent space and decode it.
     def generate_from(self, z):

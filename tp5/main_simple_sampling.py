@@ -21,16 +21,16 @@ def add_noise(matrix):
 if __name__ == '__main__':
     config = JsonReader()
     expected = get_font_as_xis()
-    data_set = []
-    result_set = []
-    for e in expected:
-        data_set.append(e)
-        result_set.append(e)
-        for _ in range(0):
-            data_set.append(add_noise(e))
-            result_set.append(e)
 
-    encoder_architecture = [35, 10, 2]
+    # for i, array in enumerate(expected):
+    #     for j, e in enumerate(array):
+    #         if e == 0:
+    #             expected[i][j] = -1
+
+    data_set = expected
+    result_set = expected
+
+    encoder_architecture = [35, 20, 10, 2]
     m_encoder = Perceptron(encoder_architecture, len(data_set), activation, activation_derivative,
                            Adam(config.learning_rate, encoder_architecture))
     s_encoder = Perceptron(encoder_architecture, len(data_set), activation, activation_derivative,
@@ -47,22 +47,22 @@ if __name__ == '__main__':
     write_weights_to_file(s_encoder.weights, './variational_weights/W_s_encoder')
     write_weights_to_file(decoder.weights, './variational_weights/W_decoder')
 
-    latent_space = []
-
-    for i, data in enumerate(expected):
-        print(i)
-        result = variational.feed_forward(add_noise(data))
-        draw_flattened_char(transform_to_binary(result), i)
-        zs = []
-        for _ in range(1000):
-            zs.append(variational.get_z(add_noise(data)))
-        latent_space.append(zs)
-
-    cmap = plt.cm.get_cmap('rainbow')
-    for i, data in enumerate(latent_space):
-        plt.scatter([z[0] for z in data], [z[1] for z in data], label=labels[i], color=cmap(i / len(latent_space)))
-    plt.legend()
-    plt.show()
-    plt.clf()
+    # latent_space = []
+    #
+    # for i, data in enumerate(expected):
+    #     print(i)
+    #     result = variational.feed_forward(add_noise(data))
+    #     draw_flattened_char(transform_to_binary(result), i)
+    #     zs = []
+    #     for _ in range(1000):
+    #         zs.append(variational.get_z(add_noise(data)))
+    #     latent_space.append(zs)
+    #
+    # cmap = plt.cm.get_cmap('rainbow')
+    # for i, data in enumerate(latent_space):
+    #     plt.scatter([z[0] for z in data], [z[1] for z in data], label=labels[i], color=cmap(i / len(latent_space)))
+    # plt.legend()
+    # plt.show()
+    # plt.clf()
 
     variational.plot_errors()
