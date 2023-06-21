@@ -62,19 +62,18 @@ if __name__ == '__main__':
 
     plot_latent_space_results(variational)
 
-    # latent_space = []
-    # for i, data in enumerate(expected):
-    #     print(i)
-    # result = variational.feed_forward(data)
-    # draw_flattened_char(data, i)
-    #     zs = []
-    #     for _ in range(1000):
-    #         zs.append(variational.get_z(data))
-    #     latent_space.append(zs)
-    #
-    # cmap = plt.cm.get_cmap('rainbow')
-    # for i, data in enumerate(latent_space):
-    #     plt.scatter([z[0] for z in data], [z[1] for z in data], label=labels[i], color=cmap(i / len(latent_space)))
-    # plt.legend()
-    # plt.show()
-    # plt.clf()
+    latent_space = []
+    for i, data in enumerate(expected):
+        print(i)
+        result = variational.feed_forward(data)
+        draw_flattened_char(result, i)
+        zs = []
+        for _ in range(1000):
+            zs.append(variational.get_z(data))
+        latent_space.append(zs)
+    cmap = plt.cm.get_cmap('rainbow')
+    for i, data in enumerate(latent_space):
+        plt.scatter([z[0] for z in data], [z[1] for z in data], label=labels[i], color=cmap(i / len(latent_space)))
+    plt.legend()
+    plt.show()
+    plt.clf()
