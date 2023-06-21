@@ -14,6 +14,11 @@ def transform_to_binary(array):
     return np.array(binary)
 
 
+def sample(m, s, e):
+    a = m + s * e
+    return a
+
+
 class VariationalPerceptron:
 
     def __init__(
@@ -30,52 +35,44 @@ class VariationalPerceptron:
         self.data_set = data_set
         self.sample_size = sample_size
         self.latent_space = []
+        self.kls = []
+        self.mses = []
+        self.e = np.random.standard_normal((2, self.sample_size))
 
     def feed_forward(self, x):
         return
 
     def train(self):
-        for epoch in range(1000):
-            m = self.m_encoder.feed(np.array(self.data_set).T)
-            s = self.s_encoder.feed(np.array(self.data_set).T)
-            e = np.random.standard_normal((len(m), self.sample_size))
-            z = m + s * e
-            print(m)
-            print(s)
+        for epoch in range(30):
+            print(epoch)
+            for point in self.data_set:
+                m = self.m_encoder.feed(np.array(point).T)
+                s = self.s_encoder.feed(np.array(point).T)
+                print(f'm:{m} s:{s}')
+                zs = []
+                for e_i in self.e.T:
+                    zs.append(sample(m, s, e_i))
 
-            self.latent_space = []
-            if epoch % 100 == 0:
-                for z_i in z.T:
-                    self.latent_space.append(z_i)
-                self.plot_latent_space(f'Epoca: {str(epoch)}')
+                if epoch % 10 == 0:
+                    plt.scatter([z[0] for z in zs], [z[1] for z in zs])
 
-            result = self.decoder.feed(z)
+                kl_lambda = 1
+                for i, z in enumerate(zs):
+                    result = self.decoder.feed(z)
+                    dloss = self.decoder.back_propagation(sum(result - point), z)
 
-            current_point_index = 0
-            for r, expected, z_i in zip(result.T, self.data_set, z.T):
-                dloss = self.decoder.back_propagation(transform_to_binary(r) - expected, current_point_index, z_i)
-                # dlossdecoder/dz * dz/dm + dKL/dm = d(MSE + KL) / dm
-                m_dloss = dloss * 1 + (len(m[:, current_point_index]) * sum(m[:, current_point_index]))
-                self.m_encoder.back_propagation(m_dloss, current_point_index, expected)
-                # dloss/z * dz/ds + dKL/ds
-                s_dloss = dloss * e.T[current_point_index] - 0.5 * len(m[:, current_point_index]) * sum(
-                    1 - np.exp(s[:, current_point_index]))
-                self.s_encoder.back_propagation(s_dloss, current_point_index, expected)
-                current_point_index += 1
-            VariationalPerceptron.loss(self.data_set, result.T, m, s)
+                    m_dloss = dloss * 1 + kl_lambda * m
+                    self.m_encoder.back_propagation(m_dloss, point)
 
-    @staticmethod
-    def loss(expected, result, mean, std):
-        total_kl = 0
-        total_mse = 0
-        for i in range(len(expected)):
-            kl = - 0.5 * len(mean[:, i]) * (1 + std[:, i] - np.square(mean[:, i]) - np.exp(std[:, i]))
-            # mse = np.linalg.norm(expected[i] - transform_to_binary(result[i]))
-            mse = (1 / 2) * sum((expected[i] - transform_to_binary(result[i])) ** 2)
-            total_kl += sum(kl)
-            total_mse += mse
-        print(f'MSE: {total_mse} --- KL: {total_kl} --- TOTAL: {total_mse + total_kl}')
-        return total_kl + total_mse
+                    s_dloss = dloss * self.e.T[i] - kl_lambda * 0.5 * (1 - np.exp(s))
+                    self.s_encoder.back_propagation(s_dloss, point)
+            print(f'Error: {self.loss(point, result, m, s)}')
+            plt.show()
+            plt.clf()
+
+    def loss(self, x, r, m, s):
+        return 0.5 * sum((x - r) ** 2) - 0.5 * (len(m) - sum(m ** 2) - sum(np.exp(s)) + sum(s))
+
 
     # receive a point on the latent space and decode it.
     def generate_from(self, z):
@@ -85,7 +82,7 @@ class VariationalPerceptron:
         m = self.m_encoder.feed(point)
         s = self.s_encoder.feed(point)
         e = np.random.standard_normal(len(m))
-        return m + s * e
+        return sample(m, s, e)
 
     def plot_latent_space(self, title):
         plt.scatter(
