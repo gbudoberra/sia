@@ -11,21 +11,23 @@ from tp5.utils.file_utils import write_weights_to_file
 
 
 def activation(preactivation):
-    return np.vectorize(sigmoid)(preactivation)
-    # return np.vectorize(activation_methods_dictionary["id"][0])(preactivation)
+    return np.vectorize(activation_methods_dictionary["tanh"][0])(preactivation)
+    # return np.vectorize(sigmoid)(preactivation)
 
 
 def activation_derivative(preactivation):
-    return np.vectorize(sigmoid_deriv)(preactivation)
-    # return np.vectorize(activation_methods_dictionary["id"][1])(preactivation)
+    return np.vectorize(activation_methods_dictionary["tanh"][1])(preactivation)
+    # return np.vectorize(sigmoid_deriv)(preactivation)
 
 
 def activation_decoder(preactivation):
-    return np.vectorize(sigmoid)(preactivation)
+    return np.vectorize(activation_methods_dictionary["tanh"][0])(preactivation)
+    # return np.vectorize(sigmoid)(preactivation)
 
 
 def activation_derivative_decoder(preactivation):
-    return np.vectorize(sigmoid_deriv)(preactivation)
+    return np.vectorize(activation_methods_dictionary["tanh"][1])(preactivation)
+    # return np.vectorize(sigmoid_deriv)(preactivation)
 
 
 def plot_latent_space_from_dataset(variational, data_set):

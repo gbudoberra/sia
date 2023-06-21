@@ -44,18 +44,19 @@ class VariacionalSimpleSampling:
             #         self.loss(m_i, s_i, x, xp, epoch)
 
             current_point_index = 0
-            kl_lambda = 0.01
+            kl_lambda = 1
             mse_total = 0
             kl_total = 0
-            for r, expected, z_i, m_i, s_i in zip(result.T, self.expected, z.T, m.T, s.T):
-                dloss = self.decoder.back_propagation_multiple((r - expected) / np.linalg.norm(expected - r),
+            for r, expected, z_i, m_i, s_i, e_i in zip(result.T, self.expected, z.T, m.T, s.T, e.T):
+                dloss = self.decoder.back_propagation_multiple((r - expected),
                                                                current_point_index, z_i)
                 # dlossdecoder/dz * dz/dm + dKL/dm = d(MSE + KL) / dm
-                m_dloss = dloss * 1 + kl_lambda * (sum(m[:, current_point_index]))
+                dz_dm = np.ones([dloss.size, 2])
+                m_dloss = np.dot(dloss, dz_dm) + kl_lambda * m_i
                 self.m_encoder.back_propagation_multiple(m_dloss, current_point_index, expected)
                 # dloss/z * dz/ds + dKL/ds
-                s_dloss = np.matmul(dloss, np.diag(e.T[current_point_index])) - kl_lambda * 0.5 * sum(
-                    1 - np.exp(s[:, current_point_index]))
+                dz_dv = e_i * np.ones([dloss.size, 2])
+                s_dloss = np.dot(dloss, dz_dv) - kl_lambda * 0.5 * (1 - np.exp(s_i))
                 self.s_encoder.back_propagation_multiple(s_dloss, current_point_index, expected)
                 current_point_index += 1
                 mse, kl = VariacionalSimpleSampling.loss(m_i, s_i, expected, r)
@@ -72,10 +73,11 @@ class VariacionalSimpleSampling:
         return self.decoder.feed(z)
 
     @staticmethod
-    def loss(m, s, x, xp):
-        kl = -0.5 * sum(1 + s - (m ** 2) - np.exp(s))
-        mse = np.linalg.norm(x - xp)
-        return mse, kl
+    def loss(mean, std, data, result):
+        rec = 0.5 * np.mean((data - result) ** 2)
+        kl = -0.5 * np.sum(1 + std - mean ** 2 - np.exp(std))
+
+        return rec, kl
 
     def get_z(self, x):
         m = self.m_encoder.feed(x)
@@ -84,26 +86,27 @@ class VariacionalSimpleSampling:
         return m + s * e
 
     def plot_errors(self):
+        total = [mse + kl for mse, kl in zip(self.mse, self.kl)]
         plt.plot(self.mse, label='MSE')
         plt.plot(self.kl, label='KL')
-        plt.plot(self.mse + self.kl, label='Total')
+        plt.plot(total, label='Total')
         plt.legend()
         plt.show()
         plt.clf()
-        plt.plot(self.kl, label='KL')
-        plt.legend()
-        plt.show()
-        plt.clf()
-        plt.plot(self.mse, label='MSE')
-        plt.legend()
-        plt.show()
-        plt.clf()
-        plt.plot(self.mse, label='MSE')
         plt.plot(self.kl, label='KL')
         plt.legend()
         plt.show()
         plt.clf()
-        plt.plot(self.mse + self.kl, label='Total')
+        plt.plot(self.mse, label='MSE')
+        plt.legend()
+        plt.show()
+        plt.clf()
+        plt.plot(self.mse, label='MSE')
+        plt.plot(self.kl, label='KL')
+        plt.legend()
+        plt.show()
+        plt.clf()
+        plt.plot(total, label='Total')
         plt.legend()
         plt.show()
         plt.clf()
